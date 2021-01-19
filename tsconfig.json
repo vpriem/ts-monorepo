@@ -23,6 +23,7 @@
     "dist",
     "packages/*/node_modules",
     "packages/*/dist",
+    "packages/**/examples",
     "packages/**/*.test.ts",
     "packages/**/*.spec.ts"
   ],
