@@ -26,7 +26,8 @@
     "format": "prettier --write packages/*/src/{*.ts,**/*.ts}",
     "test": "lerna run test",
     "u": "yarn upgrade-interactive --latest",
-    "w": "yarn workspace"
+    "w": "yarn workspace",
+    "e": "yarn workspace @vpriem/express-api-key-auth"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
