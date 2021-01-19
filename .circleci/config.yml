@@ -70,15 +70,23 @@ workflows:
       - test:
           name: test-express-api-key-auth
           package: express-api-key-auth
-
       - lint:
           name: lint-express-api-key-auth
           package: express-api-key-auth
+
+      - test:
+          name: test-rest-client
+          package: rest-client
+      - lint:
+          name: lint-rest-client
+          package: rest-client
 
       - build-and-publish:
           requires:
             - test-express-api-key-auth
             - lint-express-api-key-auth
+#            - test-rest-client
+#            - lint-rest-client
           filters:
             branches:
               only: master

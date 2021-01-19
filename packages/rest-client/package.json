@@ -1,0 +1,40 @@
+{
+  "name": "@vpriem/rest-client",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
+    "directory": "packages/rest-client"
+  },
+  "author": "V. Priem <vinzent.priem@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "fetch",
+    "http-client"
+  ],
+  "engines": {
+    "node": ">=12.x",
+    "yarn": "^1.22.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
+    "lint": "eslint --ext .ts ./src",
+    "test": "jest --testMatch '**/*.test.ts'"
+  },
+  "dependencies": {
+    "node-fetch": "2.6.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "2.5.8",
+    "nock": "13.0.5"
+  }
+}

@@ -27,7 +27,8 @@
     "test": "lerna run test",
     "u": "yarn upgrade-interactive --latest",
     "w": "yarn workspace",
-    "e": "yarn workspace @vpriem/express-api-key-auth"
+    "e": "yarn workspace @vpriem/express-api-key-auth",
+    "r": "yarn workspace @vpriem/rest-client"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",

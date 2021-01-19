@@ -3,6 +3,7 @@ module.exports = {
     testTimeout: 10000,
     collectCoverageFrom: [
         './src/**/*.ts',
+        '!./src/examples/**/*.ts',
     ],
     coverageThreshold: {
         global: {
