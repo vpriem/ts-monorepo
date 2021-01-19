@@ -1,0 +1,20 @@
+{
+  "packages": [
+    "packages/*"
+  ],
+  "version": "independent",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish [skip ci] :tada:"
+    }
+  },
+  "ignoreChanges": [
+    "**/*.test.ts",
+    "**/jest.*.js",
+    "**/tsconfig.eslint.json",
+    "**/*.md"
+  ]
+}

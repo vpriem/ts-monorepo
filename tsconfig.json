@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "esModuleInterop": true,
+    "lib": ["es2019"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "es2019",
+    "paths": {
+      "@tier/*": ["packages/*/src"]
+    }
+  },
+  "include": ["packages/*/src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/*/node_modules",
+    "packages/*/dist",
+    "packages/**/*.test.ts",
+    "packages/**/*.spec.ts"
+  ],
+  "files": [],
+  "references": []
+}
