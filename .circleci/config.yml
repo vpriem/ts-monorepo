@@ -68,17 +68,17 @@ workflows:
   deploy:
     jobs:
       - test:
-          name: test-package
-          package: package
+          name: test-express-api-key-auth
+          package: express-api-key-auth
 
       - lint:
-          name: lint-package
-          package: package
+          name: lint-express-api-key-auth
+          package: express-api-key-auth
 
       - build-and-publish:
           requires:
-            - test-package
-            - lint-package
+            - test-express-api-key-auth
+            - lint-express-api-key-auth
           filters:
             branches:
               only: master

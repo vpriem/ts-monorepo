@@ -1,0 +1,43 @@
+{
+  "name": "@vpriem/express-api-key-auth",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
+    "directory": "packages/express-api-key-auth"
+  },
+  "author": "vpriem <vinzent.priem@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "express",
+    "middleware",
+    "auth",
+    "x-api-key"
+  ],
+  "engines": {
+    "node": ">=12.16.0",
+    "yarn": "^1.22.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
+    "lint": "eslint --ext .ts ./src",
+    "test": "jest --testMatch '**/*.test.ts'"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "http-errors": "1.8.0"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.11",
+    "@types/http-errors": "1.8.0",
+    "@types/supertest": "2.0.10",
+    "supertest": "6.1.1"
+  }
+}
