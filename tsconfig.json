@@ -15,10 +15,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es2019",
-    "paths": {
-      "@tier/*": ["packages/*/src"]
-    }
+    "target": "es2019"
   },
   "include": ["packages/*/src"],
   "exclude": [
