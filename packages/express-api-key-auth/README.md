@@ -30,9 +30,9 @@ express().use(apiKeyAuth(['my-api-key1', 'my-api-key2']));
 Create the auth middleware based on all env vars with the name matching the given RegExp.
 
 ```typescript
-import { apiKeyAuth, getApiKeys } from '@tier/logger';
+import { apiKeyAuth } from '@vpriem/express-api-key-auth';
 
-express().use(apiKeyAuthFromEnvs(/^API_KEY_/));
+express().use(apiKeyAuth(/^API_KEY_/));
 ```
 
 This will create a handler with a list of api keys matching all `process.env.API_KEY_*` env vars.
