@@ -14,7 +14,6 @@
   "ignoreChanges": [
     "**/*.test.ts",
     "**/jest.*.js",
-    "**/tsconfig.eslint.json",
-    "**/*.md"
+    "**/tsconfig.eslint.json"
   ]
 }
