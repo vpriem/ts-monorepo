@@ -1,8 +1,10 @@
 {
   "name": "@vpriem/rest-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
