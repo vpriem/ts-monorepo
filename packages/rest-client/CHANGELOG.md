@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.1...@vpriem/rest-client@1.0.2) (2021-01-22)
+
+
+### Bug Fixes
+
+* **rest-client:** add undefined to Query type ([8159b0a](https://github.com/vpriem/ts-monorepo/commit/8159b0a91c586405b192c1be8d3b230c66c0f3f6))
+
+
+
+
+
 ## [1.0.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.0...@vpriem/rest-client@1.0.1) (2021-01-22)
 
 
