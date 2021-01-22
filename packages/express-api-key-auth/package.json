@@ -2,7 +2,9 @@
   "name": "@vpriem/express-api-key-auth",
   "version": "1.0.1",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
@@ -32,11 +34,11 @@
     "test": "jest --testMatch '**/*.test.ts'"
   },
   "dependencies": {
+    "@types/express": "4.17.11",
     "express": "4.17.1",
     "http-errors": "1.8.0"
   },
   "devDependencies": {
-    "@types/express": "4.17.11",
     "@types/http-errors": "1.8.0",
     "@types/supertest": "2.0.10",
     "supertest": "6.1.1"
