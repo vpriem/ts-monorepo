@@ -2,6 +2,7 @@
   "name": "@vpriem/express-api-key-auth",
   "version": "1.0.1",
   "main": "dist/index.js",
+  "files": ["dist"],
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
