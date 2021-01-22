@@ -6,7 +6,14 @@ export type Params = Record<string, string | number>;
 
 export type Query = Record<
     string,
-    string | string[] | number | number[] | boolean | boolean[] | null
+    | string
+    | string[]
+    | number
+    | number[]
+    | boolean
+    | boolean[]
+    | null
+    | undefined
 >;
 
 export interface Options {
