@@ -1,4 +1,4 @@
-import { Options, RequestError, RestClient } from '..';
+import { Options, Query, RequestError, RestClient } from '..';
 
 interface ApiResponse<D> {
     data: D;
@@ -10,6 +10,10 @@ export interface BlogPost {
 }
 
 type BlogPostBody = Omit<BlogPost, 'id'>;
+
+interface PaginationQuery {
+    page: number;
+}
 
 export class BlogApi extends RestClient {
     constructor(url = process.env.BLOG_API_URL, options?: Options) {
@@ -37,9 +41,9 @@ export class BlogApi extends RestClient {
         }
     }
 
-    async getPosts(query: { page: number }): Promise<BlogPost[]> {
+    async getPosts(query?: PaginationQuery): Promise<BlogPost[]> {
         const { data } = await this.get<ApiResponse<BlogPost[]>>('/post', {
-            query,
+            query: query as PaginationQuery & Query,
         });
         return data;
     }
