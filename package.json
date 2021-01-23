@@ -28,7 +28,8 @@
     "u": "yarn upgrade-interactive --latest",
     "w": "yarn workspace",
     "e": "yarn workspace @vpriem/express-api-key-auth",
-    "r": "yarn workspace @vpriem/rest-client"
+    "r": "yarn workspace @vpriem/rest-client",
+    "t": "yarn workspace @vpriem/tile38"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",

@@ -1,0 +1,40 @@
+{
+  "name": "@vpriem/tile38",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
+    "directory": "packages/tile38"
+  },
+  "author": "V. Priem <vinzent.priem@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "tile38",
+    "geofence"
+  ],
+  "engines": {
+    "node": ">=12.x",
+    "yarn": "^1.22.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
+    "lint": "eslint --ext .ts ./src",
+    "test": "jest --testMatch '**/*.test.ts'"
+  },
+  "dependencies": {
+    "redis": "3.0.2"
+  },
+  "devDependencies": {
+    "@types/redis": "2.8.28"
+  }
+}
