@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.0.2...@vpriem/express-api-key-auth@1.0.3) (2021-01-25)
+
+
+### Bug Fixes
+
+* **express-api-key-auth:** export apiKeyAuth as function ([acd3af3](https://github.com/vpriem/ts-monorepo/commit/acd3af33729901dbb516d22bcaa9607b80d8cf25))
+* **express-api-key-auth:** use RegExp.test ([a24c2e9](https://github.com/vpriem/ts-monorepo/commit/a24c2e90a05e40c280164da7c1b0558ad927f9f8))
+
+
+
+
+
 ## [1.0.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.0.1...@vpriem/express-api-key-auth@1.0.2) (2021-01-22)
 
 
