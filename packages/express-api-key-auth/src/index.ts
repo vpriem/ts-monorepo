@@ -13,16 +13,14 @@ const createMiddleware = (apiKeys: string[]): Handler => (
     );
 };
 
-type ApiKeyAuth = {
-    (apiKeys: string[]): Handler;
-    (regExp: RegExp): Handler;
-};
+export function apiKeyAuth(apiKeys: string[]): Handler;
 
-export const apiKeyAuth: ApiKeyAuth = (
-    apiKeysOrRegexp: string[] | RegExp
-): Handler =>
-    createMiddleware(
+export function apiKeyAuth(regExp: RegExp): Handler;
+
+export function apiKeyAuth(apiKeysOrRegexp: string[] | RegExp): Handler {
+    return createMiddleware(
         Array.isArray(apiKeysOrRegexp)
             ? apiKeysOrRegexp
             : loadApiKeys(apiKeysOrRegexp)
     );
+}
