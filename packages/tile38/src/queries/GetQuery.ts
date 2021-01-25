@@ -57,17 +57,17 @@ export class GetQuery extends Query<ObjectResponse> {
         return this;
     }
 
-    toObject<O = object, F = Fields>(): Promise<ObjectResponse<O, F>> {
+    asObject<O = object, F = Fields>(): Promise<ObjectResponse<O, F>> {
         this.output(Output.OBJECT);
         return this.exec();
     }
 
-    toPoint<F = Fields>(): Promise<PointResponse<F>> {
+    asPoint<F = Fields>(): Promise<PointResponse<F>> {
         this.output(Output.POINT);
         return this.exec<PointResponse<F>>();
     }
 
-    toHash<F = Fields>(precision: number): Promise<HashResponse<F>> {
+    asHash<F = Fields>(precision: number): Promise<HashResponse<F>> {
         this.output(Output.HASH, precision);
         return this.exec<HashResponse<F>>();
     }

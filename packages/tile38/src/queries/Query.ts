@@ -12,9 +12,13 @@ export abstract class Query<R extends JSONResponse = JSONResponse> {
         this.client = client;
     }
 
+    compile(): [Command, CommandArgs] {
+        return [this.command, this.args.flat().flat()];
+    }
+
     async exec<OverrideR>(): Promise<OverrideR>;
 
     async exec(): Promise<R> {
-        return this.client.command<R>(this.command, this.args.flat().flat());
+        return this.client.command<R>(...this.compile());
     }
 }

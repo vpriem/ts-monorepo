@@ -9,6 +9,8 @@ export type CommandArgs = Array<string | number>;
 export enum SubCommands {
     FIELD = 'FIELD',
     EX = 'EX',
+    NX = 'NX',
+    XX = 'XX',
     WITHFIELDS = 'WITHFIELDS',
 }
 
