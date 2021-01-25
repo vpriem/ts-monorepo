@@ -23,7 +23,8 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - run: yarn workspace << parameters.scope >>/<< parameters.package >> test --coverage
+      - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
+      - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
 
   lint:
     parameters:

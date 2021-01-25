@@ -1,6 +1,7 @@
 module.exports = {
     testEnvironment: 'node',
     testTimeout: 10000,
+    collectCoverage: true,
     collectCoverageFrom: [
         './src/**/*.ts',
         '!./src/examples/**/*.ts',
