@@ -10,10 +10,10 @@ describe('errors', () => {
 
     afterAll(() => tile38.quit());
 
-    it.skip('should throw Tile38Error', () =>
-        expect(
-            tile38.set('fleet', 'truck1').point(-1500000, 1500000).exec()
-        ).rejects.toBeInstanceOf(Tile38Error));
+    it('should throw Tile38Error', () =>
+        expect(tile38.set('fleet', 'truck1').exec()).rejects.toBeInstanceOf(
+            Tile38Error
+        ));
 
     it('should throw Tile38KeyNotFoundError on key not found', () =>
         expect(tile38.get('asd', 'truck1').exec()).rejects.toBeInstanceOf(
