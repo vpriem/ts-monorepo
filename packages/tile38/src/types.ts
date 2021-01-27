@@ -35,30 +35,30 @@ export enum ResponseFormat {
     JSON = 'json',
 }
 
-export interface JSONResponse {
+export type JSONResponse<E extends object = {}> = {
     ok: boolean;
     elapsed: string;
     err?: string;
-}
+} & E;
 
-export interface ObjectResponse<O = object, F = Fields> extends JSONResponse {
+export type ObjectResponse<O = object, F = Fields> = JSONResponse<{
     object: O;
     fields?: F;
-}
+}>;
 
-export interface PointResponse<F = Fields> extends JSONResponse {
+export type PointResponse<F = Fields> = JSONResponse<{
     point: {
         lat: number;
         lon: number;
     };
     fields?: F;
-}
+}>;
 
-export interface HashResponse<F = Fields> extends JSONResponse {
+export type HashResponse<F = Fields> = JSONResponse<{
     hash: string;
     fields?: F;
-}
+}>;
 
-export interface PingResponse extends JSONResponse {
+export type PingResponse = JSONResponse<{
     ping: 'pong';
-}
+}>;
