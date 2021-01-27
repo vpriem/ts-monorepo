@@ -3,7 +3,7 @@ import { Follower } from './Follower';
 import { GetQuery } from './queries';
 
 export class Tile38 extends Leader {
-    private readonly follower: Follower;
+    private readonly follower?: Follower;
 
     constructor(
         url = process.env.TILE38_LEADER_URI || process.env.TILE38_URI,
@@ -16,12 +16,10 @@ export class Tile38 extends Leader {
         }
     }
 
-    get(key: string, id: string): GetQuery {
-        if (this.follower) {
-            return this.follower.get(key, id);
-        }
-
-        return super.get(key, id);
+    get(key: string, id: string, forceLeader = false): GetQuery {
+        return forceLeader || !this.follower
+            ? super.get(key, id)
+            : this.follower.get(key, id);
     }
 
     async quit(): Promise<'OK'> {
