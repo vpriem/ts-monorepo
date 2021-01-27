@@ -7,6 +7,10 @@ export class Leader extends Follower {
         return this.command(Command.DEL, [key, id]);
     }
 
+    pdel(key: string, pattern: string): Promise<JSONResponse> {
+        return this.command(Command.PDEL, [key, pattern]);
+    }
+
     drop(key: string): Promise<JSONResponse> {
         return this.command(Command.DROP, [key]);
     }

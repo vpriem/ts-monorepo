@@ -1,5 +1,6 @@
 export enum Command {
     DEL = 'DEL',
+    PDEL = 'PDEL',
     DROP = 'DROP',
     EXPIRE = 'EXPIRE',
     SET = 'SET',
