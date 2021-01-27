@@ -35,4 +35,19 @@ describe('follower', () => {
         ).resolves.toEqual(response);
         expect(get).toHaveBeenCalledWith('fleet', 'truck1');
     });
+
+    it('should ping from leader or follower', async () => {
+        const ping = jest.spyOn(Leader.prototype, 'ping');
+        const response = {
+            ping: 'pong',
+            elapsed: expect.any(String) as String,
+            ok: true,
+        };
+
+        await expect(tile38.ping()).resolves.toEqual(response);
+        expect(ping).not.toHaveBeenCalled();
+
+        await expect(tile38.ping(true)).resolves.toEqual(response);
+        expect(ping).toHaveBeenCalled();
+    });
 });

@@ -1,6 +1,7 @@
 import { Leader } from './Leader';
 import { Follower } from './Follower';
 import { GetQuery } from './queries';
+import { PingResponse } from './types';
 
 export class Tile38 extends Leader {
     private readonly follower?: Follower;
@@ -20,6 +21,12 @@ export class Tile38 extends Leader {
         return forceLeader || !this.follower
             ? super.get(key, id)
             : this.follower.get(key, id);
+    }
+
+    ping(forceLeader = false): Promise<PingResponse> {
+        return forceLeader || !this.follower
+            ? super.ping()
+            : this.follower.ping();
     }
 
     async quit(): Promise<'OK'> {

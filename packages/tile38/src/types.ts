@@ -7,6 +7,7 @@ export enum Command {
     FSET = 'FSET',
     GET = 'GET',
     OUTPUT = 'OUTPUT',
+    PING = 'PING',
 }
 
 export type CommandArgs = Array<string | number>;
@@ -55,4 +56,8 @@ export interface PointResponse<F = Fields> extends JSONResponse {
 export interface HashResponse<F = Fields> extends JSONResponse {
     hash: string;
     fields?: F;
+}
+
+export interface PingResponse extends JSONResponse {
+    ping: 'pong';
 }
