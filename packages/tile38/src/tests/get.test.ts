@@ -14,30 +14,56 @@ describe('get', () => {
         })
     );
 
-    it('should return object', () =>
-        expect(tile38.get('fleet', 'truck1').asObject()).resolves.toEqual({
-            object: {
-                type: 'Point',
-                coordinates: [-112.2693, 33.5123],
-            },
-            elapsed: expect.any(String) as String,
-            ok: true,
-        }));
+    it('should return object', async () => {
+        const command = jest.spyOn(tile38, 'command');
 
-    it('should return point', () =>
-        expect(tile38.get('fleet', 'truck1').asPoint()).resolves.toEqual({
+        await expect(tile38.get('fleet', 'truck1').asObject()).resolves.toEqual(
+            {
+                object: {
+                    type: 'Point',
+                    coordinates: [-112.2693, 33.5123],
+                },
+                elapsed: expect.any(String) as String,
+                ok: true,
+            }
+        );
+
+        expect(command).toHaveBeenCalledWith('GET', ['fleet', 'truck1']);
+    });
+
+    it('should return point', async () => {
+        const command = jest.spyOn(tile38, 'command');
+
+        await expect(tile38.get('fleet', 'truck1').asPoint()).resolves.toEqual({
             point: {
                 lat: 33.5123,
                 lon: -112.2693,
             },
             elapsed: expect.any(String) as String,
             ok: true,
-        }));
+        });
 
-    it('should return hash', () =>
-        expect(tile38.get('fleet', 'truck1').asHash(5)).resolves.toEqual({
+        expect(command).toHaveBeenCalledWith('GET', [
+            'fleet',
+            'truck1',
+            'POINT',
+        ]);
+    });
+
+    it('should return hash', async () => {
+        const command = jest.spyOn(tile38, 'command');
+
+        await expect(tile38.get('fleet', 'truck1').asHash(5)).resolves.toEqual({
             hash: '9tbnt',
             elapsed: expect.any(String) as String,
             ok: true,
-        }));
+        });
+
+        expect(command).toHaveBeenCalledWith('GET', [
+            'fleet',
+            'truck1',
+            'HASH',
+            5,
+        ]);
+    });
 });

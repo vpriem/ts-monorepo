@@ -1,4 +1,4 @@
-import { Command, Tile38 } from '..';
+import { Tile38 } from '..';
 
 describe('fset', () => {
     const tile38 = new Tile38();
@@ -22,7 +22,7 @@ describe('fset', () => {
             ok: true,
         });
 
-        expect(command).toHaveBeenCalledWith(Command.FSET, [
+        expect(command).toHaveBeenCalledWith('FSET', [
             'fleet',
             'truck1',
             'speed',

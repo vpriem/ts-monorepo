@@ -1,4 +1,4 @@
-import { Command, Tile38 } from '..';
+import { Tile38 } from '..';
 
 describe('ping', () => {
     const tile38 = new Tile38();
@@ -14,6 +14,6 @@ describe('ping', () => {
             ping: 'pong',
         });
 
-        expect(command).toHaveBeenCalledWith(Command.PING);
+        expect(command).toHaveBeenCalledWith('PING');
     });
 });

@@ -1,4 +1,4 @@
-import { Command, Tile38 } from '..';
+import { Tile38 } from '..';
 
 describe('pdel', () => {
     const tile38 = new Tile38();
@@ -13,6 +13,6 @@ describe('pdel', () => {
             ok: true,
         });
 
-        expect(command).toHaveBeenCalledWith(Command.PDEL, ['fleet', 'truck*']);
+        expect(command).toHaveBeenCalledWith('PDEL', ['fleet', 'truck*']);
     });
 });

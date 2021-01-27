@@ -1,4 +1,4 @@
-import { Command, Tile38 } from '..';
+import { Tile38 } from '..';
 
 describe('expire', () => {
     const tile38 = new Tile38();
@@ -20,10 +20,6 @@ describe('expire', () => {
             ok: true,
         });
 
-        expect(command).toHaveBeenCalledWith(Command.EXPIRE, [
-            'fleet',
-            'truck1',
-            1,
-        ]);
+        expect(command).toHaveBeenCalledWith('EXPIRE', ['fleet', 'truck1', 1]);
     });
 });
