@@ -1,6 +1,6 @@
 import { Follower } from './Follower';
-import { SetQuery } from './queries';
-import { Command, JSONResponse } from './types';
+import { FSetQuery, SetQuery } from './queries';
+import { Command, Fields, JSONResponse } from './types';
 
 export class Leader extends Follower {
     del(key: string, id: string): Promise<JSONResponse> {
@@ -21,5 +21,9 @@ export class Leader extends Follower {
 
     set(key: string, id: string): SetQuery {
         return new SetQuery(this, key, id);
+    }
+
+    fset(key: string, id: string, fields: Fields): FSetQuery {
+        return new FSetQuery(this, key, id, fields);
     }
 }

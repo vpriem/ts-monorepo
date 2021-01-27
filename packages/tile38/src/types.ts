@@ -4,6 +4,7 @@ export enum Command {
     DROP = 'DROP',
     EXPIRE = 'EXPIRE',
     SET = 'SET',
+    FSET = 'FSET',
     GET = 'GET',
     OUTPUT = 'OUTPUT',
 }
