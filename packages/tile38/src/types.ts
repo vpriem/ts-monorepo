@@ -8,6 +8,7 @@ export enum Command {
     GET = 'GET',
     OUTPUT = 'OUTPUT',
     PING = 'PING',
+    FLUSHDB = 'FLUSHDB',
 }
 
 export type CommandArgs = Array<string | number>;

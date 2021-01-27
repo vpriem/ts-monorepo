@@ -26,4 +26,8 @@ export class Leader extends Follower {
     fset(key: string, id: string, fields: Fields): FSetQuery {
         return new FSetQuery(this, key, id, fields);
     }
+
+    flushDb(): Promise<JSONResponse> {
+        return this.command(Command.FLUSHDB);
+    }
 }
