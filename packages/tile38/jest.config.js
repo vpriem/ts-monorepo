@@ -1,4 +1,13 @@
+const config = require('../../jest.config');
+
 module.exports = {
-    ...require('../../jest.config'),
+    ...config,
     globalSetup: './jest.setup.js',
+    coverageThreshold: {
+        ...config.coverageThreshold,
+        global: {
+            ...config.coverageThreshold.global,
+            branches: 90,
+        },
+    },
 };
