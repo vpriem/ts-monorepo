@@ -16,7 +16,7 @@ describe('SetQuery', () => {
             'SET',
             [key, id, 'FIELD', 'speed', 10, 'FIELD', 'weight', 100],
         ]);
-        expect(query.field('speed', 1).compile()).toEqual([
+        expect(query.fields({ speed: 1 }).compile()).toEqual([
             'SET',
             [key, id, 'FIELD', 'speed', 1],
         ]);

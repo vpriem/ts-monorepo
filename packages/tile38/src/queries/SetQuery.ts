@@ -21,11 +21,6 @@ export class SetQuery extends Query {
         return this;
     }
 
-    field(name: string, value: number): this {
-        this.args[2] = [SubCommands.FIELD, name, value];
-        return this;
-    }
-
     fields(fields?: Fields): this {
         if (typeof fields === 'undefined') {
             delete this.args[2];
