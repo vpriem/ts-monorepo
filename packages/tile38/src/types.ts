@@ -1,6 +1,7 @@
 export enum Command {
     DEL = 'DEL',
     DROP = 'DROP',
+    EXPIRE = 'EXPIRE',
     SET = 'SET',
     GET = 'GET',
     OUTPUT = 'OUTPUT',
