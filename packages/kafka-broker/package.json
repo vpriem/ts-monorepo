@@ -1,0 +1,43 @@
+{
+  "name": "@vpriem/kafka-broker",
+  "version": "1.0.0-alpha.1",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
+    "directory": "packages/kafka-broker"
+  },
+  "author": "V. Priem <vinzent.priem@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "kafka",
+    "kafkajs",
+    "broker",
+    "event"
+  ],
+  "engines": {
+    "node": ">=12.x",
+    "yarn": "^1.22.x"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
+    "lint": "eslint --ext .ts ./src",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "kafkajs": "1.15.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "8.3.0",
+    "uuid": "8.3.2"
+  }
+}

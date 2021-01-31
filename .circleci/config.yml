@@ -26,6 +26,34 @@ jobs:
       - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
       - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
 
+  test-with-kafka:
+    parameters:
+      scope:
+        type: string
+        default: '@vpriem'
+      package:
+        type: string
+
+    docker:
+      - image: cimg/node:12.20.1
+      - image: wurstmeister/zookeeper:latest
+      - image: wurstmeister/kafka:2.11-1.1.1
+        environment:
+          KAFKA_ADVERTISED_HOST_NAME: localhost
+          KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+          KAFKA_DELETE_TOPIC_ENABLE: "true"
+
+    environment:
+      KAFKA_BROKER: localhost:9092
+
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
+      - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
+
   lint:
     parameters:
       scope:
@@ -82,12 +110,21 @@ workflows:
           name: lint-rest-client
           package: rest-client
 
+      - test-with-kafka:
+          name: test-kafka-broker
+          package: kafka-broker
+      - lint:
+          name: lint-kafka-broker
+          package: kafka-broker
+
       - build-and-publish:
           requires:
             - test-express-api-key-auth
             - lint-express-api-key-auth
-#            - test-rest-client
-#            - lint-rest-client
+            - test-rest-client
+            - lint-rest-client
+            - test-kafka-broker
+            - lint-kafka-broker
           filters:
             branches:
               only: master
