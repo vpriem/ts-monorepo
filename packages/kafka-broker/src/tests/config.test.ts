@@ -9,9 +9,7 @@ describe('config', () => {
                     brokers: [process.env.KAFKA_BROKER as string],
                 },
                 producers: {
-                    'my-producer-2': {
-                        config: { allowAutoTopicCreation: false },
-                    },
+                    'my-producer-2': { allowAutoTopicCreation: false },
                 },
                 publications: {
                     'to-topic1': 'my-topic-1',
@@ -60,9 +58,7 @@ describe('config', () => {
             },
             producers: {
                 default: {},
-                'my-producer-2': {
-                    config: { allowAutoTopicCreation: false },
-                },
+                'my-producer-2': { allowAutoTopicCreation: false },
             },
             publications: {
                 'to-topic1': {
