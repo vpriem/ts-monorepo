@@ -29,7 +29,7 @@ export class ProducerContainer {
                 throw new BrokerError(`Unknown producer "${name}"`);
             }
 
-            this.producers[name] = this.createAndConnect(producerConfig.config);
+            this.producers[name] = this.createAndConnect(producerConfig);
         }
 
         return this.producers[name];

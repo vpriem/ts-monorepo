@@ -11,9 +11,7 @@ import {
 } from 'kafkajs';
 import { Optional } from './Optional';
 
-export interface ProducerConfig {
-    config?: KafkaProducerConfig;
-}
+export type ProducerConfig = KafkaProducerConfig;
 
 export type MessageConfig = Omit<Message, 'value'>;
 
