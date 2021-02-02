@@ -1,12 +1,13 @@
 # kafka-broker
 
-⚠️ UNDER DEVELOPMENT: The API might change in the future.
+A wrapper around [KafkaJS](https://www.npmjs.com/package/kafkajs).
 
-A wrapper around [KafkaJS](https://www.npmjs.com/package/kafkajs).  
 Easily compose your broker and manage your Kafka resources
 into one place to keep the overview inside your event driven service.
 
 Heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
+
+⚠️ UNDER DEVELOPMENT: The API might change in the future.
 
 #### Features:
 
@@ -116,7 +117,7 @@ This will consume messages from `my-long-topic-name` using `my-service.from-my-t
 ### JSON support
 
 Published objects are automatically JSON encoded.  
-A `content-type: application/json"` header is also added to the message headers.
+A `content-type: application/json` header is also added to the message headers.
 
 ```typescript
 await broker.publish('to-my-topic', { value: { id: 1 } });
@@ -148,6 +149,39 @@ await broker
     .run();
 ```
 
+### Producer
+
+You can create your set of producers, configure them differently and reuse them across publications:
+
+```typescript
+const broker = new Broker({
+    // ...
+    producers: {
+        'producer-1': {
+            /* KafkaProducerConfig */
+        },
+        'producer-2': {
+            /* KafkaProducerConfig */
+        },
+    },
+    publications: {
+        'my-topic-1': {
+            topic: 'my-long-topic-name-1',
+            producer: 'producer-1',
+        },
+        'my-topic-2': {
+            topic: 'my-long-topic-name-2',
+            producer: 'producer-2',
+        },
+    },
+});
+
+// This will use "producer-1"
+await broker.publish('my-topic-1', { value: 'my-message-to-topic-1' });
+// This will use "producer-2"
+await broker.publish('my-topic-2', { value: 'my-message-to-topic-2' });
+```
+
 ### Handlers
 
 You can use `Handlers` to consume messages.
@@ -168,61 +202,107 @@ const broker = new Broker({
 await broker.subscription('from-my-topic').run();
 ```
 
-### Consuming from multiple topics
+### Run all subscriptions
 
-You can subscribe to multiple topics inside the same subscription/consumer group.  
-And consume per topic messages with `.on('message.{topic|alias}')` or by defining handlers.
+Run all subscriptions, and consume from all:
 
 ```typescript
 const broker = new Broker({
     // ...
-    publications: {
-        'to-my-topic-1': 'my-long-topic-name-1',
-        'to-my-topic-2': 'my-long-topic-name-2',
-    },
     subscriptions: {
-        'from-all-topics': {
-            topics: [
-                {
-                    topic: 'my-long-topic-name-1',
-                    alias: 'my-topic-1',
-                    handler: async ({ value }) => {
-                        // This will be called with "value-1"
-                        await myAsyncOperation(value);
-                    },
-                },
-                {
-                    topic: 'my-long-topic-name-2',
-                    alias: 'my-topic-2',
-                    handler: async ({ value }) => {
-                        // This will be called with "value-2"
-                        await myAsyncOperation(value);
-                    },
-                },
-            ],
-            handler: async ({ value }) => {
-                // This will be called with "value-1" and "value-2"
-                await myAsyncOperation(value);
-            },
-        },
+        'from-my-topic-1': 'my-long-topic-name-1',
+        'from-my-topic-2': 'my-long-topic-name-2',
+    },
+});
+
+await broker
+    .subscriptionList()
+    .on('message', ({ value }) => {
+        /*
+            Consume from both topics
+            Using two separate consumer groups
+        */
+    })
+    .run();
+```
+
+### Consuming from multiple topics
+
+You can subscribe to multiple topics inside the same subscription/consumer group:
+
+```typescript
+const broker = new Broker({
+    // ...
+    subscriptions: {
+        'from-all-topics': ['my-long-topic-name-1', 'my-long-topic-name-2'],
     },
 });
 
 await broker
     .subscription('from-all-topics')
     .on('message', ({ value }) => {
-        console.log(value.id); // Print "value-1" and "value-2"
+        console.log(value.id); // All messages
     })
-    .on('message.my-topic-1', ({ value }) => {
-        console.log(value.id); // Print "value-1"
+    .on('message.my-long-topic-name-1', ({ value }) => {
+        console.log(value.id); // Messages of topic 1
     })
-    .on('message.my-topic-2', ({ value }) => {
-        console.log(value.id); // Print "value-2"
+    .on('message.my-long-topic-name-2', ({ value }) => {
+        console.log(value.id); // Messages of topic 2
     })
     .run();
+```
 
-await broker.publish('to-my-topic-1', { value: 'value-1' });
-await broker.publish('to-my-topic-2', { value: 'value-2' });
+Using aliases:
+
+```typescript
+const broker = new Broker({
+    // ...
+    subscriptions: {
+        'from-all-topics': [
+            { topis: 'my-long-topic-name-1', alias: 'my-topic1' },
+            { topis: 'my-long-topic-name-2', alias: 'my-topic2' },
+        ],
+    },
+});
+
+await broker
+    .subscription('from-all-topics')
+    .on('message', ({ value }) => {
+        console.log(value.id); // All messages
+    })
+    .on('message.my-topic1', ({ value }) => {
+        console.log(value.id); // Messages of topic 1
+    })
+    .on('message.my-topic2', ({ value }) => {
+        console.log(value.id); // Messages of topic 2
+    })
+    .run();
+```
+
+Or with handlers:
+
+```typescript
+const broker = new Broker({
+    // ...
+    subscriptions: {
+        'from-all-topics': [
+            {
+                topic: 'my-long-topic-name-1',
+                handler: async ({ value }) => {
+                    await myAsyncOperation(value);
+                },
+            },
+            {
+                topic: 'my-long-topic-name-2',
+                handler: async ({ value }) => {
+                    await myAsyncOperation(value);
+                },
+            },
+        ],
+    },
+});
+
+await broker.subscriptionList().runAll();
 ```
 
 ### Shutdown
@@ -246,7 +326,7 @@ const broker = new BrokerContainer({
     brokers: {
         public: {
             config: {
-                brokers: [process.env.KAFKA_BROKER as string],
+                brokers: [process.env.KAFKA_PUBLIC_BROKER as string],
             },
             publications: {
                 'my-topic': 'my-long-topic-name',
@@ -257,7 +337,7 @@ const broker = new BrokerContainer({
         },
         private: {
             config: {
-                brokers: [process.env.KAFKA_BROKER as string],
+                brokers: [process.env.KAFKA_PRIVATE_BROKER as string],
             },
             publications: {
                 'my-topic': 'my-long-topic-name',
@@ -276,8 +356,8 @@ await broker
     })
     .runAll();
 
-await broker.publish('public.my-topic', { value: 'my-public-message' });
-await broker.publish('private.my-topic', { value: 'my-private-message' });
+await broker.publish('public/my-topic', { value: 'my-public-message' });
+await broker.publish('private/my-topic', { value: 'my-private-message' });
 ```
 
 ## API
