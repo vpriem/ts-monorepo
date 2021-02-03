@@ -60,6 +60,7 @@ export interface SubscriptionConfig {
     topics: string | TopicConfig | Array<string | TopicConfig>;
     runConfig?: RunConfig;
     handler?: Handler | AsyncHandler;
+    contentType?: 'application/json';
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;

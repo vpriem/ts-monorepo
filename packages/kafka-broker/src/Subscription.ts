@@ -10,6 +10,8 @@ import {
 } from './types';
 
 export interface Subscription {
+    emit(event: 'error', error: Error): boolean;
+
     emit(
         event: string,
         value: ConsumeMessageValue,
@@ -83,14 +85,21 @@ export class Subscription extends EventEmitter {
         if (this.isRunning) return this;
         this.isRunning = true;
 
+        const { runConfig, contentType } = this.config;
         const topicToAlias = this.mapTopicToAlias();
 
         await this.subscribe();
 
         await this.consumer.run({
-            ...this.config.runConfig,
+            ...runConfig,
             eachMessage: (payload) => {
-                const value = decodeMessage(payload.message);
+                let value: ConsumeMessageValue;
+                try {
+                    value = decodeMessage(payload.message, contentType);
+                } catch (error) {
+                    this.emit('error', error);
+                    return Promise.resolve();
+                }
 
                 this.emit(
                     'message',

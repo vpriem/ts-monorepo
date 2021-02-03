@@ -35,6 +35,7 @@ describe('config', () => {
                     'from-topic3': {
                         topics: 'my-topic-3',
                         consumer: { groupId: 'my-group-id-3' },
+                        contentType: 'application/json',
                     },
                     'from-all-topics': [
                         'my-topic-0',
@@ -96,6 +97,7 @@ describe('config', () => {
                 'from-topic3': {
                     topics: [{ topic: 'my-topic-3' }],
                     consumer: { groupId: 'my-group-id-3' },
+                    contentType: 'application/json',
                 },
                 'from-all-topics': {
                     topics: [

@@ -104,7 +104,7 @@ In order to consume messages you have to get the subscription and run it:
 ```typescript
 await broker
     .subscription('from-my-topic')
-    .on('message', (value) => {
+    .on('message', (value, message, topic, partition) => {
         console.log(value); // Print "my-message"
     })
     .run();
@@ -143,6 +143,31 @@ await broker
     .subscription('from-my-topic')
     .on<MyEvent>('message', (value) => {
         console.log(value.id); // Print 1
+    })
+    .run();
+```
+
+In case JSON messages were produced without any `content-type: application/json` header,
+you can enforce messages to be JSON decoded:
+
+```typescript
+const broker = new Broker({
+    // ...
+    subscriptions: {
+        'from-json-topic': {
+            topics: 'my-long-topic-name',
+            contentType: 'application/json',
+        },
+    },
+});
+
+await broker
+    .subscription('from-json-topic')
+    .on<MyEvent>('message', (value) => {
+        console.log(value.id);
+    })
+    .on('error', (error) => {
+        console.log(error); // JSON.parse failed
     })
     .run();
 ```
@@ -203,7 +228,17 @@ await broker.subscription('from-my-topic').run();
 
 const MyHandler: Handler<MyEvent> = async (value) => {
     await myAsyncOperation(value.id);
-}
+};
+
+new Broker({
+    // ...
+    subscriptions: {
+        'from-my-topic': {
+            topics: 'my-long-topic-name',
+            handler,
+        },
+    },
+});
 ```
 
 ### Run all subscriptions
@@ -245,13 +280,13 @@ const broker = new Broker({
 await broker
     .subscription('from-all-topics')
     .on('message', (value) => {
-        console.log(value.id); // All messages
+        console.log(value); // All messages
     })
     .on('message.my-long-topic-name-1', (value) => {
-        console.log(value.id); // Messages of topic 1
+        console.log(value); // Messages of topic 1
     })
     .on('message.my-long-topic-name-2', (value) => {
-        console.log(value.id); // Messages of topic 2
+        console.log(value); // Messages of topic 2
     })
     .run();
 ```
@@ -272,13 +307,13 @@ const broker = new Broker({
 await broker
     .subscription('from-all-topics')
     .on('message', (value) => {
-        console.log(value.id); // All messages
+        console.log(value); // All messages
     })
     .on('message.my-topic1', (value) => {
-        console.log(value.id); // Messages of topic 1
+        console.log(value); // Messages of topic 1
     })
     .on('message.my-topic2', (value) => {
-        console.log(value.id); // Messages of topic 2
+        console.log(value); // Messages of topic 2
     })
     .run();
 ```
