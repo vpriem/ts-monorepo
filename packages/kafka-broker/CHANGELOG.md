@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.3](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.2...@vpriem/kafka-broker@1.0.0-alpha.3) (2021-02-03)
+
+
+### Features
+
+* **kafka-broker:** add subscription contentType overload ([ab2050f](https://github.com/vpriem/ts-monorepo/commit/ab2050f2c63d5e229005d43900b7d88e8be77b90))
+* **kafka-broker:** change Handler and Subscription.on signature ([21e95cc](https://github.com/vpriem/ts-monorepo/commit/21e95cc564838a1bc349dfddcda4abd8d5dc48f2))
+
+
+
+
+
 # 1.0.0-alpha.2 (2021-02-02)
 
 
