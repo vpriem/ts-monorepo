@@ -2,7 +2,6 @@ import {
     ConsumerConfig as KafkaConsumerConfig,
     ConsumerRunConfig,
     ConsumerSubscribeTopic,
-    EachMessagePayload,
     KafkaConfig,
     KafkaMessage,
     Message,
@@ -31,29 +30,30 @@ export interface PublishMessage<V = PublishMessageValue>
 
 export type ConsumerConfig = KafkaConsumerConfig;
 
-export type ConsumePayload = EachMessagePayload;
+export type ConsumeMessage = KafkaMessage;
 
-export interface ConsumeMessage<V = string | null | object>
-    extends Omit<KafkaMessage, 'value'> {
-    value: V;
-}
+export type ConsumeMessageValue = null | string | object;
 
-export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
-
-export type Handler = (
+export type Handler<V = ConsumeMessageValue> = (
+    value: V,
     message: ConsumeMessage,
-    payload: ConsumePayload
+    topic: string,
+    partition: number
 ) => void;
 
-export type AsyncHandler = (
+export type AsyncHandler<V = ConsumeMessageValue> = (
+    value: V,
     message: ConsumeMessage,
-    payload: ConsumePayload
+    topic: string,
+    partition: number
 ) => Promise<void>;
 
 export interface TopicConfig extends ConsumerSubscribeTopic {
     alias?: string;
     handler?: Handler | AsyncHandler;
 }
+
+export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
 
 export interface SubscriptionConfig {
     consumer?: ConsumerConfig;

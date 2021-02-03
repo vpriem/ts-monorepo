@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, ConsumeMessage } from '..';
+import { Broker } from '..';
 
 interface Event {
     id: number;
@@ -27,8 +27,8 @@ describe('subscribe+run+once', () => {
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
-            subscription.on('message', (message: ConsumeMessage<Event>) => {
-                resolve(message.value.id);
+            subscription.on<Event>('message', (value) => {
+                resolve(value.id);
             });
         });
 

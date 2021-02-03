@@ -63,23 +63,31 @@ describe('handlers', () => {
         await expect(promise).resolves.toBe(2);
 
         expect(handler).toHaveBeenCalledWith(
-            expect.objectContaining({ value: { id: 123 } }),
-            expect.objectContaining({ topic: topic1 })
+            { id: 123 },
+            expect.objectContaining({ value: expect.any(Buffer) as string }),
+            topic1,
+            expect.any(Number)
         );
 
         expect(handler).toHaveBeenCalledWith(
-            expect.objectContaining({ value: { id: 321 } }),
-            expect.objectContaining({ topic: topic2 })
+            { id: 321 },
+            expect.objectContaining({ value: expect.any(Buffer) as string }),
+            topic2,
+            expect.any(Number)
         );
 
         expect(handlerOfTopic1).toHaveBeenCalledWith(
-            expect.objectContaining({ value: { id: 123 } }),
-            expect.objectContaining({ topic: topic1 })
+            { id: 123 },
+            expect.objectContaining({ value: expect.any(Buffer) as string }),
+            topic1,
+            expect.any(Number)
         );
 
         expect(handlerOfTopic2).toHaveBeenCalledWith(
-            expect.objectContaining({ value: { id: 321 } }),
-            expect.objectContaining({ topic: topic2 })
+            { id: 321 },
+            expect.objectContaining({ value: expect.any(Buffer) as string }),
+            topic2,
+            expect.any(Number)
         );
     });
 });

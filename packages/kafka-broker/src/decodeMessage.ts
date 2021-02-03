@@ -1,20 +1,15 @@
 import { KafkaMessage } from 'kafkajs';
-import { ConsumeMessage } from './types';
+import { ConsumeMessageValue } from './types';
 
-export const decodeMessage = (message: KafkaMessage): ConsumeMessage => {
-    if (!message.value) return message;
+export const decodeMessage = (message: KafkaMessage): ConsumeMessageValue => {
+    if (!message.value) return message.value;
+
+    const value = message.value.toString();
 
     const contentType = message.headers?.['content-type']?.toString();
-
     if (contentType === 'application/json') {
-        return {
-            ...message,
-            value: JSON.parse(message.value.toString()) as object,
-        };
+        return JSON.parse(value) as object;
     }
 
-    return {
-        ...message,
-        value: message.value.toString(),
-    };
+    return value;
 };

@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, ConsumeMessage } from '..';
+import { Broker } from '..';
 
 interface Event {
     id: number;
@@ -29,9 +29,9 @@ describe('publish+json', () => {
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
-            subscription.on('message', (message: ConsumeMessage<Event>) => {
+            subscription.on<Event>('message', (value, message) => {
                 headers.push(message.headers?.['content-type']?.toString());
-                values.push(message.value.id);
+                values.push(value.id);
                 if (values.length >= 4) resolve(values);
             });
         });

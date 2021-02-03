@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, ConsumeMessage } from '..';
+import { Broker } from '..';
 
 interface Event {
     id: number;
@@ -32,8 +32,8 @@ describe('subscribe+all', () => {
         expect(subscriptions).toHaveLength(2);
 
         const promise = new Promise((resolve) => {
-            subscriptions.on('message', (message: ConsumeMessage<Event>) => {
-                values.push(message.value.id);
+            subscriptions.on<Event>('message', (value) => {
+                values.push(value.id);
                 if (values.length >= 2) resolve(values);
             });
         });

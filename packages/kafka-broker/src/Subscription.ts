@@ -2,6 +2,27 @@ import EventEmitter from 'events';
 import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
+import {
+    AsyncHandler,
+    ConsumeMessage,
+    ConsumeMessageValue,
+    Handler,
+} from './types';
+
+export interface Subscription {
+    emit(
+        event: string,
+        value: ConsumeMessageValue,
+        message: ConsumeMessage,
+        topic: string,
+        partition: number
+    ): boolean;
+
+    on<V = ConsumeMessageValue>(
+        event: string,
+        listener: Handler<V> | AsyncHandler<V>
+    ): this;
+}
 
 export class Subscription extends EventEmitter {
     readonly name: string;
@@ -28,16 +49,14 @@ export class Subscription extends EventEmitter {
 
     private registerHandlers() {
         if (this.config.handler) {
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             this.on('message', this.config.handler);
         }
 
-        this.config.topics.forEach(({ topic, alias, handler }) => {
-            if (handler) {
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                this.on(`message.${alias || topic.toString()}`, handler);
-            }
-        });
+        this.config.topics.forEach(({ topic, alias, handler }) =>
+            handler
+                ? this.on(`message.${alias || topic.toString()}`, handler)
+                : undefined
+        );
     }
 
     private mapTopicToAlias(): Record<string, string> {
@@ -70,15 +89,27 @@ export class Subscription extends EventEmitter {
 
         await this.consumer.run({
             ...this.config.runConfig,
-            eachMessage: async (payload) => {
-                const message = decodeMessage(payload.message);
+            eachMessage: (payload) => {
+                const value = decodeMessage(payload.message);
 
-                this.emit('message', message, payload);
+                this.emit(
+                    'message',
+                    value,
+                    payload.message,
+                    payload.topic,
+                    payload.partition
+                );
 
                 const topicAlias = topicToAlias[payload.topic];
                 // istanbul ignore else
                 if (topicAlias) {
-                    this.emit(`message.${topicAlias}`, message, payload);
+                    this.emit(
+                        `message.${topicAlias}`,
+                        value,
+                        payload.message,
+                        payload.topic,
+                        payload.partition
+                    );
                 }
 
                 return Promise.resolve();

@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, ConsumeMessage } from '..';
+import { Broker } from '..';
 
 describe('publish+string', () => {
     const topic = uuid();
@@ -22,8 +22,8 @@ describe('publish+string', () => {
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
-            subscription.on('message', (message: ConsumeMessage<string>) => {
-                resolve(message.value);
+            subscription.on('message', (value) => {
+                resolve(value);
             });
         });
 

@@ -102,11 +102,9 @@ This will publish to `my-long-topic-name` using the `default` producer.
 In order to consume messages you have to get the subscription and run it:
 
 ```typescript
-import { ConsumeMessage } from '@vpriem/kafka-broker';
-
 await broker
     .subscription('from-my-topic')
-    .on('message', ({ value }: ConsumeMessage) => {
+    .on('message', (value) => {
         console.log(value); // Print "my-message"
     })
     .run();
@@ -130,20 +128,20 @@ Previously JSON encoded messages are decoded back using the previously set `cont
 ```typescript
 await broker
     .subscription('from-my-topic')
-    .on('message', ({ value }: ConsumeMessage<object>) => {
+    .on('message', (value) => {
         console.log(value.id); // Print 1
     })
     .run();
 
 // Or type safe:
 
-interface MyMessage {
+interface MyEvent {
     id: number;
 }
 
 await broker
     .subscription('from-my-topic')
-    .on('message', ({ value }: ConsumeMessage<MyMessage>) => {
+    .on<MyEvent>('message', (value) => {
         console.log(value.id); // Print 1
     })
     .run();
@@ -192,7 +190,7 @@ const broker = new Broker({
     subscriptions: {
         'from-my-topic': {
             topics: 'my-long-topic-name',
-            handler: async ({ value }) => {
+            handler: async (value) => {
                 await myAsyncOperation(value);
             },
         },
@@ -200,6 +198,12 @@ const broker = new Broker({
 });
 
 await broker.subscription('from-my-topic').run();
+
+// Or type safe:
+
+const MyHandler: Handler<MyEvent> = async (value) => {
+    await myAsyncOperation(value.id);
+}
 ```
 
 ### Run all subscriptions
@@ -217,13 +221,13 @@ const broker = new Broker({
 
 await broker
     .subscriptionList()
-    .on('message', ({ value }) => {
+    .on('message', (value) => {
         /*
             Consume from both topics
             Using two separate consumer groups
         */
     })
-    .run();
+    .runAll();
 ```
 
 ### Consuming from multiple topics
@@ -240,13 +244,13 @@ const broker = new Broker({
 
 await broker
     .subscription('from-all-topics')
-    .on('message', ({ value }) => {
+    .on('message', (value) => {
         console.log(value.id); // All messages
     })
-    .on('message.my-long-topic-name-1', ({ value }) => {
+    .on('message.my-long-topic-name-1', (value) => {
         console.log(value.id); // Messages of topic 1
     })
-    .on('message.my-long-topic-name-2', ({ value }) => {
+    .on('message.my-long-topic-name-2', (value) => {
         console.log(value.id); // Messages of topic 2
     })
     .run();
@@ -259,21 +263,21 @@ const broker = new Broker({
     // ...
     subscriptions: {
         'from-all-topics': [
-            { topis: 'my-long-topic-name-1', alias: 'my-topic1' },
-            { topis: 'my-long-topic-name-2', alias: 'my-topic2' },
+            { topic: 'my-long-topic-name-1', alias: 'my-topic1' },
+            { topic: 'my-long-topic-name-2', alias: 'my-topic2' },
         ],
     },
 });
 
 await broker
     .subscription('from-all-topics')
-    .on('message', ({ value }) => {
+    .on('message', (value) => {
         console.log(value.id); // All messages
     })
-    .on('message.my-topic1', ({ value }) => {
+    .on('message.my-topic1', (value) => {
         console.log(value.id); // Messages of topic 1
     })
-    .on('message.my-topic2', ({ value }) => {
+    .on('message.my-topic2', (value) => {
         console.log(value.id); // Messages of topic 2
     })
     .run();
@@ -288,13 +292,13 @@ const broker = new Broker({
         'from-all-topics': [
             {
                 topic: 'my-long-topic-name-1',
-                handler: async ({ value }) => {
+                handler: async (value) => {
                     await myAsyncOperation(value);
                 },
             },
             {
                 topic: 'my-long-topic-name-2',
-                handler: async ({ value }) => {
+                handler: async (value) => {
                     await myAsyncOperation(value);
                 },
             },
@@ -351,7 +355,7 @@ const broker = new BrokerContainer({
 
 await broker
     .subscriptionList()
-    .on('message', ({ value }) => {
+    .on('message', (value) => {
         console.log(value); // Print "my-public-message" and "my-private-message"
     })
     .runAll();
