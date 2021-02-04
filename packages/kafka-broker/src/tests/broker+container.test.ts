@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { BrokerContainer, BrokerError } from '..';
+import { Broker, BrokerContainer, BrokerError } from '..';
 
 interface Event {
     id: number;
@@ -48,11 +48,21 @@ describe('broker+container', () => {
         );
     });
 
+    it('should return brokers', () => {
+        expect(broker.get('public')).toBeInstanceOf(Broker);
+        expect(broker.get('private')).toBeInstanceOf(Broker);
+    });
+
+    it('should return subscriptions', () => {
+        expect(broker.get('public').subscriptionList()).toHaveLength(1);
+        expect(broker.get('private').subscriptionList()).toHaveLength(1);
+        expect(broker.subscriptionList()).toHaveLength(2);
+    });
+
     it('should publish and consume from all brokers', async () => {
         const values: number[] = [];
 
         const subscriptions = broker.subscriptionList();
-        expect(subscriptions).toHaveLength(2);
 
         const promise = new Promise((resolve) => {
             subscriptions.on<Event>('message', (value) => {

@@ -20,7 +20,7 @@ export class BrokerContainer implements BrokerInterface {
         this.config = buildContainerConfig(config);
     }
 
-    private createBroker(name: string): Broker {
+    get(name: string): Broker {
         if (typeof this.brokers[name] === 'undefined') {
             const brokerConfig = this.config.brokers[name];
             if (typeof brokerConfig === 'undefined') {
@@ -39,7 +39,7 @@ export class BrokerContainer implements BrokerInterface {
     ): Promise<RecordMetadata[]> {
         const [brokerName, ...parts] = brokerAndPublicationName.split('/');
 
-        return this.createBroker(brokerName).publish<V>(
+        return this.get(brokerName).publish<V>(
             parts.join('/'),
             messageOrMessages
         );
@@ -48,14 +48,14 @@ export class BrokerContainer implements BrokerInterface {
     subscription(brokerAndSubscriptionName: string): Subscription {
         const [brokerName, ...parts] = brokerAndSubscriptionName.split('/');
 
-        return this.createBroker(brokerName).subscription(parts.join('/'));
+        return this.get(brokerName).subscription(parts.join('/'));
     }
 
     subscriptionList(): SubscriptionList {
         const brokers = Object.keys(this.config.brokers);
 
         const nestedSubscriptions = brokers.map((name) =>
-            this.createBroker(name).subscriptionList()
+            this.get(name).subscriptionList()
         );
 
         return new SubscriptionList(...nestedSubscriptions.flat());

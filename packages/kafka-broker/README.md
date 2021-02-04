@@ -7,7 +7,7 @@ into one place to keep the overview inside your event driven service.
 
 Heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 
-⚠️ UNDER DEVELOPMENT: The API might change in the future.
+⚠️ UNDER DEVELOPMENT: The API might change in the future. ⚠️
 
 #### Features:
 
@@ -389,9 +389,23 @@ const broker = new BrokerContainer({
 });
 
 await broker
+    .get('public')
     .subscriptionList()
     .on('message', (value) => {
-        console.log(value); // Print "my-public-message" and "my-private-message"
+        console.log(value); // Consume only from public
+    });
+
+await broker
+    .get('private')
+    .subscriptionList()
+    .on('message', (value) => {
+        console.log(value); // Consume only from private
+    });
+
+await broker
+    .subscriptionList()
+    .on('message', (value) => {
+        console.log(value); // Consume from public and private
     })
     .runAll();
 
