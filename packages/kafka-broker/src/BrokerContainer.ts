@@ -18,7 +18,7 @@ export class BrokerContainer extends EventEmitter implements BrokerInterface {
     private brokers: Record<string, Broker> = {};
 
     constructor(config: BrokerContainerConfig) {
-        super();
+        super({ captureRejections: true });
 
         this.config = buildContainerConfig(config);
     }

@@ -20,7 +20,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
     private readonly subscriptions: SubscriptionContainer;
 
     constructor(config: BrokerConfig) {
-        super();
+        super({ captureRejections: true });
 
         this.config = buildConfig(config);
 

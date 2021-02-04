@@ -40,7 +40,7 @@ export class Subscription extends EventEmitter {
         name: string,
         config: SubscriptionConfigProcessed
     ) {
-        super();
+        super({ captureRejections: true });
 
         this.consumer = consumer;
         this.name = name;

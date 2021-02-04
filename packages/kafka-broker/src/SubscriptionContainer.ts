@@ -12,7 +12,7 @@ export class SubscriptionContainer extends EventEmitter {
     private subscriptions: Record<string, Subscription> = {};
 
     constructor(kafka: Kafka, config: Config['subscriptions']) {
-        super();
+        super({ captureRejections: true });
 
         this.kafka = kafka;
         this.config = config;
