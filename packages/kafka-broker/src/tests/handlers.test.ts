@@ -1,10 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Broker, Handler } from '..';
 
-interface Event {
-    id: number;
-}
-
 describe('handlers', () => {
     const topic1 = uuid();
     const topic2 = uuid();
@@ -41,6 +37,8 @@ describe('handlers', () => {
 
     it('should call handler', async () => {
         let calls = 0;
+        const value1 = uuid();
+        const value2 = uuid();
         const subscription = broker.subscription('from-all-topics');
 
         const promise = new Promise((resolve) => {
@@ -53,38 +51,38 @@ describe('handlers', () => {
         await subscription.run();
 
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: 123 } })
+            broker.publish('to-topic1', { value: value1 })
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
         await expect(
-            broker.publish<Event>('to-topic2', { value: { id: 321 } })
+            broker.publish('to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
         await expect(promise).resolves.toBe(2);
 
         expect(handler).toHaveBeenCalledWith(
-            { id: 123 },
+            value1,
             expect.objectContaining({ value: expect.any(Buffer) as string }),
             topic1,
             expect.any(Number)
         );
 
         expect(handler).toHaveBeenCalledWith(
-            { id: 321 },
+            value2,
             expect.objectContaining({ value: expect.any(Buffer) as string }),
             topic2,
             expect.any(Number)
         );
 
         expect(handlerOfTopic1).toHaveBeenCalledWith(
-            { id: 123 },
+            value1,
             expect.objectContaining({ value: expect.any(Buffer) as string }),
             topic1,
             expect.any(Number)
         );
 
         expect(handlerOfTopic2).toHaveBeenCalledWith(
-            { id: 321 },
+            value2,
             expect.objectContaining({ value: expect.any(Buffer) as string }),
             topic2,
             expect.any(Number)

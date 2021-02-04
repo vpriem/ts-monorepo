@@ -1,10 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Broker, BrokerContainer, BrokerError } from '..';
 
-interface Event {
-    id: number;
-}
-
 describe('broker+container', () => {
     const topic1 = uuid();
     const topic2 = uuid();
@@ -30,10 +26,7 @@ describe('broker+container', () => {
                     'to-topic2': topic2,
                 },
                 subscriptions: {
-                    'from-topic2': {
-                        topics: topic2,
-                        contentType: 'application/json',
-                    },
+                    'from-topic2': topic2,
                 },
             },
         },
@@ -42,9 +35,9 @@ describe('broker+container', () => {
     afterAll(() => broker.shutdown());
 
     it('should throw BrokerError', async () => {
-        await expect(broker.publish('foo/bar', { value: 'a' })).rejects.toThrow(
-            new BrokerError('Unknown broker "foo"')
-        );
+        await expect(
+            broker.publish('foo/bar', { value: uuid() })
+        ).rejects.toThrow(new BrokerError('Unknown broker "foo"'));
 
         expect(() => broker.subscription('foo/bar')).toThrow(
             new BrokerError('Unknown broker "foo"')
@@ -63,13 +56,15 @@ describe('broker+container', () => {
     });
 
     it('should publish and consume from all brokers', async () => {
-        const values: number[] = [];
+        const value1 = uuid();
+        const value2 = uuid();
+        const values: string[] = [];
 
         const subscriptions = broker.subscriptionList();
 
         const promise = new Promise((resolve) => {
-            subscriptions.on<Event>('message', (value) => {
-                values.push(value.id);
+            subscriptions.on<string>('message', (value) => {
+                values.push(value);
                 if (values.length >= 2) resolve(values);
             });
         });
@@ -77,27 +72,33 @@ describe('broker+container', () => {
         await subscriptions.runAll();
 
         await expect(
-            broker.publish<Event>('public/to-topic1', { value: { id: 1 } })
+            broker.publish('public/to-topic1', { value: value1 })
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
         await expect(
-            broker.publish<Event>('private/to-topic2', { value: { id: 2 } })
+            broker.publish('private/to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual(expect.arrayContaining([1, 2]));
+        await expect(promise).resolves.toEqual(
+            expect.arrayContaining([value1, value2])
+        );
     });
 
     it('should emit error event', async () => {
-        const promise = new Promise((resolve) => {
-            broker.on('error', resolve);
+        broker.on('error', () => undefined);
+        const promise = new Promise((resolve, reject) => {
+            broker.on('error', reject);
         });
 
-        await broker.subscriptionList().runAll();
+        await broker
+            .subscriptionList()
+            .on('message', async () => Promise.reject(new Error('Sorry')))
+            .runAll();
 
         await expect(
-            broker.publish('private/to-topic2', [{ value: 'asd' }])
+            broker.publish('private/to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toBeInstanceOf(Error);
+        await expect(promise).rejects.toThrow('Sorry');
     });
 });

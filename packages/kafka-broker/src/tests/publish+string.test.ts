@@ -19,6 +19,7 @@ describe('publish+string', () => {
     afterAll(() => broker.shutdown());
 
     it('should publish and consume', async () => {
+        const value = uuid();
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
@@ -28,9 +29,9 @@ describe('publish+string', () => {
         await subscription.run();
 
         await expect(
-            broker.publish('to-topic1', { value: 'foo' })
+            broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic }]);
 
-        await expect(promise).resolves.toBe('foo');
+        await expect(promise).resolves.toBe(value);
     });
 });

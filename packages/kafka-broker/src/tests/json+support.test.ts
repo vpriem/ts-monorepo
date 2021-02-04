@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { Broker } from '..';
 
 interface Event {
-    id: number;
+    id: string;
 }
 
 describe('json+support', () => {
@@ -29,7 +29,11 @@ describe('json+support', () => {
     afterAll(() => broker.shutdown());
 
     it('should publish and consume json messages', async () => {
-        const values: number[] = [];
+        const id1 = uuid();
+        const id2 = uuid();
+        const id3 = uuid();
+        const id4 = uuid();
+        const values: string[] = [];
 
         const subscription = broker.subscription('from-topic1');
 
@@ -48,19 +52,21 @@ describe('json+support', () => {
 
         await expect(
             broker.publish<Event>('to-topic1', [
-                { value: { id: 1 } },
-                { value: { id: 2 } },
-                { value: { id: 3 } },
-                { value: { id: 4 } },
+                { value: { id: id1 } },
+                { value: { id: id2 } },
+                { value: { id: id3 } },
+                { value: { id: id4 } },
             ])
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
         await expect(promise).resolves.toEqual(
-            expect.arrayContaining([1, 2, 3, 4])
+            expect.arrayContaining([id1, id2, id3, id4])
         );
     });
 
     it('should force json consume', async () => {
+        const id = uuid();
+
         const subscription = broker.subscription('from-topic2');
 
         const promise = new Promise((resolve) => {
@@ -74,11 +80,24 @@ describe('json+support', () => {
         await subscription.run();
 
         await expect(
-            broker.publish('to-topic2', [
-                { value: JSON.stringify({ id: 178 }) },
-            ])
+            broker.publish('to-topic2', [{ value: JSON.stringify({ id }) }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual({ id: 178 });
+        await expect(promise).resolves.toEqual({ id });
+    });
+
+    it('should emit error event', async () => {
+        broker.on('error', () => undefined);
+        const promise = new Promise((resolve, reject) => {
+            broker.on('error', reject);
+        });
+
+        await broker.subscription('from-topic2').run();
+
+        await expect(
+            broker.publish('to-topic2', [{ value: uuid() }])
+        ).resolves.toMatchObject([{ topicName: topic2 }]);
+
+        await expect(promise).rejects.toThrow(/JSON/);
     });
 });

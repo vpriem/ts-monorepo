@@ -1,10 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Broker } from '..';
 
-interface Event {
-    id: number;
-}
-
 describe('subscribe+run+once', () => {
     const topic = uuid();
     const broker = new Broker({
@@ -23,22 +19,21 @@ describe('subscribe+run+once', () => {
     afterAll(() => broker.shutdown());
 
     it('should subscribe and run once', async () => {
+        const value = uuid();
         broker.subscription('from-topic1');
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
-            subscription.on<Event>('message', (value) => {
-                resolve(value.id);
-            });
+            subscription.on<Event>('message', resolve);
         });
 
         await subscription.run();
         await subscription.run();
 
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: 999 } })
+            broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic }]);
 
-        await expect(promise).resolves.toBe(999);
+        await expect(promise).resolves.toBe(value);
     });
 });

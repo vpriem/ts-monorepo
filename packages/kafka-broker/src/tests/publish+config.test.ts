@@ -2,6 +2,8 @@ import { v4 as uuid } from 'uuid';
 import { Broker } from '..';
 
 describe('publish+config', () => {
+    const key1 = uuid();
+    const key2 = uuid();
     const topic = uuid();
     const broker = new Broker({
         namespace: uuid(),
@@ -11,7 +13,7 @@ describe('publish+config', () => {
         publications: {
             'to-topic1': {
                 topic,
-                messageConfig: { key: 'default-key' },
+                messageConfig: { key: key1 },
             },
         },
         subscriptions: {
@@ -24,13 +26,15 @@ describe('publish+config', () => {
     afterAll(() => broker.shutdown());
 
     it('should publish and consume with config', async () => {
+        const value1 = uuid();
+        const value2 = uuid();
         const values: string[] = [];
         const keys: string[] = [];
 
         await expect(
             broker.publish('to-topic1', [
-                { value: 'foo' },
-                { key: 'key-of-bar', value: 'bar' },
+                { value: value1 },
+                { key: key2, value: value2 },
             ])
         ).resolves.toMatchObject([{ topicName: topic }]);
 
@@ -47,11 +51,9 @@ describe('publish+config', () => {
         await subscription.run();
 
         await expect(promise).resolves.toEqual(
-            expect.arrayContaining(['foo', 'bar'])
+            expect.arrayContaining([value1, value2])
         );
 
-        expect(keys).toEqual(
-            expect.arrayContaining(['default-key', 'key-of-bar'])
-        );
+        expect(keys).toEqual(expect.arrayContaining([key1, key2]));
     });
 });
