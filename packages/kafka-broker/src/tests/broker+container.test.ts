@@ -30,7 +30,10 @@ describe('broker+container', () => {
                     'to-topic2': topic2,
                 },
                 subscriptions: {
-                    'from-topic2': topic2,
+                    'from-topic2': {
+                        topics: topic2,
+                        contentType: 'application/json',
+                    },
                 },
             },
         },
@@ -82,5 +85,19 @@ describe('broker+container', () => {
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
         await expect(promise).resolves.toEqual(expect.arrayContaining([1, 2]));
+    });
+
+    it('should emit error event', async () => {
+        const promise = new Promise((resolve) => {
+            broker.on('error', resolve);
+        });
+
+        await broker.subscriptionList().runAll();
+
+        await expect(
+            broker.publish('private/to-topic2', [{ value: 'asd' }])
+        ).resolves.toMatchObject([{ topicName: topic2 }]);
+
+        await expect(promise).resolves.toBeInstanceOf(Error);
     });
 });

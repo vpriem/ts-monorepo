@@ -1,4 +1,5 @@
 import { RecordMetadata } from 'kafkajs';
+import EventEmitter from 'events';
 import {
     BrokerContainerConfig,
     PublishMessage,
@@ -11,12 +12,14 @@ import { Subscription } from './Subscription';
 import { SubscriptionList } from './SubscriptionList';
 import { ContainerConfig, buildContainerConfig } from './buildContainerConfig';
 
-export class BrokerContainer implements BrokerInterface {
+export class BrokerContainer extends EventEmitter implements BrokerInterface {
     private readonly config: ContainerConfig;
 
     private brokers: Record<string, Broker> = {};
 
     constructor(config: BrokerContainerConfig) {
+        super();
+
         this.config = buildContainerConfig(config);
     }
 
@@ -27,7 +30,9 @@ export class BrokerContainer implements BrokerInterface {
                 throw new BrokerError(`Unknown broker "${name}"`);
             }
 
-            this.brokers[name] = new Broker(brokerConfig);
+            this.brokers[name] = new Broker(brokerConfig).on('error', (error) =>
+                this.emit('error', error)
+            );
         }
 
         return this.brokers[name];

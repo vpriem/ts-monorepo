@@ -1,9 +1,10 @@
 import { Kafka } from 'kafkajs';
+import EventEmitter from 'events';
 import { Subscription } from './Subscription';
 import { BrokerError } from './BrokerError';
 import { Config } from './buildConfig';
 
-export class SubscriptionContainer {
+export class SubscriptionContainer extends EventEmitter {
     private readonly kafka: Kafka;
 
     private readonly config: Config['subscriptions'];
@@ -11,6 +12,8 @@ export class SubscriptionContainer {
     private subscriptions: Record<string, Subscription> = {};
 
     constructor(kafka: Kafka, config: Config['subscriptions']) {
+        super();
+
         this.kafka = kafka;
         this.config = config;
     }
@@ -26,7 +29,7 @@ export class SubscriptionContainer {
                 this.kafka.consumer(subscriptionConfig.consumer),
                 name,
                 subscriptionConfig
-            );
+            ).on('error', (error) => this.emit('error', error));
         }
 
         return this.subscriptions[name];

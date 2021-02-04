@@ -1,4 +1,5 @@
 import { Kafka, RecordMetadata } from 'kafkajs';
+import EventEmitter from 'events';
 import { BrokerConfig, PublishMessage, PublishMessageValue } from './types';
 import { Subscription } from './Subscription';
 import { Config, buildConfig } from './buildConfig';
@@ -9,7 +10,7 @@ import { ProducerContainer } from './ProducerContainer';
 import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
 
-export class Broker implements BrokerInterface {
+export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
 
     private readonly kafka: Kafka;
@@ -19,6 +20,8 @@ export class Broker implements BrokerInterface {
     private readonly subscriptions: SubscriptionContainer;
 
     constructor(config: BrokerConfig) {
+        super();
+
         this.config = buildConfig(config);
 
         this.kafka = new Kafka(this.config.config);
@@ -29,7 +32,7 @@ export class Broker implements BrokerInterface {
         this.subscriptions = new SubscriptionContainer(
             this.kafka,
             this.config.subscriptions
-        );
+        ).on('error', (error) => this.emit('error', error));
     }
 
     async publish<V = PublishMessageValue>(

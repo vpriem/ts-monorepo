@@ -98,7 +98,7 @@ export class Subscription extends EventEmitter {
                     value = decodeMessage(payload.message, contentType);
                 } catch (error) {
                     this.emit('error', error);
-                    return Promise.resolve();
+                    return Promise.resolve(error);
                 }
 
                 this.emit(

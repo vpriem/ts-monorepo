@@ -344,6 +344,15 @@ const broker = new Broker({
 await broker.subscriptionList().runAll();
 ```
 
+### Error handling
+
+Subscription error are propagated to the broker,
+but you have to listen to them in order to avoid your application to crash:
+
+```typescript
+broker.on('error', console.error);
+```
+
 ### Shutdown
 
 Shutdown the broker to disconnect all producers and consumers:

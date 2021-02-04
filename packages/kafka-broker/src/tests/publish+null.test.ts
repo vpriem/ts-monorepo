@@ -22,9 +22,7 @@ describe('publish+null', () => {
         const subscription = broker.subscription('from-topic1');
 
         const promise = new Promise((resolve) => {
-            subscription.on('message', (value) => {
-                resolve(value);
-            });
+            subscription.on('message', resolve);
         });
 
         await subscription.run();
