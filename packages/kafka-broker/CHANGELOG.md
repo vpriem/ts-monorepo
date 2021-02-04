@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.4](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.3...@vpriem/kafka-broker@1.0.0-alpha.4) (2021-02-04)
+
+
+### Bug Fixes
+
+* **kafka-broker:** fix PromiseRejectionHandledWarning error ([1fa80d8](https://github.com/vpriem/ts-monorepo/commit/1fa80d8d7331d62cc0b6ad510585c1367aade3f5))
+
+
+### Features
+
+* **kafka-broker:** catch async rejection ([b56fde7](https://github.com/vpriem/ts-monorepo/commit/b56fde787dc8e351de1c56c83ae794ab5cc5e08a))
+* **kafka-broker:** expose BrokerContainer.get ([11258d9](https://github.com/vpriem/ts-monorepo/commit/11258d98b3859e73ec29be642d8d7abcf3af9256))
+* **kafka-broker:** propagate error up to Broker ([3385cb9](https://github.com/vpriem/ts-monorepo/commit/3385cb94a0f29f24d86f3b7d29aaa1092d2e1262))
+
+
+
+
+
 # [1.0.0-alpha.3](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.2...@vpriem/kafka-broker@1.0.0-alpha.3) (2021-02-03)
 
 
