@@ -86,21 +86,19 @@ describe('broker+container', () => {
 
     it('should emit error event', async () => {
         broker.on('error', () => undefined);
-        const promise = new Promise((resolve, reject) => {
-            broker.on('error', reject);
+        const promise = new Promise((resolve) => {
+            broker.on('error', resolve);
         });
 
         await broker
             .subscriptionList()
-            .on('message', async () => {
-                await Promise.reject(new Error('Sorry'));
-            })
+            .on('message', () => Promise.reject(new Error('Sorry')))
             .runAll();
 
         await expect(
             broker.publish('private/to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).rejects.toThrow('Sorry');
+        await expect(promise).resolves.toThrow('Sorry');
     });
 });
