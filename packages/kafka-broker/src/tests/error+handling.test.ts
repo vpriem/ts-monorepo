@@ -4,7 +4,9 @@ import { Broker, Handler } from '..';
 describe('error+handling', () => {
     const topic1 = uuid();
     const topic2 = uuid();
-    const handler: Handler = async () => Promise.reject(new Error('Sorry'));
+    const handler: Handler = async () => {
+        await Promise.reject(new Error('Sorry'));
+    };
     const broker = new Broker({
         namespace: uuid(),
         config: {
@@ -48,7 +50,9 @@ describe('error+handling', () => {
 
         await broker
             .subscription('from-topic2')
-            .on('message', async () => Promise.reject(new Error('Really')))
+            .on('message', async () => {
+                await Promise.reject(new Error('Really'));
+            })
             .run();
 
         await expect(

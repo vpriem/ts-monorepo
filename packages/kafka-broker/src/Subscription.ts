@@ -92,13 +92,13 @@ export class Subscription extends EventEmitter {
 
         await this.consumer.run({
             ...runConfig,
-            eachMessage: (payload) => {
+            eachMessage: async (payload) => {
                 let value: ConsumeMessageValue;
                 try {
                     value = decodeMessage(payload.message, contentType);
                 } catch (error) {
                     this.emit('error', error);
-                    return Promise.resolve(error);
+                    return Promise.resolve();
                 }
 
                 this.emit(

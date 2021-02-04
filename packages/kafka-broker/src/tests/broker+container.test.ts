@@ -92,7 +92,9 @@ describe('broker+container', () => {
 
         await broker
             .subscriptionList()
-            .on('message', async () => Promise.reject(new Error('Sorry')))
+            .on('message', async () => {
+                await Promise.reject(new Error('Sorry'));
+            })
             .runAll();
 
         await expect(
