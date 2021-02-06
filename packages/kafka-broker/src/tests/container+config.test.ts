@@ -12,7 +12,7 @@ describe('container+config', () => {
                         },
                     },
                     broker2: {
-                        namespace: 'my-service.broker2',
+                        namespace: 'keep-this-namespace',
                         config: {
                             brokers: [process.env.KAFKA_BROKER as string],
                         },
@@ -23,13 +23,13 @@ describe('container+config', () => {
             namespace: 'my-service',
             brokers: {
                 broker1: {
-                    namespace: 'my-service',
+                    namespace: 'my-service.broker1',
                     config: {
                         brokers: [process.env.KAFKA_BROKER as string],
                     },
                 },
                 broker2: {
-                    namespace: 'my-service.broker2',
+                    namespace: 'keep-this-namespace',
                     config: {
                         brokers: [process.env.KAFKA_BROKER as string],
                     },

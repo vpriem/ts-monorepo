@@ -6,6 +6,8 @@ import { SubscriptionList } from './SubscriptionList';
 export interface BrokerInterface {
     emit(event: 'error', error: Error): boolean;
 
+    namespace(): string;
+
     publish<V = PublishMessageValue>(
         name: string,
         message: PublishMessage<V>

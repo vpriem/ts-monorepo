@@ -35,6 +35,10 @@ export class Broker extends EventEmitter implements BrokerInterface {
         ).on('error', (error) => this.emit('error', error));
     }
 
+    namespace(): string {
+        return this.config.namespace;
+    }
+
     async publish<V = PublishMessageValue>(
         publicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]

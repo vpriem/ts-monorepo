@@ -2,10 +2,11 @@ import { v4 as uuid } from 'uuid';
 import { Broker, BrokerContainer, BrokerError } from '..';
 
 describe('broker+container', () => {
+    const namespace = uuid();
     const topic1 = uuid();
     const topic2 = uuid();
     const broker = new BrokerContainer({
-        namespace: uuid(),
+        namespace,
         brokers: {
             public: {
                 config: {
@@ -34,14 +35,20 @@ describe('broker+container', () => {
 
     afterAll(() => broker.shutdown());
 
-    it('should throw BrokerError', async () => {
-        await expect(
-            broker.publish('foo/bar', { value: uuid() })
-        ).rejects.toThrow(new BrokerError('Unknown broker "foo"'));
+    it('should throw on unknown publication broker', () =>
+        expect(broker.publish('foo/bar', { value: uuid() })).rejects.toThrow(
+            new BrokerError('Unknown broker "foo"')
+        ));
 
+    it('should throw on unknown subscription broker ', () =>
         expect(() => broker.subscription('foo/bar')).toThrow(
             new BrokerError('Unknown broker "foo"')
-        );
+        ));
+
+    it('should return namespace', () => {
+        expect(broker.namespace()).toBe(namespace);
+        expect(broker.get('public').namespace()).toBe(`${namespace}.public`);
+        expect(broker.get('private').namespace()).toBe(`${namespace}.private`);
     });
 
     it('should return brokers', () => {

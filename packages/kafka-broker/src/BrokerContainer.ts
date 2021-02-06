@@ -23,6 +23,10 @@ export class BrokerContainer extends EventEmitter implements BrokerInterface {
         this.config = buildContainerConfig(config);
     }
 
+    namespace(): string {
+        return this.config.namespace;
+    }
+
     get(name: string): Broker {
         if (typeof this.brokers[name] === 'undefined') {
             const brokerConfig = this.config.brokers[name];

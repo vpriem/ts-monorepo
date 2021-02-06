@@ -12,7 +12,7 @@ export const buildContainerConfig = ({
     brokers: Object.keys(brokers).reduce<ContainerConfig['brokers']>(
         (acc, brokerName) => {
             acc[brokerName] = {
-                namespace,
+                namespace: `${namespace}.${brokerName}`,
                 ...brokers[brokerName],
             };
             return acc;
