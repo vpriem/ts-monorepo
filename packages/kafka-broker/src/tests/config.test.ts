@@ -33,7 +33,7 @@ describe('config', () => {
                         ],
                     },
                     'from-topic3': {
-                        topics: 'my-topic-3',
+                        topics: ['my-topic-3'],
                         consumer: { groupId: 'my-group-id-3' },
                         contentType: 'application/json',
                     },

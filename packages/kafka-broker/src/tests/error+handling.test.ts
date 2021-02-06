@@ -16,7 +16,7 @@ describe('error+handling', () => {
         },
         subscriptions: {
             'from-topic1': {
-                topics: topic1,
+                topics: [topic1],
                 handler,
             },
             'from-topic2': topic2,

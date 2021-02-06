@@ -44,7 +44,9 @@ const buildPublications = (
         return acc;
     }, {});
 
-const buildTopics = (topics: SubscriptionConfig['topics']): TopicConfig[] => {
+const buildTopics = (
+    topics: string | SubscriptionConfig['topics']
+): TopicConfig[] => {
     if (typeof topics === 'string') {
         return [{ topic: topics }];
     }
@@ -58,9 +60,9 @@ const buildTopics = (topics: SubscriptionConfig['topics']): TopicConfig[] => {
     return [topics];
 };
 
-const isTopicConfig = (
-    config: SubscriptionConfig | TopicConfig
-): config is TopicConfig => (config as TopicConfig).topic !== undefined;
+const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
+    typeof config === 'object' &&
+    (config as SubscriptionConfig).topics !== undefined;
 
 const buildSubscriptions = (
     subscriptions: SubscriptionMap = {},
@@ -70,27 +72,21 @@ const buildSubscriptions = (
         const consumer = { groupId: `${namespace}.${name}` };
         const subscriptionConfig = subscriptions[name];
 
-        if (
-            typeof subscriptionConfig === 'string' ||
-            Array.isArray(subscriptionConfig) ||
-            isTopicConfig(subscriptionConfig)
-        ) {
+        if (isSubscriptionConfig(subscriptionConfig)) {
+            acc[name] = {
+                consumer: {
+                    ...consumer,
+                    ...subscriptionConfig.consumer,
+                },
+                ...subscriptionConfig,
+                topics: buildTopics(subscriptionConfig.topics),
+            };
+        } else {
             acc[name] = {
                 consumer,
                 topics: buildTopics(subscriptionConfig),
             };
-
-            return acc;
         }
-
-        acc[name] = {
-            consumer: {
-                ...consumer,
-                ...subscriptionConfig.consumer,
-            },
-            ...subscriptionConfig,
-            topics: buildTopics(subscriptionConfig.topics),
-        };
 
         return acc;
     }, {});

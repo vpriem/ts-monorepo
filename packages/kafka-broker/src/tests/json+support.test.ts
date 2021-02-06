@@ -20,7 +20,7 @@ describe('json+support', () => {
         subscriptions: {
             'from-topic1': topic1,
             'from-topic2': {
-                topics: topic2,
+                topics: [topic2],
                 contentType: 'application/json',
             },
         },

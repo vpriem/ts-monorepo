@@ -57,7 +57,7 @@ export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
 
 export interface SubscriptionConfig {
     consumer?: ConsumerConfig;
-    topics: string | TopicConfig | Array<string | TopicConfig>;
+    topics: TopicConfig | Array<string | TopicConfig>;
     runConfig?: RunConfig;
     handler?: Handler | AsyncHandler;
     contentType?: 'application/json';
@@ -67,7 +67,7 @@ export type ProducerMap = Record<string, ProducerConfig>;
 export type PublicationMap = Record<string, string | PublicationConfig>;
 export type SubscriptionMap = Record<
     string,
-    SubscriptionConfig['topics'] | SubscriptionConfig
+    string | SubscriptionConfig['topics'] | SubscriptionConfig
 >;
 
 export interface BrokerConfig {
