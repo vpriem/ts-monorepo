@@ -24,6 +24,11 @@ export interface Subscription {
         event: string,
         listener: Handler<V> | AsyncHandler<V>
     ): this;
+
+    once<V = ConsumeMessageValue>(
+        event: string,
+        listener: Handler<V> | AsyncHandler<V>
+    ): this;
 }
 
 export class Subscription extends EventEmitter {

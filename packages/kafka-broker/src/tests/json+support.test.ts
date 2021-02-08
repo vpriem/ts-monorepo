@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker } from '..';
+import { Broker, getMessage } from '..';
 
 interface Event {
     id: string;
@@ -33,20 +33,10 @@ describe('json+support', () => {
         const id2 = uuid();
         const id3 = uuid();
         const id4 = uuid();
-        const values: string[] = [];
 
         const subscription = broker.subscription('from-topic1');
 
-        const promise = new Promise((resolve) => {
-            subscription.on<Event>('message', (value, message, topic) => {
-                expect(message.headers?.['content-type']?.toString()).toBe(
-                    'application/json'
-                );
-                expect(topic).toBe(topic1);
-                values.push(value.id);
-                if (values.length >= 4) resolve(values);
-            });
-        });
+        const messages = getMessage(subscription, 4);
 
         await subscription.run();
 
@@ -59,9 +49,16 @@ describe('json+support', () => {
             ])
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
-        await expect(promise).resolves.toEqual(
-            expect.arrayContaining([id1, id2, id3, id4])
-        );
+        const expectedHeaders = expect.objectContaining({
+            headers: { 'content-type': Buffer.from('application/json') },
+        }) as object;
+
+        await expect(messages).resolves.toEqual([
+            [{ id: id1 }, expectedHeaders, topic1, expect.any(Number)],
+            [{ id: id2 }, expectedHeaders, topic1, expect.any(Number)],
+            [{ id: id3 }, expectedHeaders, topic1, expect.any(Number)],
+            [{ id: id4 }, expectedHeaders, topic1, expect.any(Number)],
+        ]);
     });
 
     it('should force json consume', async () => {
@@ -69,13 +66,7 @@ describe('json+support', () => {
 
         const subscription = broker.subscription('from-topic2');
 
-        const promise = new Promise((resolve) => {
-            subscription.on('message', (value, message, topic) => {
-                expect(message.headers?.['content-type']).toBeUndefined();
-                expect(topic).toBe(topic2);
-                resolve(value);
-            });
-        });
+        const message = getMessage(subscription);
 
         await subscription.run();
 
@@ -83,12 +74,17 @@ describe('json+support', () => {
             broker.publish('to-topic2', [{ value: JSON.stringify({ id }) }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual({ id });
+        await expect(message).resolves.toEqual([
+            { id },
+            expect.objectContaining({ headers: {} }),
+            topic2,
+            expect.any(Number),
+        ]);
     });
 
     it('should emit error event', async () => {
         broker.on('error', () => undefined);
-        const promise = new Promise((resolve) => {
+        const error = new Promise((resolve) => {
             broker.on('error', resolve);
         });
 
@@ -98,6 +94,6 @@ describe('json+support', () => {
             broker.publish('to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toThrow(/JSON/);
+        await expect(error).resolves.toThrow(/JSON/);
     });
 });

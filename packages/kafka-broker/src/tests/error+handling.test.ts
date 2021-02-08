@@ -27,7 +27,7 @@ describe('error+handling', () => {
 
     it('should catch handler error', async () => {
         broker.on('error', () => undefined);
-        const promise = new Promise((resolve) => {
+        const error = new Promise((resolve) => {
             broker.on('error', resolve);
         });
 
@@ -37,12 +37,12 @@ describe('error+handling', () => {
             broker.publish('to-topic1', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
-        await expect(promise).resolves.toThrow('Sorry');
+        await expect(error).resolves.toThrow('Sorry');
     });
 
     it('should catch error', async () => {
         broker.on('error', () => undefined);
-        const promise = new Promise((resolve) => {
+        const error = new Promise((resolve) => {
             broker.on('error', resolve);
         });
 
@@ -55,6 +55,6 @@ describe('error+handling', () => {
             broker.publish('to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toThrow('Really');
+        await expect(error).resolves.toThrow('Really');
     });
 });

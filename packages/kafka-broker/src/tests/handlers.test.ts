@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, Handler } from '..';
+import { Broker, Handler, getMessage } from '..';
 
 describe('handlers', () => {
     const topic1 = uuid();
@@ -36,17 +36,11 @@ describe('handlers', () => {
     afterAll(() => broker.shutdown());
 
     it('should call handler', async () => {
-        let calls = 0;
         const value1 = uuid();
         const value2 = uuid();
         const subscription = broker.subscription('from-all-topics');
 
-        const promise = new Promise((resolve) => {
-            subscription.on('message', () => {
-                calls += 1;
-                if (calls >= 2) resolve(calls);
-            });
-        });
+        const messages = getMessage(subscription, 2);
 
         await subscription.run();
 
@@ -58,7 +52,10 @@ describe('handlers', () => {
             broker.publish('to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toBe(2);
+        await expect(messages).resolves.toEqual([
+            [value1, expect.any(Object), topic1, expect.any(Number)],
+            [value2, expect.any(Object), topic2, expect.any(Number)],
+        ]);
 
         expect(handler).toHaveBeenCalledWith(
             value1,

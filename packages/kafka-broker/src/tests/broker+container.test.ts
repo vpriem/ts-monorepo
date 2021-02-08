@@ -65,13 +65,13 @@ describe('broker+container', () => {
     it('should publish and consume from all brokers', async () => {
         const value1 = uuid();
         const value2 = uuid();
-        const values: string[] = [];
 
         const subscriptions = broker.subscriptionList();
 
         const promise = new Promise((resolve) => {
-            subscriptions.on<string>('message', (value) => {
-                values.push(value);
+            const values: string[][] = [];
+            subscriptions.on<string>('message', (value, message, topic) => {
+                values.push([value, topic]);
                 if (values.length >= 2) resolve(values);
             });
         });
@@ -86,14 +86,15 @@ describe('broker+container', () => {
             broker.publish('private/to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual(
-            expect.arrayContaining([value1, value2])
-        );
+        await expect(promise).resolves.toEqual([
+            [value1, topic1],
+            [value2, topic2],
+        ]);
     });
 
     it('should emit error event', async () => {
         broker.on('error', () => undefined);
-        const promise = new Promise((resolve) => {
+        const error = new Promise((resolve) => {
             broker.on('error', resolve);
         });
 
@@ -106,6 +107,6 @@ describe('broker+container', () => {
             broker.publish('private/to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toThrow('Sorry');
+        await expect(error).resolves.toThrow('Sorry');
     });
 });

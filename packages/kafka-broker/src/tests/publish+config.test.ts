@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker } from '..';
+import { Broker, getMessage } from '..';
 
 describe('publish+config', () => {
     const key1 = uuid();
@@ -28,8 +28,6 @@ describe('publish+config', () => {
     it('should publish and consume with config', async () => {
         const value1 = uuid();
         const value2 = uuid();
-        const values: string[] = [];
-        const keys: string[] = [];
 
         await expect(
             broker.publish('to-topic1', [
@@ -40,20 +38,23 @@ describe('publish+config', () => {
 
         const subscription = broker.subscription('from-topic1');
 
-        const promise = new Promise((resolve) => {
-            subscription.on<string>('message', (value, message) => {
-                keys.push(message.key.toString());
-                values.push(value);
-                if (values.length >= 2) resolve(values);
-            });
-        });
+        const messages = getMessage(subscription, 2);
 
         await subscription.run();
 
-        await expect(promise).resolves.toEqual(
-            expect.arrayContaining([value1, value2])
-        );
-
-        expect(keys).toEqual(expect.arrayContaining([key1, key2]));
+        await expect(messages).resolves.toEqual([
+            [
+                value1,
+                expect.objectContaining({ key: Buffer.from(key1) }),
+                topic,
+                expect.any(Number),
+            ],
+            [
+                value2,
+                expect.objectContaining({ key: Buffer.from(key2) }),
+                topic,
+                expect.any(Number),
+            ],
+        ]);
     });
 });

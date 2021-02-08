@@ -24,14 +24,14 @@ describe('subscribe+all', () => {
     it('should publish and consume from all', async () => {
         const value1 = uuid();
         const value2 = uuid();
-        const values: string[] = [];
 
         const subscriptions = broker.subscriptionList();
         expect(subscriptions).toHaveLength(2);
 
         const promise = new Promise((resolve) => {
-            subscriptions.on<string>('message', (value) => {
-                values.push(value);
+            const values: string[][] = [];
+            subscriptions.on<string>('message', (value, message, topic) => {
+                values.push([value, topic]);
                 if (values.length >= 2) resolve(values);
             });
         });
@@ -46,8 +46,9 @@ describe('subscribe+all', () => {
             broker.publish('to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual(
-            expect.arrayContaining([value1, value2])
-        );
+        await expect(promise).resolves.toEqual([
+            [value1, topic1],
+            [value2, topic2],
+        ]);
     });
 });

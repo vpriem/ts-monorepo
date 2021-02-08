@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker } from '..';
+import { Broker, getMessage } from '..';
 
 describe('publish+string', () => {
     const topic = uuid();
@@ -22,9 +22,7 @@ describe('publish+string', () => {
         const value = uuid();
         const subscription = broker.subscription('from-topic1');
 
-        const promise = new Promise((resolve) => {
-            subscription.on('message', resolve);
-        });
+        const message = getMessage(subscription);
 
         await subscription.run();
 
@@ -32,6 +30,11 @@ describe('publish+string', () => {
             broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic }]);
 
-        await expect(promise).resolves.toBe(value);
+        await expect(message).resolves.toEqual([
+            value,
+            expect.any(Object),
+            topic,
+            expect.any(Number),
+        ]);
     });
 });
