@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.5](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.4...@vpriem/kafka-broker@1.0.0-alpha.5) (2021-02-08)
+
+
+### Features
+
+* **kafka-broker:** expose Broker.namespace ([ab27cb1](https://github.com/vpriem/ts-monorepo/commit/ab27cb1808b40cdf9d80cee68f59bf84219f0a55))
+* **kafka-broker:** expose getMessage helper for unit test ([50db2d1](https://github.com/vpriem/ts-monorepo/commit/50db2d1269ddcd1d845f98842a62cc03630caa06))
+* **kafka-broker:** remove duplicated type AsyncHandler ([dacdc7d](https://github.com/vpriem/ts-monorepo/commit/dacdc7d3fb587e23e2efaf978d0d5a657e00df21))
+* **kafka-broker:** remove SubscriptionConfig.topics string signature ([bc0df01](https://github.com/vpriem/ts-monorepo/commit/bc0df01d82a0a2acba0ec3f6d9c9dc2695924808))
+
+
+
+
+
 # [1.0.0-alpha.4](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.3...@vpriem/kafka-broker@1.0.0-alpha.4) (2021-02-04)
 
 
