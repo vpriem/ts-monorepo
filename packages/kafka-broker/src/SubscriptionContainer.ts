@@ -29,7 +29,9 @@ export class SubscriptionContainer extends EventEmitter {
                 this.kafka.consumer(subscriptionConfig.consumer),
                 name,
                 subscriptionConfig
-            ).on('error', (error) => this.emit('error', error));
+            ).on('error', (error) => {
+                this.emit('error', error);
+            });
         }
 
         return this.subscriptions[name];

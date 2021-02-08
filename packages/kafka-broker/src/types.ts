@@ -39,18 +39,11 @@ export type Handler<V = ConsumeMessageValue> = (
     message: ConsumeMessage,
     topic: string,
     partition: number
-) => void;
-
-export type AsyncHandler<V = ConsumeMessageValue> = (
-    value: V,
-    message: ConsumeMessage,
-    topic: string,
-    partition: number
-) => Promise<void>;
+) => Promise<void> | void;
 
 export interface TopicConfig extends ConsumerSubscribeTopic {
     alias?: string;
-    handler?: Handler | AsyncHandler;
+    handler?: Handler;
 }
 
 export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
@@ -59,7 +52,7 @@ export interface SubscriptionConfig {
     consumer?: ConsumerConfig;
     topics: TopicConfig | Array<string | TopicConfig>;
     runConfig?: RunConfig;
-    handler?: Handler | AsyncHandler;
+    handler?: Handler;
     contentType?: 'application/json';
 }
 

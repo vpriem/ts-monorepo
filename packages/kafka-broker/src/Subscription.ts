@@ -2,12 +2,7 @@ import EventEmitter from 'events';
 import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
-import {
-    AsyncHandler,
-    ConsumeMessage,
-    ConsumeMessageValue,
-    Handler,
-} from './types';
+import { ConsumeMessage, ConsumeMessageValue, Handler } from './types';
 
 export interface Subscription {
     emit(event: 'error', error: Error): boolean;
@@ -20,15 +15,11 @@ export interface Subscription {
         partition: number
     ): boolean;
 
-    on<V = ConsumeMessageValue>(
-        event: string,
-        listener: Handler<V> | AsyncHandler<V>
-    ): this;
+    on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
 
-    once<V = ConsumeMessageValue>(
-        event: string,
-        listener: Handler<V> | AsyncHandler<V>
-    ): this;
+    once<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+
+    off<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
 }
 
 export class Subscription extends EventEmitter {
