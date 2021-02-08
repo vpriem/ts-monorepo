@@ -31,7 +31,7 @@
     "build:watch": "tsc --watch",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
     "lint": "eslint --ext .ts ./src",
-    "test": "jest",
+    "test": "jest --runInBand",
     "up": "docker-compose up",
     "down": "docker-compose down"
   },
