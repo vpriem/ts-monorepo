@@ -2,7 +2,11 @@ import EventEmitter from 'events';
 import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
-import { ConsumeMessage, ConsumeMessageValue, Handler } from './types';
+import {
+    ConsumeMessage,
+    ConsumeMessageValue,
+    SubscriptionInterface,
+} from './types';
 import { Publisher } from './Publisher';
 
 export interface Subscription {
@@ -15,15 +19,11 @@ export interface Subscription {
         topic: string,
         partition: number
     ): boolean;
-
-    on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
-
-    once<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
-
-    off<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
 }
 
-export class Subscription extends EventEmitter {
+export class Subscription
+    extends EventEmitter
+    implements Subscription, SubscriptionInterface {
     readonly name: string;
 
     private readonly consumer: Consumer;

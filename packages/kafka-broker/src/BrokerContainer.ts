@@ -1,14 +1,14 @@
 import EventEmitter from 'events';
 import {
     BrokerContainerConfig,
+    BrokerInterface,
     PublishMessage,
     PublishMessageValue,
     PublishResult,
+    SubscriptionInterface,
 } from './types';
 import { Broker } from './Broker';
-import { BrokerInterface } from './BrokerInterface';
 import { BrokerError } from './BrokerError';
-import { Subscription } from './Subscription';
 import { SubscriptionList } from './SubscriptionList';
 import { ContainerConfig, buildContainerConfig } from './buildContainerConfig';
 
@@ -54,13 +54,13 @@ export class BrokerContainer extends EventEmitter implements BrokerInterface {
         );
     }
 
-    subscription(brokerAndSubscriptionName: string): Subscription {
+    subscription(brokerAndSubscriptionName: string): SubscriptionInterface {
         const [brokerName, ...parts] = brokerAndSubscriptionName.split('/');
 
         return this.get(brokerName).subscription(parts.join('/'));
     }
 
-    subscriptionList(): SubscriptionList {
+    subscriptionList(): SubscriptionInterface {
         const brokers = Object.keys(this.config.brokers);
 
         const nestedSubscriptions = brokers.map((name) =>

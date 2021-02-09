@@ -29,7 +29,7 @@ describe('subscribe+all', () => {
         expect(subscriptions).toHaveLength(2);
         const message = getMessage(subscriptions, 2);
 
-        await subscriptions.runAll();
+        await subscriptions.run();
 
         await expect(
             broker.publish('to-topic1', { value: value1 })

@@ -70,7 +70,7 @@ describe('broker+container', () => {
         expect(subscriptions).toHaveLength(2);
         const message = getMessage(subscriptions, 2);
 
-        await subscriptions.runAll();
+        await subscriptions.run();
 
         await expect(
             broker.publish('public/to-topic1', { value: value1 })
@@ -95,7 +95,7 @@ describe('broker+container', () => {
         await broker
             .subscriptionList()
             .on('message', () => Promise.reject(new Error('Sorry')))
-            .runAll();
+            .run();
 
         await expect(
             broker.publish('private/to-topic2', [{ value: uuid() }])

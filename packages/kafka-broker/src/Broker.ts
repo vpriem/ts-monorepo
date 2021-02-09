@@ -2,13 +2,13 @@ import { Kafka } from 'kafkajs';
 import EventEmitter from 'events';
 import {
     BrokerConfig,
+    BrokerInterface,
     PublishMessage,
     PublishMessageValue,
     PublishResult,
+    SubscriptionInterface,
 } from './types';
-import { Subscription } from './Subscription';
 import { Config, buildConfig } from './buildConfig';
-import { BrokerInterface } from './BrokerInterface';
 import { ProducerContainer } from './ProducerContainer';
 import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
@@ -57,11 +57,11 @@ export class Broker extends EventEmitter implements BrokerInterface {
         return this.publisher.publish(publicationName, messageOrMessages);
     }
 
-    subscription(name: string): Subscription {
+    subscription(name: string): SubscriptionInterface {
         return this.subscriptions.create(name);
     }
 
-    subscriptionList(): SubscriptionList {
+    subscriptionList(): SubscriptionInterface {
         const subscriptions = Object.keys(this.config.subscriptions);
 
         return new SubscriptionList(

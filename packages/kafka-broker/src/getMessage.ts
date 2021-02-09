@@ -1,25 +1,22 @@
-import { Subscription } from './Subscription';
-import { SubscriptionList } from './SubscriptionList';
-import { ConsumeMessage, ConsumeMessageValue, Handler } from './types';
+import {
+    ConsumeMessage,
+    ConsumeMessageValue,
+    Handler,
+    SubscriptionInterface,
+} from './types';
 
 type Args = [ConsumeMessageValue, ConsumeMessage, string, number];
 
 export function getMessage(
-    subscription: Subscription | SubscriptionList
-): Promise<Args>;
-
-export function getMessage(
-    subscription: Subscription | SubscriptionList,
-    n: number
-): Promise<Args[]>;
-
-export function getMessage(
-    subscription: Subscription,
+    subscription: SubscriptionInterface,
     n = 1
 ): Promise<Args | Args[]> {
     if (n === 1) {
         return new Promise((resolve) => {
-            subscription.once('message', (...args) => resolve(args));
+            subscription.once('message', (...args) => {
+                resolve(args);
+                return Promise.resolve();
+            });
         });
     }
 
@@ -32,6 +29,8 @@ export function getMessage(
                 resolve(values);
                 subscription.off('message', handler);
             }
+
+            return Promise.resolve();
         };
 
         subscription.on('message', handler);

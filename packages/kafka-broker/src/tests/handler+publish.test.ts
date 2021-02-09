@@ -32,7 +32,7 @@ describe('handler+publish', () => {
         const subscriptions = broker.subscriptionList();
         const message = getMessage(subscriptions, 2);
 
-        await subscriptions.runAll();
+        await subscriptions.run();
 
         await expect(
             broker.publish('to-topic1', { value })

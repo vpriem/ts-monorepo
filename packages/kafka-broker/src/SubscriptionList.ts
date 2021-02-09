@@ -1,7 +1,8 @@
-import { Subscription } from './Subscription';
-import { Handler, ConsumeMessageValue } from './types';
+import { Handler, ConsumeMessageValue, SubscriptionInterface } from './types';
 
-export class SubscriptionList extends Array<Subscription> {
+export class SubscriptionList
+    extends Array<SubscriptionInterface>
+    implements SubscriptionInterface {
     on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this {
         this.forEach((subscription) => subscription.on('message', listener));
         return this;
@@ -17,7 +18,7 @@ export class SubscriptionList extends Array<Subscription> {
         return this;
     }
 
-    async runAll(): Promise<this> {
+    async run(): Promise<this> {
         await Promise.all(this.map((subscription) => subscription.run()));
         return this;
     }

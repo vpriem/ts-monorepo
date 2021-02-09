@@ -55,7 +55,7 @@ export type Handler<V = ConsumeMessageValue> = (
     message: ConsumeMessage,
     topic: string,
     partition: number
-) => Promise<void> | void;
+) => Promise<void>;
 
 export interface TopicConfig extends ConsumerSubscribeTopic {
     alias?: string;
@@ -90,4 +90,26 @@ export interface BrokerConfig {
 export interface BrokerContainerConfig {
     namespace: string;
     brokers: Record<string, Optional<BrokerConfig, 'namespace'>>;
+}
+
+export interface SubscriptionInterface {
+    on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+
+    once<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+
+    off<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+
+    run(): Promise<this>;
+}
+
+export interface BrokerInterface extends PublisherInterface {
+    emit(event: 'error', error: Error): boolean;
+
+    namespace(): string;
+
+    subscription(name: string): SubscriptionInterface;
+
+    subscriptionList(): SubscriptionInterface;
+
+    shutdown(): Promise<void>;
 }
