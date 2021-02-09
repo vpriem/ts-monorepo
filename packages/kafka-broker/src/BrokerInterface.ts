@@ -1,22 +1,11 @@
-import { RecordMetadata } from 'kafkajs';
-import { PublishMessage, PublishMessageValue } from './types';
+import { PublisherInterface } from './types';
 import { Subscription } from './Subscription';
 import { SubscriptionList } from './SubscriptionList';
 
-export interface BrokerInterface {
+export interface BrokerInterface extends PublisherInterface {
     emit(event: 'error', error: Error): boolean;
 
     namespace(): string;
-
-    publish<V = PublishMessageValue>(
-        name: string,
-        message: PublishMessage<V>
-    ): Promise<RecordMetadata[]>;
-
-    publish<V = PublishMessageValue>(
-        name: string,
-        messages: PublishMessage<V>[]
-    ): Promise<RecordMetadata[]>;
 
     subscription(name: string): Subscription;
 

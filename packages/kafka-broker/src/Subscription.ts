@@ -3,6 +3,7 @@ import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
 import { ConsumeMessage, ConsumeMessageValue, Handler } from './types';
+import { Publisher } from './Publisher';
 
 export interface Subscription {
     emit(event: 'error', error: Error): boolean;
@@ -27,18 +28,22 @@ export class Subscription extends EventEmitter {
 
     private readonly consumer: Consumer;
 
+    private readonly publisher: Publisher;
+
     private readonly config: SubscriptionConfigProcessed;
 
     private isRunning = false;
 
     constructor(
         consumer: Consumer,
+        publisher: Publisher,
         name: string,
         config: SubscriptionConfigProcessed
     ) {
         super({ captureRejections: true });
 
         this.consumer = consumer;
+        this.publisher = publisher;
         this.name = name;
         this.config = config;
 
@@ -47,12 +52,15 @@ export class Subscription extends EventEmitter {
 
     private registerHandlers() {
         if (this.config.handler) {
-            this.on('message', this.config.handler);
+            this.on('message', this.config.handler.bind(this.publisher));
         }
 
         this.config.topics.forEach(({ topic, alias, handler }) =>
             handler
-                ? this.on(`message.${alias || topic.toString()}`, handler)
+                ? this.on(
+                      `message.${alias || topic.toString()}`,
+                      handler.bind(this.publisher)
+                  )
                 : undefined
         );
     }

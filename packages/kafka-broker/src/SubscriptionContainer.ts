@@ -3,18 +3,26 @@ import EventEmitter from 'events';
 import { Subscription } from './Subscription';
 import { BrokerError } from './BrokerError';
 import { Config } from './buildConfig';
+import { Publisher } from './Publisher';
 
 export class SubscriptionContainer extends EventEmitter {
     private readonly kafka: Kafka;
+
+    private readonly publisher: Publisher;
 
     private readonly config: Config['subscriptions'];
 
     private subscriptions: Record<string, Subscription> = {};
 
-    constructor(kafka: Kafka, config: Config['subscriptions']) {
+    constructor(
+        kafka: Kafka,
+        publisher: Publisher,
+        config: Config['subscriptions']
+    ) {
         super({ captureRejections: true });
 
         this.kafka = kafka;
+        this.publisher = publisher;
         this.config = config;
     }
 
@@ -27,6 +35,7 @@ export class SubscriptionContainer extends EventEmitter {
 
             this.subscriptions[name] = new Subscription(
                 this.kafka.consumer(subscriptionConfig.consumer),
+                this.publisher,
                 name,
                 subscriptionConfig
             ).on('error', (error) => {

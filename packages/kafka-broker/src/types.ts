@@ -7,6 +7,7 @@ import {
     Message,
     ProducerConfig as KafkaProducerConfig,
     ProducerRecord,
+    RecordMetadata,
 } from 'kafkajs';
 import { Optional } from './Optional';
 
@@ -34,7 +35,22 @@ export type ConsumeMessage = KafkaMessage;
 
 export type ConsumeMessageValue = null | string | object;
 
+export type PublishResult = RecordMetadata;
+
+export interface PublisherInterface {
+    publish<V = PublishMessageValue>(
+        name: string,
+        message: PublishMessage<V>
+    ): Promise<PublishResult[]>;
+
+    publish<V = PublishMessageValue>(
+        name: string,
+        messages: PublishMessage<V>[]
+    ): Promise<PublishResult[]>;
+}
+
 export type Handler<V = ConsumeMessageValue> = (
+    this: PublisherInterface,
     value: V,
     message: ConsumeMessage,
     topic: string,

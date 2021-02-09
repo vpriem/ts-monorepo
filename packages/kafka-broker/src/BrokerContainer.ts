@@ -1,9 +1,9 @@
-import { RecordMetadata } from 'kafkajs';
 import EventEmitter from 'events';
 import {
     BrokerContainerConfig,
     PublishMessage,
     PublishMessageValue,
+    PublishResult,
 } from './types';
 import { Broker } from './Broker';
 import { BrokerInterface } from './BrokerInterface';
@@ -45,7 +45,7 @@ export class BrokerContainer extends EventEmitter implements BrokerInterface {
     async publish<V = PublishMessageValue>(
         brokerAndPublicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]
-    ): Promise<RecordMetadata[]> {
+    ): Promise<PublishResult[]> {
         const [brokerName, ...parts] = brokerAndPublicationName.split('/');
 
         return this.get(brokerName).publish<V>(

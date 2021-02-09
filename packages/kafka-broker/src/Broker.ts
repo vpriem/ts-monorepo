@@ -1,14 +1,18 @@
-import { Kafka, RecordMetadata } from 'kafkajs';
+import { Kafka } from 'kafkajs';
 import EventEmitter from 'events';
-import { BrokerConfig, PublishMessage, PublishMessageValue } from './types';
+import {
+    BrokerConfig,
+    PublishMessage,
+    PublishMessageValue,
+    PublishResult,
+} from './types';
 import { Subscription } from './Subscription';
 import { Config, buildConfig } from './buildConfig';
-import { encodeMessage } from './encodeMessage';
 import { BrokerInterface } from './BrokerInterface';
-import { BrokerError } from './BrokerError';
 import { ProducerContainer } from './ProducerContainer';
 import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
+import { Publisher } from './Publisher';
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
@@ -16,6 +20,8 @@ export class Broker extends EventEmitter implements BrokerInterface {
     private readonly kafka: Kafka;
 
     private readonly producers: ProducerContainer;
+
+    private readonly publisher: Publisher;
 
     private readonly subscriptions: SubscriptionContainer;
 
@@ -29,8 +35,13 @@ export class Broker extends EventEmitter implements BrokerInterface {
             this.kafka,
             this.config.producers
         );
+        this.publisher = new Publisher(
+            this.producers,
+            this.config.publications
+        );
         this.subscriptions = new SubscriptionContainer(
             this.kafka,
+            this.publisher,
             this.config.subscriptions
         ).on('error', (error) => this.emit('error', error));
     }
@@ -42,36 +53,8 @@ export class Broker extends EventEmitter implements BrokerInterface {
     async publish<V = PublishMessageValue>(
         publicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]
-    ): Promise<RecordMetadata[]> {
-        const publicationConfig = this.config.publications[publicationName];
-        if (typeof publicationConfig === 'undefined') {
-            throw new BrokerError(`Unknown publication "${publicationName}"`);
-        }
-
-        const {
-            producer: producerName,
-            topic,
-            messageConfig,
-        } = publicationConfig;
-
-        const producer = await this.producers.create(producerName);
-
-        let messages = Array.isArray(messageOrMessages)
-            ? messageOrMessages
-            : [messageOrMessages];
-
-        if (messageConfig) {
-            messages = messages.map((message) => ({
-                ...messageConfig,
-                ...message,
-            }));
-        }
-
-        return producer.send({
-            ...publicationConfig.config,
-            topic,
-            messages: messages.map(encodeMessage),
-        });
+    ): Promise<PublishResult[]> {
+        return this.publisher.publish(publicationName, messageOrMessages);
     }
 
     subscription(name: string): Subscription {
