@@ -262,7 +262,7 @@ await broker
             Using two separate consumer groups
         */
     })
-    .runAll();
+    .run();
 ```
 
 ### Consuming from multiple topics
@@ -341,7 +341,7 @@ const broker = new Broker({
     },
 });
 
-await broker.subscriptionList().runAll();
+await broker.subscriptionList().run();
 ```
 
 ### Error handling
@@ -416,7 +416,7 @@ await broker
     .on('message', (value) => {
         console.log(value); // Consume from public and private
     })
-    .runAll();
+    .run();
 
 await broker.publish('public/my-topic', { value: 'my-public-message' });
 await broker.publish('private/my-topic', { value: 'my-private-message' });
