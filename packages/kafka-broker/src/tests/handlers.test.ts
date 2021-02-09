@@ -52,10 +52,12 @@ describe('handlers', () => {
             broker.publish('to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(messages).resolves.toEqual([
-            [value1, expect.any(Object), topic1, expect.any(Number)],
-            [value2, expect.any(Object), topic2, expect.any(Number)],
-        ]);
+        await expect(messages).resolves.toEqual(
+            expect.arrayContaining([
+                [value1, expect.any(Object), topic1, expect.any(Number)],
+                [value2, expect.any(Object), topic2, expect.any(Number)],
+            ])
+        );
 
         expect(handler).toHaveBeenCalledWith(
             value1,

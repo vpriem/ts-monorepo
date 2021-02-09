@@ -80,10 +80,12 @@ describe('broker+container', () => {
             broker.publish('private/to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(message).resolves.toEqual([
-            [value1, expect.any(Object), topic1, expect.any(Number)],
-            [value2, expect.any(Object), topic2, expect.any(Number)],
-        ]);
+        await expect(message).resolves.toEqual(
+            expect.arrayContaining([
+                [value1, expect.any(Object), topic1, expect.any(Number)],
+                [value2, expect.any(Object), topic2, expect.any(Number)],
+            ])
+        );
     });
 
     it('should emit error event', async () => {

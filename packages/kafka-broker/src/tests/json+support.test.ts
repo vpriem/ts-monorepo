@@ -53,12 +53,14 @@ describe('json+support', () => {
             headers: { 'content-type': Buffer.from('application/json') },
         }) as object;
 
-        await expect(messages).resolves.toEqual([
-            [{ id: id1 }, expectedHeaders, topic1, expect.any(Number)],
-            [{ id: id2 }, expectedHeaders, topic1, expect.any(Number)],
-            [{ id: id3 }, expectedHeaders, topic1, expect.any(Number)],
-            [{ id: id4 }, expectedHeaders, topic1, expect.any(Number)],
-        ]);
+        await expect(messages).resolves.toEqual(
+            expect.arrayContaining([
+                [{ id: id1 }, expectedHeaders, topic1, expect.any(Number)],
+                [{ id: id2 }, expectedHeaders, topic1, expect.any(Number)],
+                [{ id: id3 }, expectedHeaders, topic1, expect.any(Number)],
+                [{ id: id4 }, expectedHeaders, topic1, expect.any(Number)],
+            ])
+        );
     });
 
     it('should force json consume', async () => {

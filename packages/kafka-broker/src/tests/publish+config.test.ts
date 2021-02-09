@@ -42,19 +42,21 @@ describe('publish+config', () => {
 
         await subscription.run();
 
-        await expect(messages).resolves.toEqual([
-            [
-                value1,
-                expect.objectContaining({ key: Buffer.from(key1) }),
-                topic,
-                expect.any(Number),
-            ],
-            [
-                value2,
-                expect.objectContaining({ key: Buffer.from(key2) }),
-                topic,
-                expect.any(Number),
-            ],
-        ]);
+        await expect(messages).resolves.toEqual(
+            expect.arrayContaining([
+                [
+                    value1,
+                    expect.objectContaining({ key: Buffer.from(key1) }),
+                    topic,
+                    expect.any(Number),
+                ],
+                [
+                    value2,
+                    expect.objectContaining({ key: Buffer.from(key2) }),
+                    topic,
+                    expect.any(Number),
+                ],
+            ])
+        );
     });
 });

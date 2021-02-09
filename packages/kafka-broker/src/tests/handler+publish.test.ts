@@ -38,9 +38,11 @@ describe('handler+publish', () => {
             broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
-        await expect(message).resolves.toEqual([
-            [value, expect.any(Object), topic1, expect.any(Number)],
-            [value, expect.any(Object), topic2, expect.any(Number)],
-        ]);
+        await expect(message).resolves.toEqual(
+            expect.arrayContaining([
+                [value, expect.any(Object), topic1, expect.any(Number)],
+                [value, expect.any(Object), topic2, expect.any(Number)],
+            ])
+        );
     });
 });
