@@ -24,8 +24,6 @@ export interface Subscription {
 export class Subscription
     extends EventEmitter
     implements Subscription, SubscriptionInterface {
-    readonly name: string;
-
     private readonly consumer: Consumer;
 
     private readonly publisher: Publisher;
@@ -37,14 +35,12 @@ export class Subscription
     constructor(
         consumer: Consumer,
         publisher: Publisher,
-        name: string,
         config: SubscriptionConfigProcessed
     ) {
         super({ captureRejections: true });
 
         this.consumer = consumer;
         this.publisher = publisher;
-        this.name = name;
         this.config = config;
 
         this.registerHandlers();
