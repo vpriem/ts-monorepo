@@ -3,12 +3,12 @@ import EventEmitter from 'events';
 import { Subscription } from './Subscription';
 import { BrokerError } from './BrokerError';
 import { Config } from './buildConfig';
-import { Publisher } from './Publisher';
+import { PublisherInterface } from './types';
 
 export class SubscriptionContainer extends EventEmitter {
     private readonly kafka: Kafka;
 
-    private readonly publisher: Publisher;
+    private readonly publisher: PublisherInterface;
 
     private readonly config: Config['subscriptions'];
 
@@ -16,7 +16,7 @@ export class SubscriptionContainer extends EventEmitter {
 
     constructor(
         kafka: Kafka,
-        publisher: Publisher,
+        publisher: PublisherInterface,
         config: Config['subscriptions']
     ) {
         super({ captureRejections: true });

@@ -5,9 +5,9 @@ import { SubscriptionConfigProcessed } from './buildConfig';
 import {
     ConsumeMessage,
     ConsumeMessageValue,
+    PublisherInterface,
     SubscriptionInterface,
 } from './types';
-import { Publisher } from './Publisher';
 
 export interface Subscription {
     emit(event: 'error', error: Error): boolean;
@@ -26,7 +26,7 @@ export class Subscription
     implements Subscription, SubscriptionInterface {
     private readonly consumer: Consumer;
 
-    private readonly publisher: Publisher;
+    private readonly publisher: PublisherInterface;
 
     private readonly config: SubscriptionConfigProcessed;
 
@@ -34,7 +34,7 @@ export class Subscription
 
     constructor(
         consumer: Consumer,
-        publisher: Publisher,
+        publisher: PublisherInterface,
         config: SubscriptionConfigProcessed
     ) {
         super({ captureRejections: true });

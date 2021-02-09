@@ -12,7 +12,8 @@ import { Config, buildConfig } from './buildConfig';
 import { ProducerContainer } from './ProducerContainer';
 import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
-import { Publisher } from './Publisher';
+import { BrokerError } from './BrokerError';
+import { encodeMessage } from './encodeMessage';
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
@@ -20,8 +21,6 @@ export class Broker extends EventEmitter implements BrokerInterface {
     private readonly kafka: Kafka;
 
     private readonly producers: ProducerContainer;
-
-    private readonly publisher: Publisher;
 
     private readonly subscriptions: SubscriptionContainer;
 
@@ -35,13 +34,9 @@ export class Broker extends EventEmitter implements BrokerInterface {
             this.kafka,
             this.config.producers
         );
-        this.publisher = new Publisher(
-            this.producers,
-            this.config.publications
-        );
         this.subscriptions = new SubscriptionContainer(
             this.kafka,
-            this.publisher,
+            this,
             this.config.subscriptions
         ).on('error', (error) => this.emit('error', error));
     }
@@ -54,7 +49,35 @@ export class Broker extends EventEmitter implements BrokerInterface {
         publicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]
     ): Promise<PublishResult[]> {
-        return this.publisher.publish(publicationName, messageOrMessages);
+        const publicationConfig = this.config.publications[publicationName];
+        if (typeof publicationConfig === 'undefined') {
+            throw new BrokerError(`Unknown publication "${publicationName}"`);
+        }
+
+        const {
+            producer: producerName,
+            topic,
+            messageConfig,
+        } = publicationConfig;
+
+        const producer = await this.producers.create(producerName);
+
+        let messages = Array.isArray(messageOrMessages)
+            ? messageOrMessages
+            : [messageOrMessages];
+
+        if (messageConfig) {
+            messages = messages.map((message) => ({
+                ...messageConfig,
+                ...message,
+            }));
+        }
+
+        return producer.send({
+            ...publicationConfig.config,
+            topic,
+            messages: messages.map(encodeMessage),
+        });
     }
 
     subscription(name: string): SubscriptionInterface {
