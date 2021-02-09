@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, BrokerContainer, BrokerError } from '..';
+import { Broker, BrokerContainer, BrokerError, getMessage } from '..';
 
 describe('broker+container', () => {
     const namespace = uuid();
@@ -67,14 +67,8 @@ describe('broker+container', () => {
         const value2 = uuid();
 
         const subscriptions = broker.subscriptionList();
-
-        const promise = new Promise((resolve) => {
-            const values: string[][] = [];
-            subscriptions.on<string>('message', (value, message, topic) => {
-                values.push([value, topic]);
-                if (values.length >= 2) resolve(values);
-            });
-        });
+        expect(subscriptions).toHaveLength(2);
+        const message = getMessage(subscriptions, 2);
 
         await subscriptions.runAll();
 
@@ -86,9 +80,9 @@ describe('broker+container', () => {
             broker.publish('private/to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(promise).resolves.toEqual([
-            [value1, topic1],
-            [value2, topic2],
+        await expect(message).resolves.toEqual([
+            [value1, expect.any(Object), topic1, expect.any(Number)],
+            [value2, expect.any(Object), topic2, expect.any(Number)],
         ]);
     });
 

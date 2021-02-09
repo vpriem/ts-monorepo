@@ -1,12 +1,15 @@
 import { Subscription } from './Subscription';
+import { SubscriptionList } from './SubscriptionList';
 import { ConsumeMessage, ConsumeMessageValue, Handler } from './types';
 
 type Args = [ConsumeMessageValue, ConsumeMessage, string, number];
 
-export function getMessage(subscription: Subscription): Promise<Args>;
+export function getMessage(
+    subscription: Subscription | SubscriptionList
+): Promise<Args>;
 
 export function getMessage(
-    subscription: Subscription,
+    subscription: Subscription | SubscriptionList,
     n: number
 ): Promise<Args[]>;
 
