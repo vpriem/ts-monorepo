@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.6](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.5...@vpriem/kafka-broker@1.0.0-alpha.6) (2021-02-09)
+
+
+### Features
+
+* **kafka-broker:** add Publisher and bind to handler ([d8f7165](https://github.com/vpriem/ts-monorepo/commit/d8f7165d64eb2b58bf0f87996d1e90a6ef783978))
+* **kafka-broker:** getMessage() accepts SubscriptionList ([5a0ba70](https://github.com/vpriem/ts-monorepo/commit/5a0ba702ff7acefdc6445f40902a388aa49e0a66))
+* **kafka-broker:** refactor Subscription and SubscriptionList with SubscriptionInterface ([afbce26](https://github.com/vpriem/ts-monorepo/commit/afbce26c70986047f1cdf8adb48aad5e44f7a2c2))
+* **kafka-broker:** remove Subscription.name ([043312b](https://github.com/vpriem/ts-monorepo/commit/043312b4c06cb11084d023c77c4cd7aff9137b11))
+
+
+
+
+
 # [1.0.0-alpha.5](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.4...@vpriem/kafka-broker@1.0.0-alpha.5) (2021-02-08)
 
 
