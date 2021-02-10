@@ -5,6 +5,7 @@ import { SubscriptionConfigProcessed } from './buildConfig';
 import {
     ConsumeMessageValue,
     ConsumePayload,
+    Publish,
     PublisherInterface,
     SubscriptionInterface,
 } from './types';
@@ -15,7 +16,8 @@ export interface Subscription {
     emit(
         event: string,
         value: ConsumeMessageValue,
-        payload: ConsumePayload
+        payload: ConsumePayload,
+        publish: Publish
     ): boolean;
 }
 
@@ -46,15 +48,14 @@ export class Subscription
 
     private registerHandlers() {
         if (this.config.handler) {
-            this.on('message', this.config.handler.bind(this.publisher));
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            this.on('message', this.config.handler);
         }
 
         this.config.topics.forEach(({ topic, alias, handler }) =>
             handler
-                ? this.on(
-                      `message.${alias || topic.toString()}`,
-                      handler.bind(this.publisher)
-                  )
+                ? // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  this.on(`message.${alias || topic.toString()}`, handler)
                 : undefined
         );
     }
@@ -85,6 +86,7 @@ export class Subscription
 
         const { runConfig, contentType } = this.config;
         const topicToAlias = this.mapTopicToAlias();
+        const publish = this.publisher.publish.bind(this.publisher) as Publish;
 
         await this.subscribe();
 
@@ -99,12 +101,12 @@ export class Subscription
                     return Promise.resolve();
                 }
 
-                this.emit('message', value, payload);
+                this.emit('message', value, payload, publish);
 
                 const topicAlias = topicToAlias[payload.topic];
                 // istanbul ignore else
                 if (topicAlias) {
-                    this.emit(`message.${topicAlias}`, value, payload);
+                    this.emit(`message.${topicAlias}`, value, payload, publish);
                 }
 
                 return Promise.resolve();

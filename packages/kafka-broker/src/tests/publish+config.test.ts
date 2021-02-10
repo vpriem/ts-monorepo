@@ -52,6 +52,7 @@ describe('publish+config', () => {
                         }) as object,
                         topic,
                     }),
+                    expect.any(Function),
                 ],
                 [
                     value2,
@@ -61,6 +62,7 @@ describe('publish+config', () => {
                         }) as object,
                         topic,
                     }),
+                    expect.any(Function),
                 ],
             ])
         );

@@ -58,10 +58,10 @@ describe('json+support', () => {
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
-                [{ id: id1 }, expectedPayload],
-                [{ id: id2 }, expectedPayload],
-                [{ id: id3 }, expectedPayload],
-                [{ id: id4 }, expectedPayload],
+                [{ id: id1 }, expectedPayload, expect.any(Function)],
+                [{ id: id2 }, expectedPayload, expect.any(Function)],
+                [{ id: id3 }, expectedPayload, expect.any(Function)],
+                [{ id: id4 }, expectedPayload, expect.any(Function)],
             ])
         );
     });
@@ -85,6 +85,7 @@ describe('json+support', () => {
                 message: expect.objectContaining({ headers: {} }) as object,
                 topic: topic2,
             }),
+            expect.any(Function),
         ]);
     });
 

@@ -54,29 +54,41 @@ describe('handlers', () => {
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
-                [value1, expect.objectContaining({ topic: topic1 })],
-                [value2, expect.objectContaining({ topic: topic2 })],
+                [
+                    value1,
+                    expect.objectContaining({ topic: topic1 }),
+                    expect.any(Function),
+                ],
+                [
+                    value2,
+                    expect.objectContaining({ topic: topic2 }),
+                    expect.any(Function),
+                ],
             ])
         );
 
         expect(handler).toHaveBeenCalledWith(
             value1,
-            expect.objectContaining({ topic: topic1 })
+            expect.objectContaining({ topic: topic1 }),
+            expect.any(Function)
         );
 
         expect(handler).toHaveBeenCalledWith(
             value2,
-            expect.objectContaining({ topic: topic2 })
+            expect.objectContaining({ topic: topic2 }),
+            expect.any(Function)
         );
 
         expect(handlerOfTopic1).toHaveBeenCalledWith(
             value1,
-            expect.objectContaining({ topic: topic1 })
+            expect.objectContaining({ topic: topic1 }),
+            expect.any(Function)
         );
 
         expect(handlerOfTopic2).toHaveBeenCalledWith(
             value2,
-            expect.objectContaining({ topic: topic2 })
+            expect.objectContaining({ topic: topic2 }),
+            expect.any(Function)
         );
     });
 });

@@ -41,8 +41,16 @@ describe('subscribe+all', () => {
 
         await expect(message).resolves.toEqual(
             expect.arrayContaining([
-                [value1, expect.objectContaining({ topic: topic1 })],
-                [value2, expect.objectContaining({ topic: topic2 })],
+                [
+                    value1,
+                    expect.objectContaining({ topic: topic1 }),
+                    expect.any(Function),
+                ],
+                [
+                    value2,
+                    expect.objectContaining({ topic: topic2 }),
+                    expect.any(Function),
+                ],
             ])
         );
     });

@@ -4,8 +4,8 @@ import { Broker, Handler, getMessage } from '..';
 describe('handler+publish', () => {
     const topic1 = uuid();
     const topic2 = uuid();
-    const handler: Handler = async function handler(value): Promise<void> {
-        await this.publish('to-topic2', { value });
+    const handler: Handler = async (value, payload, publish): Promise<void> => {
+        await publish('to-topic2', { value });
     };
     const broker = new Broker({
         namespace: uuid(),
@@ -40,8 +40,16 @@ describe('handler+publish', () => {
 
         await expect(message).resolves.toEqual(
             expect.arrayContaining([
-                [value, expect.objectContaining({ topic: topic1 })],
-                [value, expect.objectContaining({ topic: topic2 })],
+                [
+                    value,
+                    expect.objectContaining({ topic: topic1 }),
+                    expect.any(Function),
+                ],
+                [
+                    value,
+                    expect.objectContaining({ topic: topic2 }),
+                    expect.any(Function),
+                ],
             ])
         );
     });

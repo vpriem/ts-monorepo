@@ -2,10 +2,11 @@ import {
     ConsumeMessageValue,
     ConsumePayload,
     Handler,
+    Publish,
     SubscriptionInterface,
 } from './types';
 
-type Args = [ConsumeMessageValue, ConsumePayload];
+type Args = [ConsumeMessageValue, ConsumePayload, Publish];
 
 export function getMessage(
     subscription: SubscriptionInterface,

@@ -37,22 +37,26 @@ export type ConsumePayload = EachMessagePayload;
 
 export type PublishResult = RecordMetadata;
 
-export interface PublisherInterface {
-    publish<V = PublishMessageValue>(
+export type Publish = {
+    <V = PublishMessageValue>(
         name: string,
         messages: PublishMessage<V>[]
     ): Promise<PublishResult[]>;
 
-    publish<V = PublishMessageValue>(
+    <V = PublishMessageValue>(
         name: string,
         message: PublishMessage<V>
     ): Promise<PublishResult[]>;
+};
+
+export interface PublisherInterface {
+    publish: Publish;
 }
 
 export type Handler<V = ConsumeMessageValue> = (
-    this: PublisherInterface,
     value: V,
-    payload: ConsumePayload
+    payload: ConsumePayload,
+    publish: Publish
 ) => Promise<void>;
 
 export interface TopicConfig extends ConsumerSubscribeTopic {

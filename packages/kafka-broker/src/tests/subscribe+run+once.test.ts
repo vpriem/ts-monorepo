@@ -35,6 +35,7 @@ describe('subscribe+run+once', () => {
         await expect(message).resolves.toEqual([
             value,
             expect.objectContaining({ topic }),
+            expect.any(Function),
         ]);
     });
 });
