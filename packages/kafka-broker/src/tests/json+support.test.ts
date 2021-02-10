@@ -49,16 +49,19 @@ describe('json+support', () => {
             ])
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
-        const expectedHeaders = expect.objectContaining({
-            headers: { 'content-type': Buffer.from('application/json') },
+        const expectedPayload = expect.objectContaining({
+            message: expect.objectContaining({
+                headers: { 'content-type': Buffer.from('application/json') },
+            }) as object,
+            topic: topic1,
         }) as object;
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
-                [{ id: id1 }, expectedHeaders, topic1, expect.any(Number)],
-                [{ id: id2 }, expectedHeaders, topic1, expect.any(Number)],
-                [{ id: id3 }, expectedHeaders, topic1, expect.any(Number)],
-                [{ id: id4 }, expectedHeaders, topic1, expect.any(Number)],
+                [{ id: id1 }, expectedPayload],
+                [{ id: id2 }, expectedPayload],
+                [{ id: id3 }, expectedPayload],
+                [{ id: id4 }, expectedPayload],
             ])
         );
     });
@@ -78,9 +81,10 @@ describe('json+support', () => {
 
         await expect(message).resolves.toEqual([
             { id },
-            expect.objectContaining({ headers: {} }),
-            topic2,
-            expect.any(Number),
+            expect.objectContaining({
+                message: expect.objectContaining({ headers: {} }) as object,
+                topic: topic2,
+            }),
         ]);
     });
 

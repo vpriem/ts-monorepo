@@ -2,8 +2,8 @@ import {
     ConsumerConfig as KafkaConsumerConfig,
     ConsumerRunConfig,
     ConsumerSubscribeTopic,
+    EachMessagePayload,
     KafkaConfig,
-    KafkaMessage,
     Message,
     ProducerConfig as KafkaProducerConfig,
     ProducerRecord,
@@ -31,9 +31,9 @@ export interface PublishMessage<V = PublishMessageValue>
 
 export type ConsumerConfig = KafkaConsumerConfig;
 
-export type ConsumeMessage = KafkaMessage;
-
 export type ConsumeMessageValue = null | string | object;
+
+export type ConsumePayload = EachMessagePayload;
 
 export type PublishResult = RecordMetadata;
 
@@ -52,9 +52,7 @@ export interface PublisherInterface {
 export type Handler<V = ConsumeMessageValue> = (
     this: PublisherInterface,
     value: V,
-    message: ConsumeMessage,
-    topic: string,
-    partition: number
+    payload: ConsumePayload
 ) => Promise<void>;
 
 export interface TopicConfig extends ConsumerSubscribeTopic {

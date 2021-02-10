@@ -46,15 +46,21 @@ describe('publish+config', () => {
             expect.arrayContaining([
                 [
                     value1,
-                    expect.objectContaining({ key: Buffer.from(key1) }),
-                    topic,
-                    expect.any(Number),
+                    expect.objectContaining({
+                        message: expect.objectContaining({
+                            key: Buffer.from(key1),
+                        }) as object,
+                        topic,
+                    }),
                 ],
                 [
                     value2,
-                    expect.objectContaining({ key: Buffer.from(key2) }),
-                    topic,
-                    expect.any(Number),
+                    expect.objectContaining({
+                        message: expect.objectContaining({
+                            key: Buffer.from(key2),
+                        }) as object,
+                        topic,
+                    }),
                 ],
             ])
         );

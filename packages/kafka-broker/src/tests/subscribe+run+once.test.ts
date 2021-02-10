@@ -34,9 +34,7 @@ describe('subscribe+run+once', () => {
 
         await expect(message).resolves.toEqual([
             value,
-            expect.any(Object),
-            topic,
-            expect.any(Number),
+            expect.objectContaining({ topic }),
         ]);
     });
 });

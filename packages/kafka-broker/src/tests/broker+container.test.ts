@@ -82,8 +82,8 @@ describe('broker+container', () => {
 
         await expect(message).resolves.toEqual(
             expect.arrayContaining([
-                [value1, expect.any(Object), topic1, expect.any(Number)],
-                [value2, expect.any(Object), topic2, expect.any(Number)],
+                [value1, expect.objectContaining({ topic: topic1 })],
+                [value2, expect.objectContaining({ topic: topic2 })],
             ])
         );
     });

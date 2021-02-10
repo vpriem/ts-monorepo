@@ -31,9 +31,7 @@ describe('publish+null', () => {
 
         await expect(message).resolves.toEqual([
             null,
-            expect.any(Object),
-            topic,
-            expect.any(Number),
+            expect.objectContaining({ topic }),
         ]);
     });
 });

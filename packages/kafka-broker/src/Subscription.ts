@@ -3,8 +3,8 @@ import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
 import {
-    ConsumeMessage,
     ConsumeMessageValue,
+    ConsumePayload,
     PublisherInterface,
     SubscriptionInterface,
 } from './types';
@@ -15,9 +15,7 @@ export interface Subscription {
     emit(
         event: string,
         value: ConsumeMessageValue,
-        message: ConsumeMessage,
-        topic: string,
-        partition: number
+        payload: ConsumePayload
     ): boolean;
 }
 
@@ -101,24 +99,12 @@ export class Subscription
                     return Promise.resolve();
                 }
 
-                this.emit(
-                    'message',
-                    value,
-                    payload.message,
-                    payload.topic,
-                    payload.partition
-                );
+                this.emit('message', value, payload);
 
                 const topicAlias = topicToAlias[payload.topic];
                 // istanbul ignore else
                 if (topicAlias) {
-                    this.emit(
-                        `message.${topicAlias}`,
-                        value,
-                        payload.message,
-                        payload.topic,
-                        payload.partition
-                    );
+                    this.emit(`message.${topicAlias}`, value, payload);
                 }
 
                 return Promise.resolve();

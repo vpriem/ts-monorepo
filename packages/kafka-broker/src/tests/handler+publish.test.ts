@@ -40,8 +40,8 @@ describe('handler+publish', () => {
 
         await expect(message).resolves.toEqual(
             expect.arrayContaining([
-                [value, expect.any(Object), topic1, expect.any(Number)],
-                [value, expect.any(Object), topic2, expect.any(Number)],
+                [value, expect.objectContaining({ topic: topic1 })],
+                [value, expect.objectContaining({ topic: topic2 })],
             ])
         );
     });
