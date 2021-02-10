@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import queryString from 'querystring';
 import { RequestOptions, Headers, Options } from './types';
-import { createPath } from './utils';
+import { createPath, isJSON } from './utils';
 import { RequestError } from './RequestError';
 
 export class RestClient {
@@ -50,12 +50,7 @@ export class RestClient {
 
         if (res.ok) {
             const contentType = res.headers.get('content-type');
-            if (
-                contentType &&
-                ['application/json', 'application/geo+json'].includes(
-                    contentType
-                )
-            ) {
+            if (contentType && isJSON(contentType.toLowerCase())) {
                 return res.json() as Promise<R>;
             }
 

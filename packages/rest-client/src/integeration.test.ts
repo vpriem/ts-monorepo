@@ -41,7 +41,30 @@ describe('integration', () => {
                 },
             })
                 .get(`/post/${post.id}`)
-                .reply(200, { data: post });
+                .reply(
+                    200,
+                    { data: post },
+                    { 'Content-Type': 'application/json; charset=utf-8' }
+                );
+
+            await expect(blogApi.getPost(post.id)).resolves.toEqual(post);
+
+            expect(scope.isDone()).toBeTruthy();
+        });
+
+        it('should return a post geo+json', async () => {
+            const scope = nock(process.env.BLOG_API_URL as string, {
+                reqheaders: {
+                    'x-api-key': process.env.BLOG_API_KEY as string,
+                    Accept: 'application/json',
+                },
+            })
+                .get(`/post/${post.id}`)
+                .reply(
+                    200,
+                    { data: post },
+                    { 'content-type': 'application/geo+json; charset=utf-8' }
+                );
 
             await expect(blogApi.getPost(post.id)).resolves.toEqual(post);
 

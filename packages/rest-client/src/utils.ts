@@ -8,3 +8,7 @@ export const createPath = (path: string, params?: Params): string =>
               path
           )
         : path;
+
+export const isJSON = (contentType: string): boolean =>
+    contentType.startsWith('application/json') ||
+    contentType.startsWith('application/geo+json');
