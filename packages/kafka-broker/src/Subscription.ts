@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
-import { SubscriptionConfigProcessed } from './buildConfig';
+import { ConfigSubscription } from './buildConfig';
 import {
     ConsumeValue,
     ConsumePayload,
@@ -28,14 +28,14 @@ export class Subscription
 
     private readonly publisher: PublisherInterface;
 
-    private readonly config: SubscriptionConfigProcessed;
+    private readonly config: ConfigSubscription;
 
     private isRunning = false;
 
     constructor(
         consumer: Consumer,
         publisher: PublisherInterface,
-        config: SubscriptionConfigProcessed
+        config: ConfigSubscription
     ) {
         super({ captureRejections: true });
 

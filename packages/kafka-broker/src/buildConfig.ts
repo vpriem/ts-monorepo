@@ -1,6 +1,8 @@
+import { KafkaConfig } from 'kafkajs';
 import {
     BrokerConfig,
     ConsumerConfig,
+    ProducerConfig,
     ProducerMap,
     PublicationConfig,
     PublicationMap,
@@ -9,40 +11,59 @@ import {
     TopicConfig,
 } from './types';
 
-export interface SubscriptionConfigProcessed extends SubscriptionConfig {
+export interface ConfigProducer {
+    kafka: string;
+    producer?: ProducerConfig;
+}
+
+export interface ConfigSubscription extends SubscriptionConfig {
+    kafka: string;
     consumer: ConsumerConfig;
     topics: TopicConfig[];
 }
 
-export interface Config extends BrokerConfig {
-    producers: ProducerMap;
+export interface Config {
+    namespace: string;
+    kafka: Record<string, KafkaConfig>;
+    producers: Record<string, ConfigProducer>;
     publications: Record<
         string,
         PublicationConfig & {
             producer: string;
         }
     >;
-    subscriptions: Record<string, SubscriptionConfigProcessed>;
+    subscriptions: Record<string, ConfigSubscription>;
 }
 
-const buildPublications = (
-    publications: PublicationMap = {}
+export const buildKafka = (
+    config: KafkaConfig,
+    clientId: string
+): KafkaConfig => ({ clientId, ...config });
+
+export const buildProducers = (
+    producers: ProducerMap = {},
+    kafka = 'default'
+): Config['producers'] => ({
+    default: { kafka },
+    ...Object.fromEntries(
+        Object.entries(producers).map(([name, producerConfig]) => [
+            name,
+            { kafka, producer: producerConfig },
+        ])
+    ),
+});
+
+export const buildPublications = (
+    publications: PublicationMap = {},
+    producer = 'default'
 ): Config['publications'] =>
-    Object.keys(publications).reduce<Config['publications']>((acc, name) => {
-        const publicationConfig = publications[name];
-        if (typeof publicationConfig === 'string') {
-            acc[name] = {
-                producer: 'default',
-                topic: publicationConfig,
-            };
-        } else {
-            acc[name] = {
-                producer: 'default',
-                ...publicationConfig,
-            };
-        }
-        return acc;
-    }, {});
+    Object.fromEntries(
+        Object.entries(publications).map(([name, publicationConfig]) =>
+            typeof publicationConfig === 'string'
+                ? [name, { producer, topic: publicationConfig }]
+                : [name, { producer, ...publicationConfig }]
+        )
+    );
 
 const buildTopics = (
     topics: string | SubscriptionConfig['topics']
@@ -61,46 +82,55 @@ const buildTopics = (
 };
 
 const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
-    typeof config === 'object' &&
     (config as SubscriptionConfig).topics !== undefined;
 
-const buildSubscriptions = (
+export const buildSubscriptions = (
     subscriptions: SubscriptionMap = {},
-    namespace: string
+    groupPrefix: string,
+    kafka = 'default'
 ): Config['subscriptions'] =>
-    Object.keys(subscriptions).reduce<Config['subscriptions']>((acc, name) => {
-        const consumer = { groupId: `${namespace}.${name}` };
-        const subscriptionConfig = subscriptions[name];
+    Object.fromEntries(
+        Object.entries(subscriptions).map(([name, subscriptionConfig]) => {
+            const consumer = { groupId: `${groupPrefix}.${name}` };
 
-        if (isSubscriptionConfig(subscriptionConfig)) {
-            acc[name] = {
-                consumer: {
-                    ...consumer,
-                    ...subscriptionConfig.consumer,
+            if (isSubscriptionConfig(subscriptionConfig)) {
+                return [
+                    name,
+                    {
+                        kafka,
+                        consumer: {
+                            ...consumer,
+                            ...subscriptionConfig.consumer,
+                        },
+                        ...subscriptionConfig,
+                        topics: buildTopics(subscriptionConfig.topics),
+                    },
+                ];
+            }
+
+            return [
+                name,
+                {
+                    kafka,
+                    consumer,
+                    topics: buildTopics(subscriptionConfig),
                 },
-                ...subscriptionConfig,
-                topics: buildTopics(subscriptionConfig.topics),
-            };
-        } else {
-            acc[name] = {
-                consumer,
-                topics: buildTopics(subscriptionConfig),
-            };
-        }
+            ];
+        })
+    );
 
-        return acc;
-    }, {});
-
-export const buildConfig = (config: BrokerConfig): Config => ({
-    ...config,
-    config: {
-        clientId: config.namespace,
-        ...config.config,
+export const buildConfig = ({
+    namespace,
+    config,
+    producers,
+    publications,
+    subscriptions,
+}: BrokerConfig): Config => ({
+    namespace,
+    kafka: {
+        default: buildKafka(config, namespace),
     },
-    producers: {
-        default: {},
-        ...config.producers,
-    },
-    publications: buildPublications(config.publications),
-    subscriptions: buildSubscriptions(config.subscriptions, config.namespace),
+    producers: buildProducers(producers),
+    publications: buildPublications(publications),
+    subscriptions: buildSubscriptions(subscriptions, namespace),
 });

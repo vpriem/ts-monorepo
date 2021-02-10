@@ -1,21 +1,25 @@
-import { Kafka, Producer, ProducerConfig } from 'kafkajs';
-import { ProducerMap } from './types';
+import { Producer } from 'kafkajs';
 import { BrokerError } from './BrokerError';
+import { Config, ConfigProducer } from './buildConfig';
+import { KafkaContainer } from './KafkaContainer';
 
 export class ProducerContainer {
-    private readonly kafka: Kafka;
+    private readonly kafka: KafkaContainer;
 
-    private readonly config: ProducerMap;
+    private readonly config: Config['producers'];
 
     private producers: Record<string, Promise<Producer>> = {};
 
-    constructor(kafka: Kafka, config: ProducerMap) {
+    constructor(kafka: KafkaContainer, config: Config['producers']) {
         this.kafka = kafka;
         this.config = config;
     }
 
-    private async createAndConnect(config?: ProducerConfig): Promise<Producer> {
-        const producer = this.kafka.producer(config);
+    private async createAndConnect({
+        kafka: kafkaName,
+        producer: producerConfig,
+    }: ConfigProducer): Promise<Producer> {
+        const producer = this.kafka.producer(kafkaName, producerConfig);
 
         await producer.connect();
 

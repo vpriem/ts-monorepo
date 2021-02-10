@@ -1,7 +1,7 @@
-import { Kafka } from 'kafkajs';
 import EventEmitter from 'events';
 import {
     BrokerConfig,
+    BrokerContainerConfig,
     BrokerInterface,
     PublishMessage,
     PublishMessageValue,
@@ -14,28 +14,33 @@ import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
 import { BrokerError } from './BrokerError';
 import { encodeMessage } from './encodeMessage';
+import { KafkaContainer } from './KafkaContainer';
+import { buildContainerConfig } from './buildContainerConfig';
+
+const isConfig = (
+    config: BrokerConfig | BrokerContainerConfig
+): config is BrokerConfig => (config as BrokerConfig).config !== undefined;
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
-
-    private readonly kafka: Kafka;
 
     private readonly producers: ProducerContainer;
 
     private readonly subscriptions: SubscriptionContainer;
 
-    constructor(config: BrokerConfig) {
+    constructor(config: BrokerConfig | BrokerContainerConfig) {
         super({ captureRejections: true });
 
-        this.config = buildConfig(config);
+        this.config = isConfig(config)
+            ? buildConfig(config)
+            : buildContainerConfig(config);
 
-        this.kafka = new Kafka(this.config.config);
-        this.producers = new ProducerContainer(
-            this.kafka,
-            this.config.producers
-        );
+        const kafka = new KafkaContainer(this.config.kafka);
+
+        this.producers = new ProducerContainer(kafka, this.config.producers);
+
         this.subscriptions = new SubscriptionContainer(
-            this.kafka,
+            kafka,
             this,
             this.config.subscriptions
         ).on('error', (error) => this.emit('error', error));
@@ -85,10 +90,10 @@ export class Broker extends EventEmitter implements BrokerInterface {
     }
 
     subscriptionList(): SubscriptionInterface {
-        const subscriptions = Object.keys(this.config.subscriptions);
+        const names = Object.keys(this.config.subscriptions);
 
         return new SubscriptionList(
-            ...subscriptions.map((name) => this.subscription(name))
+            ...names.map((name) => this.subscription(name))
         );
     }
 

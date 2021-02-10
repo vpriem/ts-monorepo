@@ -6,7 +6,7 @@ describe('config', () => {
             buildConfig({
                 namespace: 'my-service',
                 config: {
-                    brokers: [process.env.KAFKA_BROKER as string],
+                    brokers: ['localhost'],
                 },
                 producers: {
                     'my-producer-2': { allowAutoTopicCreation: false },
@@ -34,7 +34,7 @@ describe('config', () => {
                     },
                     'from-topic3': {
                         topics: ['my-topic-3'],
-                        consumer: { groupId: 'my-group-id-3' },
+                        consumer: { groupId: 'keep-that-group-id' },
                         contentType: 'application/json',
                     },
                     'from-all-topics': [
@@ -53,13 +53,20 @@ describe('config', () => {
             })
         ).toEqual({
             namespace: 'my-service',
-            config: {
-                clientId: 'my-service',
-                brokers: [process.env.KAFKA_BROKER as string],
+            kafka: {
+                default: {
+                    clientId: 'my-service',
+                    brokers: ['localhost'],
+                },
             },
             producers: {
-                default: {},
-                'my-producer-2': { allowAutoTopicCreation: false },
+                default: {
+                    kafka: 'default',
+                },
+                'my-producer-2': {
+                    kafka: 'default',
+                    producer: { allowAutoTopicCreation: false },
+                },
             },
             publications: {
                 'to-topic1': {
@@ -73,10 +80,12 @@ describe('config', () => {
             },
             subscriptions: {
                 'from-topic0': {
+                    kafka: 'default',
                     topics: [{ topic: 'my-topic-0' }],
                     consumer: { groupId: 'my-service.from-topic0' },
                 },
                 'from-topic1': {
+                    kafka: 'default',
                     topics: [
                         {
                             topic: 'my-topic-1',
@@ -86,6 +95,7 @@ describe('config', () => {
                     consumer: { groupId: 'my-service.from-topic1' },
                 },
                 'from-topic2': {
+                    kafka: 'default',
                     topics: [
                         {
                             topic: 'my-topic-2',
@@ -95,11 +105,13 @@ describe('config', () => {
                     consumer: { groupId: 'my-service.from-topic2' },
                 },
                 'from-topic3': {
+                    kafka: 'default',
                     topics: [{ topic: 'my-topic-3' }],
-                    consumer: { groupId: 'my-group-id-3' },
+                    consumer: { groupId: 'keep-that-group-id' },
                     contentType: 'application/json',
                 },
                 'from-all-topics': {
+                    kafka: 'default',
                     topics: [
                         { topic: 'my-topic-0' },
                         { topic: 'my-topic-1' },
@@ -109,6 +121,7 @@ describe('config', () => {
                     consumer: { groupId: 'my-service.from-all-topics' },
                 },
                 'from-all-again': {
+                    kafka: 'default',
                     topics: [
                         { topic: 'my-topic-0' },
                         { topic: 'my-topic-1' },
@@ -131,12 +144,14 @@ describe('config', () => {
             })
         ).toEqual({
             namespace: 'my-service',
-            config: {
-                clientId: 'my-service',
-                brokers: [process.env.KAFKA_BROKER as string],
+            kafka: {
+                default: {
+                    clientId: 'my-service',
+                    brokers: [process.env.KAFKA_BROKER as string],
+                },
             },
             producers: {
-                default: {},
+                default: { kafka: 'default' },
             },
             publications: {},
             subscriptions: {},

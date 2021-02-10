@@ -1,12 +1,12 @@
-import { Kafka } from 'kafkajs';
 import EventEmitter from 'events';
 import { Subscription } from './Subscription';
 import { BrokerError } from './BrokerError';
 import { Config } from './buildConfig';
 import { PublisherInterface } from './types';
+import { KafkaContainer } from './KafkaContainer';
 
 export class SubscriptionContainer extends EventEmitter {
-    private readonly kafka: Kafka;
+    private readonly kafka: KafkaContainer;
 
     private readonly publisher: PublisherInterface;
 
@@ -15,7 +15,7 @@ export class SubscriptionContainer extends EventEmitter {
     private subscriptions: Record<string, Subscription> = {};
 
     constructor(
-        kafka: Kafka,
+        kafka: KafkaContainer,
         publisher: PublisherInterface,
         config: Config['subscriptions']
     ) {
@@ -33,8 +33,13 @@ export class SubscriptionContainer extends EventEmitter {
                 throw new BrokerError(`Unknown subscription "${name}"`);
             }
 
+            const {
+                kafka: kafkaName,
+                consumer: consumerConfig,
+            } = subscriptionConfig;
+
             this.subscriptions[name] = new Subscription(
-                this.kafka.consumer(subscriptionConfig.consumer),
+                this.kafka.consumer(kafkaName, consumerConfig),
                 this.publisher,
                 subscriptionConfig
             ).on('error', (error) => {

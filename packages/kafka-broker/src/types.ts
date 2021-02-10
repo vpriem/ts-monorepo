@@ -9,7 +9,6 @@ import {
     ProducerRecord,
     RecordMetadata,
 } from 'kafkajs';
-import { Optional } from './Optional';
 
 export type ProducerConfig = KafkaProducerConfig;
 
@@ -91,7 +90,7 @@ export interface BrokerConfig {
 
 export interface BrokerContainerConfig {
     namespace: string;
-    brokers: Record<string, Optional<BrokerConfig, 'namespace'>>;
+    brokers: Record<string, Omit<BrokerConfig, 'namespace'>>;
 }
 
 export interface SubscriptionInterface {

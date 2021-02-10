@@ -363,13 +363,10 @@ await broker.shutdown();
 
 ### Broker container
 
-The `BrokerContainer` helps you to manage multiple `Broker` instance,
-helpful to compose a company broker.
-
-It shares the same interface as the `Broker` class.
+You can also build a `Broker` from resources coming from multiple kafka instances:
 
 ```typescript
-const broker = new BrokerContainer({
+const broker = new Broker({
     namespace: 'my-service',
     brokers: {
         public: {
@@ -398,15 +395,14 @@ const broker = new BrokerContainer({
 });
 
 await broker
-    .get('public')
-    .subscriptionList()
+    .subscription('public/my-topic')
     .on('message', (value) => {
         console.log(value); // Consume only from public
     });
 
 await broker
     .get('private')
-    .subscriptionList()
+    .subscription('private/my-topic')
     .on('message', (value) => {
         console.log(value); // Consume only from private
     });

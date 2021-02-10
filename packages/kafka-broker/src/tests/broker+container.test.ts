@@ -1,11 +1,11 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, BrokerContainer, BrokerError, getMessage } from '..';
+import { Broker, getMessage } from '..';
 
 describe('broker+container', () => {
     const namespace = uuid();
     const topic1 = uuid();
     const topic2 = uuid();
-    const broker = new BrokerContainer({
+    const broker = new Broker({
         namespace,
         brokers: {
             public: {
@@ -34,33 +34,6 @@ describe('broker+container', () => {
     });
 
     afterAll(() => broker.shutdown());
-
-    it('should throw on unknown publication broker', () =>
-        expect(broker.publish('foo/bar', { value: uuid() })).rejects.toThrow(
-            new BrokerError('Unknown broker "foo"')
-        ));
-
-    it('should throw on unknown subscription broker ', () =>
-        expect(() => broker.subscription('foo/bar')).toThrow(
-            new BrokerError('Unknown broker "foo"')
-        ));
-
-    it('should return namespace', () => {
-        expect(broker.namespace()).toBe(namespace);
-        expect(broker.get('public').namespace()).toBe(`${namespace}.public`);
-        expect(broker.get('private').namespace()).toBe(`${namespace}.private`);
-    });
-
-    it('should return brokers', () => {
-        expect(broker.get('public')).toBeInstanceOf(Broker);
-        expect(broker.get('private')).toBeInstanceOf(Broker);
-    });
-
-    it('should return subscriptions', () => {
-        expect(broker.get('public').subscriptionList()).toHaveLength(1);
-        expect(broker.get('private').subscriptionList()).toHaveLength(1);
-        expect(broker.subscriptionList()).toHaveLength(2);
-    });
 
     it('should publish and consume from all brokers', async () => {
         const value1 = uuid();
@@ -94,23 +67,5 @@ describe('broker+container', () => {
                 ],
             ])
         );
-    });
-
-    it('should emit error event', async () => {
-        broker.on('error', () => undefined);
-        const error = new Promise((resolve) => {
-            broker.on('error', resolve);
-        });
-
-        await broker
-            .subscriptionList()
-            .on('message', () => Promise.reject(new Error('Sorry')))
-            .run();
-
-        await expect(
-            broker.publish('private/to-topic2', [{ value: uuid() }])
-        ).resolves.toMatchObject([{ topicName: topic2 }]);
-
-        await expect(error).resolves.toThrow('Sorry');
     });
 });
