@@ -40,12 +40,12 @@ export type PublishResult = RecordMetadata;
 export interface PublisherInterface {
     publish<V = PublishMessageValue>(
         name: string,
-        message: PublishMessage<V>
+        messages: PublishMessage<V>[]
     ): Promise<PublishResult[]>;
 
     publish<V = PublishMessageValue>(
         name: string,
-        messages: PublishMessage<V>[]
+        message: PublishMessage<V>
     ): Promise<PublishResult[]>;
 }
 
