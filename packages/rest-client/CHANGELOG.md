@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.2...@vpriem/rest-client@1.0.3) (2021-02-10)
+
+
+### Bug Fixes
+
+* **rest-client:** fix JSON decoding with charset ([fcaae4a](https://github.com/vpriem/ts-monorepo/commit/fcaae4a8097598d6068adf0a16c6358087d8fbfb))
+
+
+
+
+
 ## [1.0.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.1...@vpriem/rest-client@1.0.2) (2021-01-22)
 
 

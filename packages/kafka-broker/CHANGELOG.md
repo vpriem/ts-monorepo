@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.7](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.6...@vpriem/kafka-broker@1.0.0-alpha.7) (2021-02-10)
+
+
+### Bug Fixes
+
+* **kafka-broker:** change method overload order because of typing error ([a7c70b7](https://github.com/vpriem/ts-monorepo/commit/a7c70b78c802cbe857b677c49acaf34437b33e71))
+
+
+
+
+
 # [1.0.0-alpha.6](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.5...@vpriem/kafka-broker@1.0.0-alpha.6) (2021-02-09)
 
 
