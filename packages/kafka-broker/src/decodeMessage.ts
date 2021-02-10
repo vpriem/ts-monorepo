@@ -1,10 +1,10 @@
 import { KafkaMessage } from 'kafkajs';
-import { ConsumeMessageValue } from './types';
+import { ConsumeValue } from './types';
 
 export const decodeMessage = (
     message: KafkaMessage,
     contentTypeOverride?: 'application/json'
-): ConsumeMessageValue => {
+): ConsumeValue => {
     if (!message.value) return message.value;
 
     const value = message.value.toString();

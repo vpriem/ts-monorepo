@@ -31,7 +31,7 @@ export interface PublishMessage<V = PublishMessageValue>
 
 export type ConsumerConfig = KafkaConsumerConfig;
 
-export type ConsumeMessageValue = null | string | object;
+export type ConsumeValue = null | string | object;
 
 export type ConsumePayload = EachMessagePayload;
 
@@ -53,7 +53,7 @@ export interface PublisherInterface {
     publish: Publish;
 }
 
-export type Handler<V = ConsumeMessageValue> = (
+export type Handler<V = ConsumeValue> = (
     value: V,
     payload: ConsumePayload,
     publish: Publish
@@ -95,11 +95,11 @@ export interface BrokerContainerConfig {
 }
 
 export interface SubscriptionInterface {
-    on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+    on<V = ConsumeValue>(event: string, listener: Handler<V>): this;
 
-    once<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+    once<V = ConsumeValue>(event: string, listener: Handler<V>): this;
 
-    off<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this;
+    off<V = ConsumeValue>(event: string, listener: Handler<V>): this;
 
     run(): Promise<this>;
 }

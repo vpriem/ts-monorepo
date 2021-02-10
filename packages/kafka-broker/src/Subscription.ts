@@ -3,7 +3,7 @@ import { Consumer } from 'kafkajs';
 import { decodeMessage } from './decodeMessage';
 import { SubscriptionConfigProcessed } from './buildConfig';
 import {
-    ConsumeMessageValue,
+    ConsumeValue,
     ConsumePayload,
     Publish,
     PublisherInterface,
@@ -15,7 +15,7 @@ export interface Subscription {
 
     emit(
         event: string,
-        value: ConsumeMessageValue,
+        value: ConsumeValue,
         payload: ConsumePayload,
         publish: Publish
     ): boolean;
@@ -93,7 +93,7 @@ export class Subscription
         await this.consumer.run({
             ...runConfig,
             eachMessage: async (payload) => {
-                let value: ConsumeMessageValue;
+                let value: ConsumeValue;
                 try {
                     value = decodeMessage(payload.message, contentType);
                 } catch (error) {

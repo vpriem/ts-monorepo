@@ -1,19 +1,19 @@
-import { Handler, ConsumeMessageValue, SubscriptionInterface } from './types';
+import { Handler, ConsumeValue, SubscriptionInterface } from './types';
 
 export class SubscriptionList
     extends Array<SubscriptionInterface>
     implements SubscriptionInterface {
-    on<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this {
+    on<V = ConsumeValue>(event: string, listener: Handler<V>): this {
         this.forEach((subscription) => subscription.on('message', listener));
         return this;
     }
 
-    once<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this {
+    once<V = ConsumeValue>(event: string, listener: Handler<V>): this {
         this.forEach((subscription) => subscription.once('message', listener));
         return this;
     }
 
-    off<V = ConsumeMessageValue>(event: string, listener: Handler<V>): this {
+    off<V = ConsumeValue>(event: string, listener: Handler<V>): this {
         this.forEach((subscription) => subscription.off('message', listener));
         return this;
     }
