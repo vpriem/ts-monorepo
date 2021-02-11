@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.8](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.7...@vpriem/kafka-broker@1.0.0-alpha.8) (2021-02-11)
+
+
+### Features
+
+* **kafka-broker:** add publish function to Handler ([e031496](https://github.com/vpriem/ts-monorepo/commit/e03149656989ce6b2c75525088a3457cbb6f0ead))
+* **kafka-broker:** change Handler signature to receive kafka payload ([199b920](https://github.com/vpriem/ts-monorepo/commit/199b9208da449a0f4eb70f7c2baf84510dda6cac))
+* **kafka-broker:** merge Broker/BrokerContainer into one ([c1c845d](https://github.com/vpriem/ts-monorepo/commit/c1c845d5cf695ea5fa3909950a1979e25be3347b))
+* **kafka-broker:** rename ConsumeMessageValue to ConsumeValue ([e10e49f](https://github.com/vpriem/ts-monorepo/commit/e10e49f18cbb599d4a3d206d4ccd4c472ee986c8))
+
+
+
+
+
 # [1.0.0-alpha.7](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.6...@vpriem/kafka-broker@1.0.0-alpha.7) (2021-02-10)
 
 
