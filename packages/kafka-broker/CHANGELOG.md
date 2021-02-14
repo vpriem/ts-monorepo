@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.9](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.8...@vpriem/kafka-broker@1.0.0-alpha.9) (2021-02-14)
+
+
+### Bug Fixes
+
+* **kafka-broker:** do not expose BrokerInterface.emit() ([cf5272f](https://github.com/vpriem/ts-monorepo/commit/cf5272f7713af950f798e1e44674a77656e9159d))
+
+
+
+
+
 # [1.0.0-alpha.8](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.7...@vpriem/kafka-broker@1.0.0-alpha.8) (2021-02-11)
 
 
