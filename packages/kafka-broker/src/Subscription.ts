@@ -61,12 +61,11 @@ export class Subscription
     }
 
     private mapTopicToAlias(): Record<string, string> {
-        return this.config.topics.reduce<Record<string, string>>(
-            (acc, { topic, alias }) => {
-                acc[topic.toString()] = alias || topic.toString();
-                return acc;
-            },
-            {}
+        return Object.fromEntries(
+            this.config.topics.map(({ topic, alias }) => [
+                topic.toString(),
+                alias || topic.toString(),
+            ])
         );
     }
 
