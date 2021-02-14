@@ -22,16 +22,15 @@ export interface ConfigSubscription extends SubscriptionConfig {
     topics: TopicConfig[];
 }
 
+export interface ConfigPublication extends PublicationConfig {
+    producer: string;
+}
+
 export interface Config {
     namespace: string;
     kafka: Record<string, KafkaConfig>;
     producers: Record<string, ConfigProducer>;
-    publications: Record<
-        string,
-        PublicationConfig & {
-            producer: string;
-        }
-    >;
+    publications: Record<string, ConfigPublication>;
     subscriptions: Record<string, ConfigSubscription>;
 }
 

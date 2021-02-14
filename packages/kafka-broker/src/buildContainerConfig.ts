@@ -5,6 +5,9 @@ import {
     buildPublications,
     buildSubscriptions,
     Config,
+    ConfigProducer,
+    ConfigPublication,
+    ConfigSubscription,
 } from './buildConfig';
 
 const nsKafka = (
@@ -21,13 +24,12 @@ const nsKafka = (
 const nsProducers = (
     brokers: BrokerContainerConfig['brokers']
 ): Config['producers'] =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     Object.fromEntries(
         Object.entries(brokers)
             .map(([brokerName, { producers }]) =>
-                Object.entries(
-                    buildProducers(producers, brokerName)
-                ).map(([name, config]) => [`${brokerName}/${name}`, config])
+                Object.entries(buildProducers(producers, brokerName)).map<
+                    [string, ConfigProducer]
+                >(([name, config]) => [`${brokerName}/${name}`, config])
             )
             .flat()
     );
@@ -35,13 +37,15 @@ const nsProducers = (
 const nsPublications = (
     brokers: BrokerContainerConfig['brokers']
 ): Config['publications'] =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     Object.fromEntries(
         Object.entries(brokers)
             .map(([brokerName, { publications }]) =>
                 Object.entries(
                     buildPublications(publications, `${brokerName}/default`)
-                ).map(([name, config]) => [`${brokerName}/${name}`, config])
+                ).map<[string, ConfigPublication]>(([name, config]) => [
+                    `${brokerName}/${name}`,
+                    config,
+                ])
             )
             .flat()
     );
@@ -50,7 +54,6 @@ const nsSubscriptions = (
     brokers: BrokerContainerConfig['brokers'],
     groupPrefix: string
 ): Config['subscriptions'] =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     Object.fromEntries(
         Object.entries(brokers)
             .map(([brokerName, { subscriptions }]) =>
@@ -60,7 +63,10 @@ const nsSubscriptions = (
                         `${groupPrefix}.${brokerName}`,
                         brokerName
                     )
-                ).map(([name, config]) => [`${brokerName}/${name}`, config])
+                ).map<[string, ConfigSubscription]>(([name, config]) => [
+                    `${brokerName}/${name}`,
+                    config,
+                ])
             )
             .flat()
     );
