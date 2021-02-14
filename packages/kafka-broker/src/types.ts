@@ -104,8 +104,6 @@ export interface SubscriptionInterface {
 }
 
 export interface BrokerInterface extends PublisherInterface {
-    emit(event: 'error', error: Error): boolean;
-
     namespace(): string;
 
     subscription(name: string): SubscriptionInterface;
