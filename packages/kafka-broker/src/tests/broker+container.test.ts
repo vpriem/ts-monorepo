@@ -41,7 +41,7 @@ describe('broker+container', () => {
 
         const subscriptions = broker.subscriptionList();
         expect(subscriptions).toHaveLength(2);
-        const message = getMessage(subscriptions, 2);
+        const messages = getMessage(subscriptions, 2);
 
         await subscriptions.run();
 
@@ -53,7 +53,7 @@ describe('broker+container', () => {
             broker.publish('private/to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(message).resolves.toEqual(
+        await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
                     value1,
@@ -67,5 +67,33 @@ describe('broker+container', () => {
                 ],
             ])
         );
+    });
+
+    it('should consume and publish from one broker to another', async () => {
+        const value1 = uuid();
+        const value2 = uuid();
+
+        await broker
+            .subscription('public/from-topic1')
+            .on('message', async (value, payload, publish) => {
+                await publish('private/to-topic2', { value: value2 });
+            })
+            .run();
+
+        const subscription = broker.subscription('private/from-topic2');
+
+        const message = getMessage(subscription);
+
+        await subscription.run();
+
+        await expect(
+            broker.publish('public/to-topic1', { value: value1 })
+        ).resolves.toMatchObject([{ topicName: topic1 }]);
+
+        await expect(message).resolves.toEqual([
+            value2,
+            expect.objectContaining({ topic: topic2 }),
+            expect.any(Function),
+        ]);
     });
 });

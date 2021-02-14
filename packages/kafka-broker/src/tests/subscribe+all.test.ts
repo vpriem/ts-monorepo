@@ -27,8 +27,9 @@ describe('subscribe+all', () => {
 
         const subscriptions = broker.subscriptionList();
         expect(subscriptions).toHaveLength(2);
-        const message = getMessage(subscriptions, 2);
+        const messages = getMessage(subscriptions, 2);
 
+        await subscriptions.run();
         await subscriptions.run();
 
         await expect(
@@ -39,7 +40,7 @@ describe('subscribe+all', () => {
             broker.publish('to-topic2', { value: value2 })
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(message).resolves.toEqual(
+        await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
                     value1,

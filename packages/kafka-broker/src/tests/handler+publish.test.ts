@@ -30,7 +30,7 @@ describe('handler+publish', () => {
     it('should publish from handler', async () => {
         const value = uuid();
         const subscriptions = broker.subscriptionList();
-        const message = getMessage(subscriptions, 2);
+        const messages = getMessage(subscriptions, 2);
 
         await subscriptions.run();
 
@@ -38,7 +38,7 @@ describe('handler+publish', () => {
             broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic1 }]);
 
-        await expect(message).resolves.toEqual(
+        await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
                     value,
