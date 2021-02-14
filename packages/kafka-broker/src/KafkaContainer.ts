@@ -7,10 +7,8 @@ import {
 } from 'kafkajs';
 import { Config } from './buildConfig';
 
-type KafkaMap = Record<string, Kafka>;
-
 export class KafkaContainer {
-    private readonly kafkas: KafkaMap = {};
+    private readonly kafkas: Record<string, Kafka> = {};
 
     constructor(config: Config['kafka']) {
         this.kafkas = Object.fromEntries(
