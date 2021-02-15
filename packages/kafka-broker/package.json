@@ -36,6 +36,7 @@
     "down": "docker-compose down"
   },
   "dependencies": {
+    "@types/node": "14.14.28",
     "kafkajs": "1.15.0"
   },
   "devDependencies": {
