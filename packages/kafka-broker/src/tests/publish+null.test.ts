@@ -31,7 +31,10 @@ describe('publish+null', () => {
 
         await expect(message).resolves.toEqual([
             null,
-            expect.objectContaining({ topic }),
+            expect.objectContaining({
+                message: expect.objectContaining({ headers: {} }) as object,
+                topic,
+            }),
             expect.any(Function),
         ]);
     });

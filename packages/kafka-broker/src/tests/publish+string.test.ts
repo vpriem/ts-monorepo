@@ -32,7 +32,10 @@ describe('publish+string', () => {
 
         await expect(message).resolves.toEqual([
             value,
-            expect.objectContaining({ topic }),
+            expect.objectContaining({
+                message: expect.objectContaining({ headers: {} }) as object,
+                topic,
+            }),
             expect.any(Function),
         ]);
     });
