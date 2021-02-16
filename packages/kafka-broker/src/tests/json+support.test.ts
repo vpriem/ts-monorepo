@@ -82,7 +82,11 @@ describe('json+support', () => {
         await expect(message).resolves.toEqual([
             { id },
             expect.objectContaining({
-                message: expect.objectContaining({ headers: {} }) as object,
+                message: expect.objectContaining({
+                    headers: {
+                        'content-type': Buffer.from('text/plain'),
+                    },
+                }) as object,
                 topic: topic2,
             }),
             expect.any(Function),

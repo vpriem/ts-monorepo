@@ -10,6 +10,7 @@ export const encodeMessages = async <V = PublishMessageValue>(
     registry?: SchemaRegistry
 ): Promise<Message[]> => {
     if (schemaId) {
+        // istanbul ignore if
         if (typeof registry === 'undefined') {
             throw new BrokerError('Registry not defined');
         }

@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { Broker, getMessage } from '..';
 
-describe('publish+string', () => {
+describe('publish+buffer', () => {
     const topic = uuid();
     const broker = new Broker({
         namespace: uuid(),
@@ -27,7 +27,7 @@ describe('publish+string', () => {
         await subscription.run();
 
         await expect(
-            broker.publish('to-topic1', { value })
+            broker.publish('to-topic1', { value: Buffer.from(value) })
         ).resolves.toMatchObject([{ topicName: topic }]);
 
         await expect(message).resolves.toEqual([
@@ -35,7 +35,7 @@ describe('publish+string', () => {
             expect.objectContaining({
                 message: expect.objectContaining({
                     headers: {
-                        'content-type': Buffer.from('text/plain'),
+                        'content-type': Buffer.from('application/octet-stream'),
                     },
                 }) as object,
                 topic,
