@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "Event",
+  "namespace": "kafka.broker.event",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    }
+  ]
+}

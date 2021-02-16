@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { Consumer } from 'kafkajs';
+import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { decodeMessage } from './decodeMessage';
 import { ConfigSubscription } from './buildConfig';
 import {
@@ -30,18 +31,22 @@ export class Subscription
 
     private readonly config: ConfigSubscription;
 
+    private readonly registry?: SchemaRegistry;
+
     private isRunning = false;
 
     constructor(
         consumer: Consumer,
         publisher: PublisherInterface,
-        config: ConfigSubscription
+        config: ConfigSubscription,
+        registry?: SchemaRegistry
     ) {
         super({ captureRejections: true });
 
         this.consumer = consumer;
         this.publisher = publisher;
         this.config = config;
+        this.registry = registry;
 
         this.registerHandlers();
     }
@@ -93,11 +98,16 @@ export class Subscription
             ...runConfig,
             eachMessage: async (payload) => {
                 let value: ConsumeValue;
+
                 try {
-                    value = decodeMessage(payload.message, contentType);
+                    value = await decodeMessage(
+                        payload.message,
+                        this.registry,
+                        contentType
+                    );
                 } catch (error) {
                     this.emit('error', error);
-                    return Promise.resolve();
+                    return;
                 }
 
                 this.emit('message', value, payload, publish);
@@ -107,8 +117,6 @@ export class Subscription
                 if (topicAlias) {
                     this.emit(`message.${topicAlias}`, value, payload, publish);
                 }
-
-                return Promise.resolve();
             },
         });
 

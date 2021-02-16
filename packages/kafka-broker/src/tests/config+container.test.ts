@@ -5,6 +5,9 @@ describe('config+container', () => {
         expect(
             buildContainerConfig({
                 namespace: 'my-service',
+                registry: {
+                    host: 'localhost:3',
+                },
                 brokers: {
                     broker1: {
                         config: {
@@ -50,6 +53,9 @@ describe('config+container', () => {
                     clientId: 'my-service',
                     brokers: ['localhost:2'],
                 },
+            },
+            registry: {
+                host: 'localhost:3',
             },
             producers: {
                 'broker1/default': {

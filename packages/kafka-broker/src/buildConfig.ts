@@ -6,6 +6,7 @@ import {
     ProducerMap,
     PublicationConfig,
     PublicationMap,
+    RegistryConfig,
     SubscriptionConfig,
     SubscriptionMap,
     TopicConfig,
@@ -29,6 +30,7 @@ export interface ConfigPublication extends PublicationConfig {
 export interface Config {
     namespace: string;
     kafka: Record<string, KafkaConfig>;
+    registry?: RegistryConfig;
     producers: Record<string, ConfigProducer>;
     publications: Record<string, ConfigPublication>;
     subscriptions: Record<string, ConfigSubscription>;
@@ -121,6 +123,7 @@ export const buildSubscriptions = (
 export const buildConfig = ({
     namespace,
     config,
+    registry,
     producers,
     publications,
     subscriptions,
@@ -129,6 +132,7 @@ export const buildConfig = ({
     kafka: {
         default: buildKafka(config, namespace),
     },
+    registry,
     producers: buildProducers(producers),
     publications: buildPublications(publications),
     subscriptions: buildSubscriptions(subscriptions, namespace),

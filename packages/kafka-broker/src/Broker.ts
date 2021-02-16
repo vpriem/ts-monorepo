@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import {
     BrokerConfig,
     BrokerContainerConfig,
@@ -13,7 +14,7 @@ import { ProducerContainer } from './ProducerContainer';
 import { SubscriptionContainer } from './SubscriptionContainer';
 import { SubscriptionList } from './SubscriptionList';
 import { BrokerError } from './BrokerError';
-import { encodeMessage } from './encodeMessage';
+import { encodeMessages } from './encodeMessages';
 import { KafkaContainer } from './KafkaContainer';
 import { buildContainerConfig } from './buildContainerConfig';
 
@@ -23,6 +24,8 @@ const isConfig = (
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
+
+    private readonly registry?: SchemaRegistry;
 
     private readonly producers: ProducerContainer;
 
@@ -37,12 +40,17 @@ export class Broker extends EventEmitter implements BrokerInterface {
 
         const kafka = new KafkaContainer(this.config.kafka);
 
+        if (config.registry) {
+            this.registry = new SchemaRegistry(config.registry);
+        }
+
         this.producers = new ProducerContainer(kafka, this.config.producers);
 
         this.subscriptions = new SubscriptionContainer(
             kafka,
             this,
-            this.config.subscriptions
+            this.config.subscriptions,
+            this.registry
         ).on('error', (error) => this.emit('error', error));
     }
 
@@ -60,9 +68,11 @@ export class Broker extends EventEmitter implements BrokerInterface {
         }
 
         const {
+            config,
             producer: producerName,
             topic,
             messageConfig,
+            schemaId,
         } = publicationConfig;
 
         const producer = await this.producers.create(producerName);
@@ -78,10 +88,16 @@ export class Broker extends EventEmitter implements BrokerInterface {
             }));
         }
 
+        const encodedMessages = await encodeMessages(
+            messages,
+            schemaId,
+            this.registry
+        );
+
         return producer.send({
-            ...publicationConfig.config,
+            ...config,
             topic,
-            messages: messages.map(encodeMessage),
+            messages: encodedMessages,
         });
     }
 

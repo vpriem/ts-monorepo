@@ -18,3 +18,14 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  schemaregistry:
+    image: confluentinc/cp-schema-registry:6.1.0
+    depends_on:
+      - zookeeper
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_LISTENERS: "http://schemaregistry:8081"
+    ports:
+      - 8081:8081

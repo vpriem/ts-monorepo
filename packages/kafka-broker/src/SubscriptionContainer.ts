@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { Subscription } from './Subscription';
 import { BrokerError } from './BrokerError';
 import { Config } from './buildConfig';
@@ -12,18 +13,22 @@ export class SubscriptionContainer extends EventEmitter {
 
     private readonly config: Config['subscriptions'];
 
+    private readonly registry?: SchemaRegistry;
+
     private subscriptions: Record<string, Subscription> = {};
 
     constructor(
         kafka: KafkaContainer,
         publisher: PublisherInterface,
-        config: Config['subscriptions']
+        config: Config['subscriptions'],
+        registry?: SchemaRegistry
     ) {
         super({ captureRejections: true });
 
         this.kafka = kafka;
         this.publisher = publisher;
         this.config = config;
+        this.registry = registry;
     }
 
     create(name: string): Subscription {
@@ -41,7 +46,8 @@ export class SubscriptionContainer extends EventEmitter {
             this.subscriptions[name] = new Subscription(
                 this.kafka.consumer(kafkaName, consumerConfig),
                 this.publisher,
-                subscriptionConfig
+                subscriptionConfig,
+                this.registry
             ).on('error', (error) => {
                 this.emit('error', error);
             });

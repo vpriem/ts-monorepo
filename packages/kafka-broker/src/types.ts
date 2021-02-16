@@ -19,6 +19,7 @@ export interface PublicationConfig {
     topic: string;
     config?: Omit<ProducerRecord, 'topic' | 'messages'>;
     messageConfig?: MessageConfig;
+    schemaId?: number;
 }
 
 export type PublishMessageValue = Buffer | string | null | object;
@@ -80,9 +81,14 @@ export type SubscriptionMap = Record<
     string | SubscriptionConfig['topics'] | SubscriptionConfig
 >;
 
+export interface RegistryConfig {
+    host: string;
+}
+
 export interface BrokerConfig {
     namespace: string;
     config: KafkaConfig;
+    registry?: RegistryConfig;
     producers?: ProducerMap;
     publications?: PublicationMap;
     subscriptions?: SubscriptionMap;
@@ -90,7 +96,8 @@ export interface BrokerConfig {
 
 export interface BrokerContainerConfig {
     namespace: string;
-    brokers: Record<string, Omit<BrokerConfig, 'namespace'>>;
+    registry?: RegistryConfig;
+    brokers: Record<string, Omit<BrokerConfig, 'namespace' | 'registry'>>;
 }
 
 export interface SubscriptionInterface {

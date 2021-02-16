@@ -6,7 +6,10 @@ describe('config', () => {
             buildConfig({
                 namespace: 'my-service',
                 config: {
-                    brokers: ['localhost'],
+                    brokers: ['localhost:1'],
+                },
+                registry: {
+                    host: 'localhost:2',
                 },
                 producers: {
                     'my-producer-2': { allowAutoTopicCreation: false },
@@ -56,8 +59,11 @@ describe('config', () => {
             kafka: {
                 default: {
                     clientId: 'my-service',
-                    brokers: ['localhost'],
+                    brokers: ['localhost:1'],
                 },
+            },
+            registry: {
+                host: 'localhost:2',
             },
             producers: {
                 default: {
@@ -139,7 +145,7 @@ describe('config', () => {
             buildConfig({
                 namespace: 'my-service',
                 config: {
-                    brokers: [process.env.KAFKA_BROKER as string],
+                    brokers: ['localhost:1'],
                 },
             })
         ).toEqual({
@@ -147,7 +153,7 @@ describe('config', () => {
             kafka: {
                 default: {
                     clientId: 'my-service',
-                    brokers: [process.env.KAFKA_BROKER as string],
+                    brokers: ['localhost:1'],
                 },
             },
             producers: {
