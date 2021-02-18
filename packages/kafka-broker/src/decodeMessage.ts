@@ -19,7 +19,7 @@ export const decodeMessage = async (
         return JSON.parse(value) as object;
     }
 
-    if (contentType === 'application/avro') {
+    if (contentType === 'application/sr+avro') {
         // istanbul ignore if
         if (typeof registry === 'undefined') {
             throw new BrokerError('Registry not defined');

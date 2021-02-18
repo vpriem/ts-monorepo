@@ -23,7 +23,7 @@ export const encodeMessages = async <V = PublishMessageValue>(
                     value,
                     headers: {
                         ...message.headers,
-                        'content-type': 'application/avro',
+                        'content-type': 'application/sr+avro',
                     },
                 };
             })

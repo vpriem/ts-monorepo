@@ -63,7 +63,7 @@ describe('registry', () => {
             expect.objectContaining({
                 message: expect.objectContaining({
                     headers: {
-                        'content-type': Buffer.from('application/avro'),
+                        'content-type': Buffer.from('application/sr+avro'),
                     },
                 }) as object,
                 topic,
