@@ -1,6 +1,6 @@
 import { Message } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
-import { PublishMessage, MessageValue } from './types';
+import { PublishMessage, MessageValue, ContentTypes } from './types';
 import { encodeMessage } from './encodeMessage';
 import { BrokerError } from './BrokerError';
 
@@ -23,7 +23,7 @@ export const encodeMessages = async <V = MessageValue>(
                     value,
                     headers: {
                         ...message.headers,
-                        'content-type': 'application/sr+avro',
+                        'content-type': ContentTypes.SCHEMA_REGISTRY,
                     },
                 };
             })

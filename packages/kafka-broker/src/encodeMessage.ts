@@ -1,5 +1,5 @@
 import { Message } from 'kafkajs';
-import { PublishMessage, MessageValue } from './types';
+import { PublishMessage, MessageValue, ContentTypes } from './types';
 
 export const encodeMessage = <V = MessageValue>(
     message: PublishMessage<V>
@@ -14,7 +14,7 @@ export const encodeMessage = <V = MessageValue>(
                 ...message,
                 headers: {
                     ...message.headers,
-                    'content-type': 'application/octet-stream',
+                    'content-type': ContentTypes.BUFFER,
                 },
             } as unknown) as Message;
         }
@@ -24,7 +24,7 @@ export const encodeMessage = <V = MessageValue>(
             value: JSON.stringify(message.value),
             headers: {
                 ...message.headers,
-                'content-type': 'application/json',
+                'content-type': ContentTypes.JSON,
             },
         };
     }
@@ -33,7 +33,7 @@ export const encodeMessage = <V = MessageValue>(
         ...message,
         headers: {
             ...message.headers,
-            'content-type': 'text/plain',
+            'content-type': ContentTypes.TEXT,
         },
     } as unknown) as Message;
 };

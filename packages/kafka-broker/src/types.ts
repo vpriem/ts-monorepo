@@ -62,12 +62,19 @@ export interface TopicConfig extends ConsumerSubscribeTopic {
 
 export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
 
+export enum ContentTypes {
+    BUFFER = 'application/octet-stream',
+    JSON = 'application/json',
+    SCHEMA_REGISTRY = 'application/sr+avro',
+    TEXT = 'text/plain',
+}
+
 export interface SubscriptionConfig {
     consumer?: ConsumerConfig;
     topics: TopicConfig | Array<string | TopicConfig>;
     runConfig?: RunConfig;
     handler?: Handler;
-    contentType?: 'application/json';
+    contentType?: ContentTypes;
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;

@@ -1,23 +1,23 @@
 import { KafkaMessage } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
-import { MessageValue } from './types';
+import { ContentTypes, MessageValue } from './types';
 import { BrokerError } from './BrokerError';
 
 export const decodeMessage = async (
     message: KafkaMessage,
     registry?: SchemaRegistry,
-    contentTypeOverride?: 'application/json'
+    contentTypeOverride?: ContentTypes
 ): Promise<MessageValue> => {
     if (!message.value) return message.value;
 
     const contentType =
         contentTypeOverride || message.headers?.['content-type']?.toString();
 
-    if (contentType === 'application/json') {
+    if (contentType === ContentTypes.JSON) {
         return JSON.parse(message.value.toString()) as object;
     }
 
-    if (contentType === 'application/sr+avro') {
+    if (contentType === ContentTypes.SCHEMA_REGISTRY) {
         // istanbul ignore if
         if (typeof registry === 'undefined') {
             throw new BrokerError('Registry not defined');
@@ -26,7 +26,7 @@ export const decodeMessage = async (
         return (await registry.decode(message.value)) as MessageValue;
     }
 
-    if (contentType === 'text/plain') {
+    if (contentType === ContentTypes.TEXT) {
         return message.value.toString();
     }
 
