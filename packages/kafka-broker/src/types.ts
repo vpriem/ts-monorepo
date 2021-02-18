@@ -31,7 +31,7 @@ export interface PublishMessage<V = PublishMessageValue>
 
 export type ConsumerConfig = KafkaConsumerConfig;
 
-export type ConsumeValue = null | string | object;
+export type ConsumeValue = PublishMessageValue;
 
 export type ConsumePayload = EachMessagePayload;
 

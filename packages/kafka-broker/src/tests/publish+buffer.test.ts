@@ -19,7 +19,7 @@ describe('publish+buffer', () => {
     afterAll(() => broker.shutdown());
 
     it('should publish and consume', async () => {
-        const value = uuid();
+        const value = Buffer.from(uuid());
         const subscription = broker.subscription('from-topic1');
 
         const message = getMessage(subscription);
@@ -27,7 +27,7 @@ describe('publish+buffer', () => {
         await subscription.run();
 
         await expect(
-            broker.publish('to-topic1', { value: Buffer.from(value) })
+            broker.publish('to-topic1', { value })
         ).resolves.toMatchObject([{ topicName: topic }]);
 
         await expect(message).resolves.toEqual([

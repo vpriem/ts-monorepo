@@ -10,13 +10,11 @@ export const decodeMessage = async (
 ): Promise<ConsumeValue> => {
     if (!message.value) return message.value;
 
-    const value = message.value.toString();
-
     const contentType =
         contentTypeOverride || message.headers?.['content-type']?.toString();
 
     if (contentType === 'application/json') {
-        return JSON.parse(value) as object;
+        return JSON.parse(message.value.toString()) as object;
     }
 
     if (contentType === 'application/sr+avro') {
@@ -28,5 +26,9 @@ export const decodeMessage = async (
         return (await registry.decode(message.value)) as ConsumeValue;
     }
 
-    return value;
+    if (contentType === 'text/plain') {
+        return message.value.toString();
+    }
+
+    return message.value;
 };
