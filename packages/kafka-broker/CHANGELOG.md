@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.11](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.10...@vpriem/kafka-broker@1.0.0-alpha.11) (2021-02-18)
+
+
+### Bug Fixes
+
+* **kafka-broker:** add content type header to string and buffer message value ([95fb04d](https://github.com/vpriem/ts-monorepo/commit/95fb04d53e822638b4368d5dd6b4c106ef3ca58a))
+* **kafka-broker:** consolidate PublishMessageValue and ConsumeValue into one type ([3ecf420](https://github.com/vpriem/ts-monorepo/commit/3ecf420c961f4253c6982e2d33aa446c3d0463d2))
+* **kafka-broker:** fix encodeMessage and null value ([03523af](https://github.com/vpriem/ts-monorepo/commit/03523afbc1f36676158de5b1bc2e44570b930365))
+* **kafka-broker:** return buffer for buffer messages ([6132ba9](https://github.com/vpriem/ts-monorepo/commit/6132ba9443136b21160dfbdb4814537bba6ef244))
+* **kafka-broker:** use content-type application/sr+avro for schema registry encoded message ([a5063bd](https://github.com/vpriem/ts-monorepo/commit/a5063bddd877506a9d9dd61813d22c869371850e))
+
+
+### Features
+
+* **kafka-broker:** add config defaults ([7fe6844](https://github.com/vpriem/ts-monorepo/commit/7fe68448c0009d005f14b93737a1ca0e35d8df64))
+* **kafka-broker:** add enum type for content-types ([ba14483](https://github.com/vpriem/ts-monorepo/commit/ba1448326c776f6e55c6bbc1bfa525abd81c01fe))
+* **kafka-broker:** add schema registry support ([514a765](https://github.com/vpriem/ts-monorepo/commit/514a765097c34ffa68f9b97dc7de127d5df1677a))
+
+
+
+
+
 # [1.0.0-alpha.10](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.9...@vpriem/kafka-broker@1.0.0-alpha.10) (2021-02-15)
 
 
