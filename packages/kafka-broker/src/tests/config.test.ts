@@ -140,6 +140,57 @@ describe('config', () => {
         });
     });
 
+    it('should build config with default', () => {
+        expect(
+            buildConfig({
+                namespace: 'my-service',
+                defaults: {
+                    producer: {
+                        allowAutoTopicCreation: true,
+                    },
+                    consumer: {
+                        groupId: 'this-will-be-overridden',
+                        allowAutoTopicCreation: false,
+                    },
+                },
+                config: {
+                    clientId: 'my-super-client-id',
+                    brokers: ['localhost:1'],
+                },
+                subscriptions: {
+                    'from-topic1': 'my-topic-1',
+                },
+            })
+        ).toEqual({
+            namespace: 'my-service',
+            kafka: {
+                default: {
+                    clientId: 'my-super-client-id',
+                    brokers: ['localhost:1'],
+                },
+            },
+            producers: {
+                default: {
+                    kafka: 'default',
+                    producer: {
+                        allowAutoTopicCreation: true,
+                    },
+                },
+            },
+            publications: {},
+            subscriptions: {
+                'from-topic1': {
+                    kafka: 'default',
+                    topics: [{ topic: 'my-topic-1' }],
+                    consumer: {
+                        groupId: 'my-service.from-topic1',
+                        allowAutoTopicCreation: false,
+                    },
+                },
+            },
+        });
+    });
+
     it('should build config from empty', () => {
         expect(
             buildConfig({

@@ -43,13 +43,14 @@ export const buildKafka = (
 
 export const buildProducers = (
     producers: ProducerMap = {},
-    kafka = 'default'
+    kafka: string,
+    defaults?: Partial<ProducerConfig>
 ): Config['producers'] => ({
-    default: { kafka },
+    default: { kafka, producer: defaults },
     ...Object.fromEntries(
         Object.entries(producers).map(([name, producerConfig]) => [
             name,
-            { kafka, producer: producerConfig },
+            { kafka, producer: { ...defaults, ...producerConfig } },
         ])
     ),
 });
@@ -88,11 +89,12 @@ const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
 export const buildSubscriptions = (
     subscriptions: SubscriptionMap = {},
     groupPrefix: string,
-    kafka = 'default'
+    kafka: string,
+    defaults?: Partial<ConsumerConfig>
 ): Config['subscriptions'] =>
     Object.fromEntries(
         Object.entries(subscriptions).map(([name, subscriptionConfig]) => {
-            const consumer = { groupId: `${groupPrefix}.${name}` };
+            const consumer = { ...defaults, groupId: `${groupPrefix}.${name}` };
 
             if (isSubscriptionConfig(subscriptionConfig)) {
                 return [
@@ -122,6 +124,7 @@ export const buildSubscriptions = (
 
 export const buildConfig = ({
     namespace,
+    defaults,
     config,
     registry,
     producers,
@@ -133,7 +136,12 @@ export const buildConfig = ({
         default: buildKafka(config, namespace),
     },
     registry,
-    producers: buildProducers(producers),
+    producers: buildProducers(producers, 'default', defaults?.producer),
     publications: buildPublications(publications),
-    subscriptions: buildSubscriptions(subscriptions, namespace),
+    subscriptions: buildSubscriptions(
+        subscriptions,
+        namespace,
+        'default',
+        defaults?.consumer
+    ),
 });

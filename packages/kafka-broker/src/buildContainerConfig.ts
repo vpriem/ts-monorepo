@@ -1,4 +1,5 @@
-import { BrokerContainerConfig } from './types';
+import { KafkaConfig } from 'kafkajs';
+import { BrokerContainerConfig, ConsumerConfig, ProducerConfig } from './types';
 import {
     buildKafka,
     buildProducers,
@@ -12,24 +13,29 @@ import {
 
 const nsKafka = (
     brokers: BrokerContainerConfig['brokers'],
-    clientId: string
+    clientId: string,
+    defaults?: Partial<KafkaConfig>
 ): Config['kafka'] =>
     Object.fromEntries(
         Object.entries(brokers).map(([name, { config }]) => [
             name,
-            buildKafka(config, clientId),
+            buildKafka({ ...defaults, ...config }, clientId),
         ])
     );
 
 const nsProducers = (
-    brokers: BrokerContainerConfig['brokers']
+    brokers: BrokerContainerConfig['brokers'],
+    defaults?: Partial<ProducerConfig>
 ): Config['producers'] =>
     Object.fromEntries(
         Object.entries(brokers)
             .map(([brokerName, { producers }]) =>
-                Object.entries(buildProducers(producers, brokerName)).map<
-                    [string, ConfigProducer]
-                >(([name, config]) => [`${brokerName}/${name}`, config])
+                Object.entries(
+                    buildProducers(producers, brokerName, defaults)
+                ).map<[string, ConfigProducer]>(([name, config]) => [
+                    `${brokerName}/${name}`,
+                    config,
+                ])
             )
             .flat()
     );
@@ -52,7 +58,8 @@ const nsPublications = (
 
 const nsSubscriptions = (
     brokers: BrokerContainerConfig['brokers'],
-    groupPrefix: string
+    groupPrefix: string,
+    defaults?: Partial<ConsumerConfig>
 ): Config['subscriptions'] =>
     Object.fromEntries(
         Object.entries(brokers)
@@ -61,7 +68,8 @@ const nsSubscriptions = (
                     buildSubscriptions(
                         subscriptions,
                         `${groupPrefix}.${brokerName}`,
-                        brokerName
+                        brokerName,
+                        defaults
                     )
                 ).map<[string, ConfigSubscription]>(([name, config]) => [
                     `${brokerName}/${name}`,
@@ -73,13 +81,14 @@ const nsSubscriptions = (
 
 export const buildContainerConfig = ({
     namespace,
+    defaults,
     registry,
     brokers,
 }: BrokerContainerConfig): Config => ({
     namespace,
     registry,
-    kafka: nsKafka(brokers, namespace),
-    producers: nsProducers(brokers),
+    kafka: nsKafka(brokers, namespace, defaults?.config),
+    producers: nsProducers(brokers, defaults?.producer),
     publications: nsPublications(brokers),
-    subscriptions: nsSubscriptions(brokers, namespace),
+    subscriptions: nsSubscriptions(brokers, namespace, defaults?.consumer),
 });

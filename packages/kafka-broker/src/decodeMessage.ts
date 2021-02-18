@@ -6,7 +6,7 @@ import { BrokerError } from './BrokerError';
 export const decodeMessage = async (
     message: KafkaMessage,
     registry?: SchemaRegistry,
-    contentTypeOverride?: ContentTypes
+    contentTypeOverride?: ContentTypes | string
 ): Promise<MessageValue> => {
     if (!message.value) return message.value;
 

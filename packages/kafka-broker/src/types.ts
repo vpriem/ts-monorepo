@@ -74,7 +74,7 @@ export interface SubscriptionConfig {
     topics: TopicConfig | Array<string | TopicConfig>;
     runConfig?: RunConfig;
     handler?: Handler;
-    contentType?: ContentTypes;
+    contentType?: ContentTypes | string;
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;
@@ -90,6 +90,10 @@ export interface RegistryConfig {
 
 export interface BrokerConfig {
     namespace: string;
+    defaults?: {
+        producer?: Partial<ProducerConfig>;
+        consumer?: Partial<ConsumerConfig>;
+    };
     config: KafkaConfig;
     registry?: RegistryConfig;
     producers?: ProducerMap;
@@ -99,6 +103,11 @@ export interface BrokerConfig {
 
 export interface BrokerContainerConfig {
     namespace: string;
+    defaults?: {
+        config?: Partial<KafkaConfig>;
+        producer?: Partial<ProducerConfig>;
+        consumer?: Partial<ConsumerConfig>;
+    };
     registry?: RegistryConfig;
     brokers: Record<string, Omit<BrokerConfig, 'namespace' | 'registry'>>;
 }
