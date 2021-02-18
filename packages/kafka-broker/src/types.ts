@@ -22,38 +22,34 @@ export interface PublicationConfig {
     schemaId?: number;
 }
 
-export type PublishMessageValue = Buffer | string | null | object;
+export type MessageValue = Buffer | string | null | object;
 
-export interface PublishMessage<V = PublishMessageValue>
+export interface PublishMessage<V = MessageValue>
     extends Omit<Message, 'value'> {
     value: V;
 }
 
 export type ConsumerConfig = KafkaConsumerConfig;
 
-export type ConsumeValue = PublishMessageValue;
-
 export type ConsumePayload = EachMessagePayload;
 
 export type PublishResult = RecordMetadata;
 
 export type Publish = {
-    <V = PublishMessageValue>(
-        name: string,
-        messages: PublishMessage<V>[]
-    ): Promise<PublishResult[]>;
+    <V = MessageValue>(name: string, messages: PublishMessage<V>[]): Promise<
+        PublishResult[]
+    >;
 
-    <V = PublishMessageValue>(
-        name: string,
-        message: PublishMessage<V>
-    ): Promise<PublishResult[]>;
+    <V = MessageValue>(name: string, message: PublishMessage<V>): Promise<
+        PublishResult[]
+    >;
 };
 
 export interface PublisherInterface {
     publish: Publish;
 }
 
-export type Handler<V = ConsumeValue> = (
+export type Handler<V = MessageValue> = (
     value: V,
     payload: ConsumePayload,
     publish: Publish
@@ -101,11 +97,11 @@ export interface BrokerContainerConfig {
 }
 
 export interface SubscriptionInterface {
-    on<V = ConsumeValue>(event: string, listener: Handler<V>): this;
+    on<V = MessageValue>(event: string, listener: Handler<V>): this;
 
-    once<V = ConsumeValue>(event: string, listener: Handler<V>): this;
+    once<V = MessageValue>(event: string, listener: Handler<V>): this;
 
-    off<V = ConsumeValue>(event: string, listener: Handler<V>): this;
+    off<V = MessageValue>(event: string, listener: Handler<V>): this;
 
     run(): Promise<this>;
 }

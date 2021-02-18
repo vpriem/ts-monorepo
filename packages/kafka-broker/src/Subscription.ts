@@ -4,7 +4,7 @@ import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { decodeMessage } from './decodeMessage';
 import { ConfigSubscription } from './buildConfig';
 import {
-    ConsumeValue,
+    MessageValue,
     ConsumePayload,
     Publish,
     PublisherInterface,
@@ -16,7 +16,7 @@ export interface Subscription {
 
     emit(
         event: string,
-        value: ConsumeValue,
+        value: MessageValue,
         payload: ConsumePayload,
         publish: Publish
     ): boolean;
@@ -97,7 +97,7 @@ export class Subscription
         await this.consumer.run({
             ...runConfig,
             eachMessage: async (payload) => {
-                let value: ConsumeValue;
+                let value: MessageValue;
 
                 try {
                     value = await decodeMessage(

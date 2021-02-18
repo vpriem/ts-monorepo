@@ -1,10 +1,10 @@
 import { Message } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
-import { PublishMessage, PublishMessageValue } from './types';
+import { PublishMessage, MessageValue } from './types';
 import { encodeMessage } from './encodeMessage';
 import { BrokerError } from './BrokerError';
 
-export const encodeMessages = async <V = PublishMessageValue>(
+export const encodeMessages = async <V = MessageValue>(
     messages: PublishMessage<V>[],
     schemaId?: number,
     registry?: SchemaRegistry

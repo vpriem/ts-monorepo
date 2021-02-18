@@ -1,7 +1,7 @@
 import { Message } from 'kafkajs';
-import { PublishMessage, PublishMessageValue } from './types';
+import { PublishMessage, MessageValue } from './types';
 
-export const encodeMessage = <V = PublishMessageValue>(
+export const encodeMessage = <V = MessageValue>(
     message: PublishMessage<V>
 ): Message => {
     if (message.value === null) {

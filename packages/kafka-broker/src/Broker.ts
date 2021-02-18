@@ -5,7 +5,7 @@ import {
     BrokerContainerConfig,
     BrokerInterface,
     PublishMessage,
-    PublishMessageValue,
+    MessageValue,
     PublishResult,
     SubscriptionInterface,
 } from './types';
@@ -58,7 +58,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
         return this.config.namespace;
     }
 
-    async publish<V = PublishMessageValue>(
+    async publish<V = MessageValue>(
         publicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]
     ): Promise<PublishResult[]> {

@@ -1,13 +1,13 @@
 import { KafkaMessage } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
-import { ConsumeValue } from './types';
+import { MessageValue } from './types';
 import { BrokerError } from './BrokerError';
 
 export const decodeMessage = async (
     message: KafkaMessage,
     registry?: SchemaRegistry,
     contentTypeOverride?: 'application/json'
-): Promise<ConsumeValue> => {
+): Promise<MessageValue> => {
     if (!message.value) return message.value;
 
     const contentType =
@@ -23,7 +23,7 @@ export const decodeMessage = async (
             throw new BrokerError('Registry not defined');
         }
 
-        return (await registry.decode(message.value)) as ConsumeValue;
+        return (await registry.decode(message.value)) as MessageValue;
     }
 
     if (contentType === 'text/plain') {
