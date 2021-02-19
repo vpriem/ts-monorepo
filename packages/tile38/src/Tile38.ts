@@ -1,6 +1,6 @@
 import { Leader } from './Leader';
 import { Follower } from './Follower';
-import { GetQuery } from './queries';
+import { GetQuery, WithinQuery } from './queries';
 import { PingResponse } from './types';
 
 export class Tile38 extends Leader {
@@ -21,6 +21,12 @@ export class Tile38 extends Leader {
         return forceLeader || !this.follower
             ? super.get(key, id)
             : this.follower.get(key, id);
+    }
+
+    within(key: string, forceLeader = false): WithinQuery {
+        return forceLeader || !this.follower
+            ? super.within(key)
+            : this.follower.within(key);
     }
 
     ping(forceLeader = false): Promise<PingResponse> {
