@@ -1,6 +1,6 @@
 {
   "name": "@vpriem/express-api-key-auth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Tiny express middleware to authenticate x-api-key request header",
   "main": "dist/index.js",
   "files": [

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.12](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.11...@vpriem/kafka-broker@1.0.0-alpha.12) (2021-03-02)
+
+
+### Bug Fixes
+
+* **kafka-broker:** update dependency @types/node to 14.14.31 ([b04e700](https://github.com/vpriem/ts-monorepo/commit/b04e70020d17434f7fe3fbbba8ce07c0d925e100))
+
+
+
+
+
 # [1.0.0-alpha.11](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.10...@vpriem/kafka-broker@1.0.0-alpha.11) (2021-02-18)
 
 
