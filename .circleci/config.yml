@@ -79,21 +79,12 @@ jobs:
     executor: node
 
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "5a:b0:fb:15:25:f5:81:1f:2e:0a:11:8c:bb:65:ca:d3"
-      - run:
-          name: Configure git
-          command: |
-            git config --global user.email "vinzent.priem@gmail.com"
-            git config --global user.name "V. Priem"
       - run:
           name: Configure npm
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - run: yarn build
       - run: yarn run publish --no-verify-access --yes from-package
 
 workflows:
