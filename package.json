@@ -29,7 +29,8 @@
     "w": "yarn workspace",
     "e": "yarn workspace @vpriem/express-api-key-auth",
     "r": "yarn workspace @vpriem/rest-client",
-    "k": "yarn workspace @vpriem/kafka-broker"
+    "k": "yarn workspace @vpriem/kafka-broker",
+    "g": "yarn workspace @vpriem/geojson"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
