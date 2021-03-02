@@ -1,6 +1,7 @@
 {
   "name": "@vpriem/rest-client",
   "version": "1.0.3",
+  "description": "A TypeScript rest api client based on node-fetch",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -27,6 +28,7 @@
     "yarn": "^1.22.x"
   },
   "scripts": {
+    "prepublishOnly": "yarn run build",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
