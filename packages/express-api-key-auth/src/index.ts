@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import type { Request, Response, NextFunction, Handler } from 'express';
 import createError from 'http-errors';
 import { loadApiKeys } from './utils';
