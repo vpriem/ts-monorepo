@@ -122,14 +122,26 @@ workflows:
           name: lint-kafka-broker
           package: kafka-broker
 
+      - test:
+          name: test-geojson
+          package: geojson
+      - lint:
+          name: lint-geojson
+          package: geojson
+
       - build-and-publish:
           requires:
             - test-express-api-key-auth
             - lint-express-api-key-auth
+
             - test-rest-client
             - lint-rest-client
+
             - test-kafka-broker
             - lint-kafka-broker
+
+            - test-geojson
+            - lint-geojson
           filters:
             branches:
               only: master
