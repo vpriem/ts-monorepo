@@ -65,7 +65,7 @@ export type RunConfig = Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
 export enum ContentTypes {
     BUFFER = 'application/octet-stream',
     JSON = 'application/json',
-    SCHEMA_REGISTRY = 'application/sr+avro',
+    SCHEMA_REGISTRY = 'application/schema-registry',
     TEXT = 'text/plain',
 }
 
@@ -84,7 +84,7 @@ export type SubscriptionMap = Record<
     string | SubscriptionConfig['topics'] | SubscriptionConfig
 >;
 
-export interface RegistryConfig {
+export interface SchemaRegistryConfig {
     host: string;
 }
 
@@ -95,7 +95,7 @@ export interface BrokerConfig {
         consumer?: Partial<ConsumerConfig>;
     };
     config: KafkaConfig;
-    registry?: RegistryConfig;
+    schemaRegistry?: SchemaRegistryConfig;
     producers?: ProducerMap;
     publications?: PublicationMap;
     subscriptions?: SubscriptionMap;
@@ -108,8 +108,8 @@ export interface BrokerContainerConfig {
         producer?: Partial<ProducerConfig>;
         consumer?: Partial<ConsumerConfig>;
     };
-    registry?: RegistryConfig;
-    brokers: Record<string, Omit<BrokerConfig, 'namespace' | 'registry'>>;
+    schemaRegistry?: SchemaRegistryConfig;
+    brokers: Record<string, Omit<BrokerConfig, 'namespace' | 'schemaRegistry'>>;
 }
 
 export interface SubscriptionInterface {

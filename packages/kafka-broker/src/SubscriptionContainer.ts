@@ -13,7 +13,7 @@ export class SubscriptionContainer extends EventEmitter {
 
     private readonly config: Config['subscriptions'];
 
-    private readonly registry?: SchemaRegistry;
+    private readonly schemaRegistry?: SchemaRegistry;
 
     private subscriptions: Record<string, Subscription> = {};
 
@@ -21,14 +21,14 @@ export class SubscriptionContainer extends EventEmitter {
         kafka: KafkaContainer,
         publisher: PublisherInterface,
         config: Config['subscriptions'],
-        registry?: SchemaRegistry
+        schemaRegistry?: SchemaRegistry
     ) {
         super({ captureRejections: true });
 
         this.kafka = kafka;
         this.publisher = publisher;
         this.config = config;
-        this.registry = registry;
+        this.schemaRegistry = schemaRegistry;
     }
 
     create(name: string): Subscription {
@@ -47,7 +47,7 @@ export class SubscriptionContainer extends EventEmitter {
                 this.kafka.consumer(kafkaName, consumerConfig),
                 this.publisher,
                 subscriptionConfig,
-                this.registry
+                this.schemaRegistry
             ).on('error', (error) => {
                 this.emit('error', error);
             });

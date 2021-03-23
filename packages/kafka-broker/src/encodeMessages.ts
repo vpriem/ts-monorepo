@@ -7,17 +7,20 @@ import { BrokerError } from './BrokerError';
 export const encodeMessages = async <V = MessageValue>(
     messages: PublishMessage<V>[],
     schemaId?: number,
-    registry?: SchemaRegistry
+    schemaRegistry?: SchemaRegistry
 ): Promise<Message[]> => {
     if (schemaId) {
         // istanbul ignore if
-        if (typeof registry === 'undefined') {
+        if (typeof schemaRegistry === 'undefined') {
             throw new BrokerError('Registry not defined');
         }
 
         return Promise.all(
             messages.map(async (message) => {
-                const value = await registry.encode(schemaId, message.value);
+                const value = await schemaRegistry.encode(
+                    schemaId,
+                    message.value
+                );
                 return {
                     ...message,
                     value,

@@ -12,14 +12,14 @@ interface Event {
     name: string;
 }
 
-describe('registry', () => {
+describe('schema registry', () => {
     const topic = uuid();
     const broker = new Broker({
         namespace: uuid(),
         config: {
             brokers: [process.env.KAFKA_BROKER as string],
         },
-        registry: {
+        schemaRegistry: {
             host: process.env.SCHEMA_REGISTRY_HOST as string,
         },
         publications: {
@@ -37,12 +37,12 @@ describe('registry', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const schema = await readAVSCAsync(path.join(__dirname, 'event.avsc'));
 
-        const registry = new SchemaRegistry({
+        const schemaRegistry = new SchemaRegistry({
             host: process.env.SCHEMA_REGISTRY_HOST as string,
         });
 
         await expect(
-            registry.register({
+            schemaRegistry.register({
                 type: SchemaType.AVRO,
                 schema: JSON.stringify(schema),
             })
@@ -69,7 +69,9 @@ describe('registry', () => {
             expect.objectContaining({
                 message: expect.objectContaining({
                     headers: {
-                        'content-type': Buffer.from('application/sr+avro'),
+                        'content-type': Buffer.from(
+                            'application/schema-registry'
+                        ),
                     },
                 }) as object,
                 topic,

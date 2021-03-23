@@ -8,7 +8,7 @@ describe('config', () => {
                 config: {
                     brokers: ['localhost:1'],
                 },
-                registry: {
+                schemaRegistry: {
                     host: 'localhost:2',
                 },
                 producers: {
@@ -62,7 +62,7 @@ describe('config', () => {
                     brokers: ['localhost:1'],
                 },
             },
-            registry: {
+            schemaRegistry: {
                 host: 'localhost:2',
             },
             producers: {

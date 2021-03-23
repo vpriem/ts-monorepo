@@ -82,11 +82,11 @@ const nsSubscriptions = (
 export const buildContainerConfig = ({
     namespace,
     defaults,
-    registry,
+    schemaRegistry,
     brokers,
 }: BrokerContainerConfig): Config => ({
     namespace,
-    registry,
+    schemaRegistry,
     kafka: nsKafka(brokers, namespace, defaults?.config),
     producers: nsProducers(brokers, defaults?.producer),
     publications: nsPublications(brokers),

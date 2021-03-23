@@ -31,7 +31,7 @@ export class Subscription
 
     private readonly config: ConfigSubscription;
 
-    private readonly registry?: SchemaRegistry;
+    private readonly schemaRegistry?: SchemaRegistry;
 
     private isRunning = false;
 
@@ -39,14 +39,14 @@ export class Subscription
         consumer: Consumer,
         publisher: PublisherInterface,
         config: ConfigSubscription,
-        registry?: SchemaRegistry
+        schemaRegistry?: SchemaRegistry
     ) {
         super({ captureRejections: true });
 
         this.consumer = consumer;
         this.publisher = publisher;
         this.config = config;
-        this.registry = registry;
+        this.schemaRegistry = schemaRegistry;
 
         this.registerHandlers();
     }
@@ -102,7 +102,7 @@ export class Subscription
                 try {
                     value = await decodeMessage(
                         payload.message,
-                        this.registry,
+                        this.schemaRegistry,
                         contentType
                     );
                 } catch (error) {

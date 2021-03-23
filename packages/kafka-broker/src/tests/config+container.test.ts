@@ -5,7 +5,7 @@ describe('config+container', () => {
         expect(
             buildContainerConfig({
                 namespace: 'my-service',
-                registry: {
+                schemaRegistry: {
                     host: 'localhost:3',
                 },
                 brokers: {
@@ -56,7 +56,7 @@ describe('config+container', () => {
                     brokers: ['localhost:2'],
                 },
             },
-            registry: {
+            schemaRegistry: {
                 host: 'localhost:3',
             },
             producers: {
