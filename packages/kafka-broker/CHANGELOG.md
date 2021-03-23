@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.13](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.12...@vpriem/kafka-broker@1.0.0-alpha.13) (2021-03-23)
+
+
+### Bug Fixes
+
+* **kafka-broker:** update dependency @kafkajs/confluent-schema-registrye to 2.0.0 ([31c5059](https://github.com/vpriem/ts-monorepo/commit/31c505959b7eca6459422a9ea421eba7f7837410))
+
+
+
+
+
 # [1.0.0-alpha.12](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.11...@vpriem/kafka-broker@1.0.0-alpha.12) (2021-03-02)
 
 

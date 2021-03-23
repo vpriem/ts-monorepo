@@ -1,6 +1,6 @@
 {
   "name": "@vpriem/kafka-broker",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "description": "A wrapper around KafkaJS",
   "main": "dist/index.js",
   "files": [
