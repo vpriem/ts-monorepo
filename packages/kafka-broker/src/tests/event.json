@@ -1,0 +1,21 @@
+{
+  "definitions": {
+    "record:test.Json": {
+      "type": "object",
+      "required": [
+        "id",
+        "json"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "json": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$ref": "#/definitions/record:test.Json"
+}

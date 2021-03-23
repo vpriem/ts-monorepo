@@ -1,15 +1,15 @@
 {
   "type": "record",
-  "name": "Event",
-  "namespace": "kafka.broker.event",
+  "name": "Avro",
+  "namespace": "test",
   "fields": [
     {
       "name": "id",
       "type": "string"
     },
     {
-      "name": "name",
-      "type": "string"
+      "name": "avro",
+      "type": "boolean"
     }
   ]
 }
