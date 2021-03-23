@@ -3,6 +3,7 @@ import {
     readAVSCAsync,
     SchemaRegistry,
 } from '@kafkajs/confluent-schema-registry';
+import { SchemaType } from '@kafkajs/confluent-schema-registry/dist/@types';
 import path from 'path';
 import { Broker, getMessage } from '..';
 
@@ -40,7 +41,12 @@ describe('registry', () => {
             host: process.env.SCHEMA_REGISTRY_HOST as string,
         });
 
-        await expect(registry.register(schema)).resolves.toEqual({ id: 1 });
+        await expect(
+            registry.register({
+                type: SchemaType.AVRO,
+                schema: JSON.stringify(schema),
+            })
+        ).resolves.toEqual({ id: 1 });
     });
 
     afterAll(() => broker.shutdown());
