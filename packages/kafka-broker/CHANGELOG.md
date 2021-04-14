@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.14](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.13...@vpriem/kafka-broker@1.0.0-alpha.14) (2021-04-14)
+
+
+### Features
+
+* **kafka-broker:** allow options in BrokerConfig.schemaRegistry ([c817dd2](https://github.com/vpriem/ts-monorepo/commit/c817dd2ca338bc645e38fb0d20e72cad80d8d1db))
+
+
+
+
+
 # [1.0.0-alpha.13](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.12...@vpriem/kafka-broker@1.0.0-alpha.13) (2021-03-23)
 
 
