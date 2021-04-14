@@ -40,8 +40,11 @@ export class Broker extends EventEmitter implements BrokerInterface {
 
         const kafka = new KafkaContainer(this.config.kafka);
 
-        if (config.schemaRegistry) {
-            this.schemaRegistry = new SchemaRegistry(config.schemaRegistry);
+        if (this.config.schemaRegistry) {
+            this.schemaRegistry = new SchemaRegistry(
+                this.config.schemaRegistry,
+                this.config.schemaRegistry.options
+            );
         }
 
         this.producers = new ProducerContainer(kafka, this.config.producers);

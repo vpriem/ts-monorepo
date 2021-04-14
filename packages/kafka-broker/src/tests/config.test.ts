@@ -8,9 +8,7 @@ describe('config', () => {
                 config: {
                     brokers: ['localhost:1'],
                 },
-                schemaRegistry: {
-                    host: 'localhost:2',
-                },
+                schemaRegistry: 'localhost:2',
                 producers: {
                     'my-producer-2': { allowAutoTopicCreation: false },
                 },
@@ -62,9 +60,7 @@ describe('config', () => {
                     brokers: ['localhost:1'],
                 },
             },
-            schemaRegistry: {
-                host: 'localhost:2',
-            },
+            schemaRegistry: { host: 'localhost:2' },
             producers: {
                 default: {
                     kafka: 'default',

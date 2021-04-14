@@ -655,10 +655,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@kafkajs/confluent-schema-registry@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@kafkajs/confluent-schema-registry/-/confluent-schema-registry-2.0.0.tgz#c742098a2c8bb9cf4e17d9bff0c172d6d940712c"
-  integrity sha512-3g27NOWOx2QyY7oJqtvifGCdGRJe1MiPKT9qt9ePQDZ8VhpcPcOz371B03B2hAg/ew338UHZ4TVTlUo2VLUj6Q==
+"@kafkajs/confluent-schema-registry@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@kafkajs/confluent-schema-registry/-/confluent-schema-registry-2.0.1.tgz#7a04d77bb18e3d2d1859dbf06e33d1d4a4245642"
+  integrity sha512-sUF9kV/x1r5Iq0AzCcEqBeuHqgoMCg0FvzjwpDpKU0dj7KAozmPzGVzpejzVmB+/Z793N1ULyjNKBrRWd6QXqA==
   dependencies:
     ajv "^7.1.0"
     avsc ">= 5.4.13 < 6"

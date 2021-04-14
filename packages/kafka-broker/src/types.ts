@@ -9,6 +9,8 @@ import {
     ProducerRecord,
     RecordMetadata,
 } from 'kafkajs';
+import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
+import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
 
 export type ProducerConfig = KafkaProducerConfig;
 
@@ -84,8 +86,10 @@ export type SubscriptionMap = Record<
     string | SubscriptionConfig['topics'] | SubscriptionConfig
 >;
 
-export interface SchemaRegistryConfig {
-    host: string;
+export type SchemaRegistryArgs = SchemaRegistryAPIClientArgs;
+export type SchemaRegistryOptions = SchemaRegistryAPIClientOptions;
+export interface SchemaRegistryConfig extends SchemaRegistryArgs {
+    options?: SchemaRegistryOptions;
 }
 
 export interface BrokerConfig {
@@ -95,7 +99,7 @@ export interface BrokerConfig {
         consumer?: Partial<ConsumerConfig>;
     };
     config: KafkaConfig;
-    schemaRegistry?: SchemaRegistryConfig;
+    schemaRegistry?: string | SchemaRegistryConfig;
     producers?: ProducerMap;
     publications?: PublicationMap;
     subscriptions?: SubscriptionMap;
@@ -108,7 +112,7 @@ export interface BrokerContainerConfig {
         producer?: Partial<ProducerConfig>;
         consumer?: Partial<ConsumerConfig>;
     };
-    schemaRegistry?: SchemaRegistryConfig;
+    schemaRegistry?: string | SchemaRegistryArgs | SchemaRegistryConfig;
     brokers: Record<string, Omit<BrokerConfig, 'namespace' | 'schemaRegistry'>>;
 }
 

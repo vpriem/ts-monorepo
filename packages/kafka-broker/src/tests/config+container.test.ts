@@ -7,6 +7,7 @@ describe('config+container', () => {
                 namespace: 'my-service',
                 schemaRegistry: {
                     host: 'localhost:3',
+                    options: { JSON: { strict: true } },
                 },
                 brokers: {
                     broker1: {
@@ -58,6 +59,7 @@ describe('config+container', () => {
             },
             schemaRegistry: {
                 host: 'localhost:3',
+                options: { JSON: { strict: true } },
             },
             producers: {
                 'broker1/default': {

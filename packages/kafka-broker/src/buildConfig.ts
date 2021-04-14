@@ -84,7 +84,7 @@ const buildTopics = (
 };
 
 const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
-    (config as SubscriptionConfig).topics !== undefined;
+    typeof (config as SubscriptionConfig).topics !== 'undefined';
 
 export const buildSubscriptions = (
     subscriptions: SubscriptionMap = {},
@@ -122,6 +122,11 @@ export const buildSubscriptions = (
         })
     );
 
+export const buildSchemaRegistry = (
+    config?: string | SchemaRegistryConfig
+): SchemaRegistryConfig | undefined =>
+    typeof config === 'string' ? { host: config } : config;
+
 export const buildConfig = ({
     namespace,
     defaults,
@@ -135,7 +140,7 @@ export const buildConfig = ({
     kafka: {
         default: buildKafka(config, namespace),
     },
-    schemaRegistry,
+    schemaRegistry: buildSchemaRegistry(schemaRegistry),
     producers: buildProducers(producers, 'default', defaults?.producer),
     publications: buildPublications(publications),
     subscriptions: buildSubscriptions(

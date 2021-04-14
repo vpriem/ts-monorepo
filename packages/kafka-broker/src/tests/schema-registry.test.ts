@@ -2,8 +2,8 @@ import { v4 as uuid } from 'uuid';
 import {
     readAVSCAsync,
     SchemaRegistry,
+    SchemaType,
 } from '@kafkajs/confluent-schema-registry';
-import { SchemaType } from '@kafkajs/confluent-schema-registry/dist/@types';
 import path from 'path';
 import fs from 'fs';
 import { Broker, getMessage } from '..';

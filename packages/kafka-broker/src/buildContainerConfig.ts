@@ -4,6 +4,7 @@ import {
     buildKafka,
     buildProducers,
     buildPublications,
+    buildSchemaRegistry,
     buildSubscriptions,
     Config,
     ConfigProducer,
@@ -86,7 +87,7 @@ export const buildContainerConfig = ({
     brokers,
 }: BrokerContainerConfig): Config => ({
     namespace,
-    schemaRegistry,
+    schemaRegistry: buildSchemaRegistry(schemaRegistry),
     kafka: nsKafka(brokers, namespace, defaults?.config),
     producers: nsProducers(brokers, defaults?.producer),
     publications: nsPublications(brokers),
