@@ -2,7 +2,8 @@ import { Handler, MessageValue, SubscriptionInterface } from './types';
 
 export class SubscriptionList
     extends Array<SubscriptionInterface>
-    implements SubscriptionInterface {
+    implements SubscriptionInterface
+{
     on<V = MessageValue>(event: string, listener: Handler<V>): this {
         this.forEach((subscription) => subscription.on('message', listener));
         return this;

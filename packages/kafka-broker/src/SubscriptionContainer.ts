@@ -38,10 +38,8 @@ export class SubscriptionContainer extends EventEmitter {
                 throw new BrokerError(`Unknown subscription "${name}"`);
             }
 
-            const {
-                kafka: kafkaName,
-                consumer: consumerConfig,
-            } = subscriptionConfig;
+            const { kafka: kafkaName, consumer: consumerConfig } =
+                subscriptionConfig;
 
             this.subscriptions[name] = new Subscription(
                 this.kafka.consumer(kafkaName, consumerConfig),

@@ -24,7 +24,8 @@ export interface Subscription {
 
 export class Subscription
     extends EventEmitter
-    implements Subscription, SubscriptionInterface {
+    implements Subscription, SubscriptionInterface
+{
     private readonly consumer: Consumer;
 
     private readonly publisher: PublisherInterface;

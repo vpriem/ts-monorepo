@@ -5,18 +5,18 @@ export const encodeMessage = <V = MessageValue>(
     message: PublishMessage<V>
 ): Message => {
     if (message.value === null) {
-        return (message as unknown) as Message;
+        return message as unknown as Message;
     }
 
     if (typeof message.value === 'object') {
         if (Buffer.isBuffer(message.value)) {
-            return ({
+            return {
                 ...message,
                 headers: {
                     ...message.headers,
                     'content-type': ContentTypes.BUFFER,
                 },
-            } as unknown) as Message;
+            } as unknown as Message;
         }
 
         return {
@@ -29,11 +29,11 @@ export const encodeMessage = <V = MessageValue>(
         };
     }
 
-    return ({
+    return {
         ...message,
         headers: {
             ...message.headers,
             'content-type': ContentTypes.TEXT,
         },
-    } as unknown) as Message;
+    } as unknown as Message;
 };
