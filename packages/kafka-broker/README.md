@@ -1,38 +1,55 @@
 # kafka-broker
 
-A wrapper around [KafkaJS](https://www.npmjs.com/package/kafkajs).
+Easily compose and manage your kafka resources in one place.
 
-Easily compose your broker and manage your Kafka resources
-into one place to keep the overview inside your event driven service.
+A wrapper around [KafkaJS](https://www.npmjs.com/package/kafkajs)
+heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 
-Heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
+## Table of contents
 
-⚠️ UNDER DEVELOPMENT: The API might change in the future. ⚠️
-
-#### Features:
-
--   Global resource configuration
--   Lazy resource creation
--   Multiple brokers orchestration
--   Topic name alias
--   JSON encoding/decoding support
--   Async/Await
--   Type safe publishing/consuming
--   Consume messages with Handlers or EventEmitter
--   Global shutdown
--   Strong integration/unit tests
+-   [Install](#install)
+-   [Concepts](#concepts)
+-   [Configuration](#configuration)
+-   [Publishing](#publishing)
+-   [Consuming](#consuming)
+    -   [Handlers](#handlers)
+    -   [Consumer group](#consumer-group)
+-   [Encoding](#encoding)
+    -   [JSON](#json)
+    -   [AVRO](#avro)
+    -   [Plain text](#plain-text)
+    -   [Enforce contentType](#enforce-contenttype)
+-   [Schema registry](#schema-registry)
+-   [Typescript](#typescript)
+-   [Error handling](#error-handling)
+-   [Shutdown](#shutdown)
+-   [Advanced configuration](#advanced-configuration)
+    -   [Using defaults](#using-defaults)
+    -   [Topic alias](#topic-alias)
+    -   [Multiple producers](#multiple-producers)
+    -   [Multiple brokers](#multiple-brokers)
+    -   [Full configuration](#full-configuration)
+-   [License](#license)
 
 ## Install
 
 ```shell
 yarn add @vpriem/kafka-broker
+# or
+npm install @vpriem/kafka-broker
 ```
 
-## Usage
+## Concepts
 
-### Configuration
+This library is using two concepts: Publications and Subscriptions.
 
-First configure the broker:
+A `Publication` is a named configuration to produce messages to a certain topic with a specific producer and options.
+
+A `Subscription` is a named configuration to consumer messages from certain topics with a specific consumer group and options.
+
+## Configuration
+
+In order to publish or consume messages, you need first to configure your broker:
 
 ```typescript
 import { Broker } from '@vpriem/kafka-broker';
@@ -51,9 +68,10 @@ const broker = new Broker({
 });
 ```
 
-This will create a default producer and a default consumer with the groupId `my-service.from-my-topic`.  
-Connections will be first started once published to `to-my-topic`
-or the subscription `from-my-topic` is started.
+This will create a `default` producer to produce messages to the topic named `my-long-topic-name`
+and a consumer with the consumer group `my-service.from-my-topic` to consume from that topic.
+
+Connections are lazy and will be first established once published or subscribed.
 
 This is equivalent of doing:
 
@@ -75,7 +93,7 @@ const broker = new Broker({
     },
     subscriptions: {
         'from-my-topic': {
-            topics: 'my-long-topic-name',
+            topics: ['my-long-topic-name'],
             consumer: {
                 groupId: 'my-service.from-my-topic',
             },
@@ -84,7 +102,9 @@ const broker = new Broker({
 });
 ```
 
-### Publishing messages
+## Publishing
+
+In order to publish messages to a topic you need to refer to his publication name:
 
 ```typescript
 await broker.publish('to-my-topic', { value: 'my-message' });
@@ -97,33 +117,87 @@ await broker.publish('to-my-topic', [
 
 This will publish to `my-long-topic-name` using the `default` producer.
 
-### Consuming messages
+## Consuming
 
-In order to consume messages you have to get the subscription and run it:
+In order to start consuming messages from a topic you need to subscribe and run the subscription:
 
 ```typescript
 await broker
     .subscription('from-my-topic')
     .on('message', (value, message, topic, partition) => {
-        console.log(value); // Print "my-message"
+        //  ...
     })
     .run();
 ```
 
-This will consume messages from `my-long-topic-name` using `my-service.from-my-topic` consumer group.
+This will consume messages from `my-long-topic-name` using the consumer group `my-service.from-my-topic`.
 
-### JSON support
+Or you can just run all subscriptions:
 
-Published objects are automatically JSON encoded.  
-A `content-type: application/json` header is also added to the message headers.
+```typescript
+await broker
+    .subscriptionList()
+    .on('message', (value) => {
+        // Consume from all registered topics
+    })
+    .on('message.my-long-topic-name', (value) => {
+        // Or from "my-long-topic-name" only
+    })
+    .run();
+```
+
+### Handlers
+
+Handlers are a different approach to consume messages by using small functions equivalent to lambdas
+and can help to structure your code better by splitting them into small files:
+
+```typescript
+const handler: Handler = async (value) => {
+    await myAsyncOperation(value);
+};
+
+const broker = new Broker({
+    // ...
+    subscriptions: {
+        'from-my-topic': {
+            topics: ['my-long-topic-name'],
+            handler,
+        },
+    },
+});
+
+await broker.subscription('from-my-topic').run();
+```
+
+### Consumer group
+
+Consumer group are important and needs to be unique across applications.  
+If no `groupId` is specified in the subscription configuration, the name is auto generated as following `[namespace].[subscription]`:
+
+```typescript
+const broker = new Broker({
+    namespace: 'my-service',
+    // ...
+    subscriptions: {
+        'from-my-topic': 'my-long-topic-name',
+    },
+});
+```
+
+This will create and use the consumer group `my-service.from-my-topic` for the topic `my-long-topic-name`.
+
+## Encoding
+
+### JSON
+
+Published objects are automatically encoded to JSON.
 
 ```typescript
 await broker.publish('to-my-topic', { value: { id: 1 } });
-// Or type safe:
-await broker.publish<{ id: number }>('to-my-topic', { value: { id: 1 } });
 ```
 
-Previously JSON encoded messages are decoded back using the previously set `content-type` header.
+A `content-type: application/json` header is added to the message headers
+in order to automatically decode messages as object on the consumer side:
 
 ```typescript
 await broker
@@ -132,166 +206,138 @@ await broker
         console.log(value.id); // Print 1
     })
     .run();
+```
 
-// Or type safe:
+### AVRO
 
-interface MyEvent {
-    id: number;
-}
+Not supported yet.
+
+### Plain text
+
+For string messages, a `content-type: text/plain` header is added to the message headers
+and automatically decoded as string on the consumer side:
+
+```typescript
+await broker.publish('to-my-topic', { value: 'my-value' });
 
 await broker
     .subscription('from-my-topic')
-    .on<MyEvent>('message', (value) => {
-        console.log(value.id); // Print 1
+    .on('message', (value) => {
+        console.log(value); // Print "my-value"
     })
     .run();
 ```
 
-In case JSON messages were produced without any `content-type: application/json` header,
-you can enforce messages to be JSON decoded:
+### Enforce contentType
+
+In some case you might have messages produced by another applications without the `content-type` header being set.  
+You can enforce the decoding on your side by specifying the `contentType` in the subscription configuration:
 
 ```typescript
 const broker = new Broker({
     // ...
     subscriptions: {
         'from-json-topic': {
-            topics: 'my-long-topic-name',
+            topics: ['my-long-json-topic-name'],
             contentType: 'application/json',
         },
     },
 });
+```
+
+## Schema registry
+
+Schema registry is supported and can be configured as following:
+
+```typescript
+const broker = new Broker({
+    // ...
+    schemaRegistry: process.env.SCHEMA_REGISTRY_URL as string,
+    // or
+    schemaRegistry: {
+        host: process.env.SCHEMA_REGISTRY_URL as string,
+        options: { /* SchemaRegistryOptions */ },
+    },
+});
+```
+
+For the full configuration please refer to [@kafkajs/confluent-schema-registry](https://kafkajs.github.io/confluent-schema-registry/).
+
+Producers need to specify the schema registry id in the publication config:
+
+```typescript
+const broker = new Broker({
+    // ...
+    publications: {
+        'to-my-topic': {
+            topic: 'my-long-topic-name',
+            schemaId: 1,
+        },
+    },
+});
+```
+
+By doing this, a `content-type: application/schema-registry` header will be added to the message,
+in order to automatically decode messages using schema registry on the consumer side.
+
+**This implies consumer having schema registry configured the same way as the producer.**
+
+## Typescript
+
+Typescript generics are supported for more type safety:
+
+```typescript
+interface MyEvent {
+    id: number;
+}
 
 await broker
-    .subscription('from-json-topic')
-    .on<MyEvent>('message', (value) => {
-        console.log(value.id);
-    })
-    .on('error', (error) => {
-        console.log(error); // JSON.parse failed
+    .subscription('from-my-topic')
+    .on<MyEvent>('message', ({ id }) => {
+        console.log(id); // Print 1
     })
     .run();
-```
 
-### Producer
-
-You can create your set of producers, configure them differently and reuse them across publications:
-
-```typescript
-const broker = new Broker({
-    // ...
-    producers: {
-        'producer-1': {
-            /* KafkaProducerConfig */
-        },
-        'producer-2': {
-            /* KafkaProducerConfig */
-        },
-    },
-    publications: {
-        'my-topic-1': {
-            topic: 'my-long-topic-name-1',
-            producer: 'producer-1',
-        },
-        'my-topic-2': {
-            topic: 'my-long-topic-name-2',
-            producer: 'producer-2',
-        },
-    },
-});
-
-// This will use "producer-1"
-await broker.publish('my-topic-1', { value: 'my-message-to-topic-1' });
-// This will use "producer-2"
-await broker.publish('my-topic-2', { value: 'my-message-to-topic-2' });
-```
-
-### Handlers
-
-You can use `Handlers` to consume messages.
-
-```typescript
-const broker = new Broker({
-    // ...
-    subscriptions: {
-        'from-my-topic': {
-            topics: 'my-long-topic-name',
-            handler: async (value) => {
-                await myAsyncOperation(value);
-            },
-        },
-    },
-});
-
-await broker.subscription('from-my-topic').run();
-
-// Or type safe:
-
-const MyHandler: Handler<MyEvent> = async (value) => {
-    await myAsyncOperation(value.id);
+// or with an handler
+const MyHandler: Handler<MyEvent> = async ({ id }) => {
+    console.log(id); // Print 1
 };
 
-new Broker({
-    // ...
-    subscriptions: {
-        'from-my-topic': {
-            topics: 'my-long-topic-name',
-            handler,
-        },
-    },
-});
+await broker.publish<MyEvent>('to-my-topic', { value: { id: 1 } });
 ```
 
-### Run all subscriptions
+## Error handling
 
-Run all subscriptions, and consume from all:
+Subscription errors are propagated to the broker,
+but you have to listen to them in order to avoid your application to crash:
+
+```typescript
+broker.on('error', console.error);
+```
+
+## Shutdown
+
+It is important to shutdown the broker to disconnect all producers and consumers:
+
+```typescript
+await broker.shutdown();
+```
+
+## Advanced configuration
+
+### Using defaults
 
 ```typescript
 const broker = new Broker({
     // ...
-    subscriptions: {
-        'from-my-topic-1': 'my-long-topic-name-1',
-        'from-my-topic-2': 'my-long-topic-name-2',
+    defaults: {
+        producer: { /* KafkaProducerConfig to be applyed to all producers */ },
+        consumer: { /* KafkaConsumerConfig to be applyed to all consumers */ },
     },
 });
-
-await broker
-    .subscriptionList()
-    .on('message', (value) => {
-        /*
-            Consume from both topics
-            Using two separate consumer groups
-        */
-    })
-    .run();
 ```
 
-### Consuming from multiple topics
-
-You can subscribe to multiple topics inside the same subscription/consumer group:
-
-```typescript
-const broker = new Broker({
-    // ...
-    subscriptions: {
-        'from-all-topics': ['my-long-topic-name-1', 'my-long-topic-name-2'],
-    },
-});
-
-await broker
-    .subscription('from-all-topics')
-    .on('message', (value) => {
-        console.log(value); // All messages
-    })
-    .on('message.my-long-topic-name-1', (value) => {
-        console.log(value); // Messages of topic 1
-    })
-    .on('message.my-long-topic-name-2', (value) => {
-        console.log(value); // Messages of topic 2
-    })
-    .run();
-```
-
-Using aliases:
+### Topic alias:
 
 ```typescript
 const broker = new Broker({
@@ -307,13 +353,13 @@ const broker = new Broker({
 await broker
     .subscription('from-all-topics')
     .on('message', (value) => {
-        console.log(value); // All messages
+        // Consume from "my-long-topic-name-1" and "my-long-topic-name-2"
     })
     .on('message.my-topic1', (value) => {
-        console.log(value); // Messages of topic 1
+        // Consume from "my-long-topic-name-1" only
     })
     .on('message.my-topic2', (value) => {
-        console.log(value); // Messages of topic 2
+        // Consume from "my-long-topic-name-2" only
     })
     .run();
 ```
@@ -328,13 +374,13 @@ const broker = new Broker({
             {
                 topic: 'my-long-topic-name-1',
                 handler: async (value) => {
-                    await myAsyncOperation(value);
+                    // Consume from "my-long-topic-name-1" only
                 },
             },
             {
                 topic: 'my-long-topic-name-2',
                 handler: async (value) => {
-                    await myAsyncOperation(value);
+                    // Consume from "my-long-topic-name-2" only
                 },
             },
         ],
@@ -344,24 +390,36 @@ const broker = new Broker({
 await broker.subscriptionList().run();
 ```
 
-### Error handling
+### Multiple producers
 
-Subscription error are propagated to the broker,
-but you have to listen to them in order to avoid your application to crash:
-
-```typescript
-broker.on('error', console.error);
-```
-
-### Shutdown
-
-Shutdown the broker to disconnect all producers and consumers:
+You can define multiple producers, configure them differently and reuse them across publications:
 
 ```typescript
-await broker.shutdown();
+const broker = new Broker({
+    // ...
+    producers: {
+        'producer-1': { /* KafkaProducerConfig */ },
+        'producer-2': { /* KafkaProducerConfig */ },
+    },
+    publications: {
+        'to-my-topic-1': {
+            topic: 'my-long-topic-name-1',
+            producer: 'producer-1',
+        },
+        'to-my-topic-2': {
+            topic: 'my-long-topic-name-2',
+            producer: 'producer-2',
+        },
+    },
+});
+
+// This will use "producer-1"
+await broker.publish('to-my-topic-1', { value: 'my-message-to-topic-1' });
+// This will use "producer-2"
+await broker.publish('to-my-topic-2', { value: 'my-message-to-topic-2' });
 ```
 
-### Broker container
+### Multiple brokers
 
 You can also build a `Broker` from resources coming from multiple kafka instances:
 
@@ -397,15 +455,16 @@ const broker = new Broker({
 await broker
     .subscription('public/my-topic')
     .on('message', (value) => {
-        console.log(value); // Consume only from public
-    });
+        // Consume from public only
+    })
+    .run();
 
 await broker
-    .get('private')
     .subscription('private/my-topic')
     .on('message', (value) => {
-        console.log(value); // Consume only from private
-    });
+        // Consume from private only
+    })
+    .run();
 
 await broker
     .subscriptionList()
@@ -418,9 +477,52 @@ await broker.publish('public/my-topic', { value: 'my-public-message' });
 await broker.publish('private/my-topic', { value: 'my-private-message' });
 ```
 
-## API
+### Full configuration
 
-...
+```typescript
+const broker = new Broker({
+    namespace: 'my-service',
+    defaults: { // optional
+        producer: { /* KafkaProducerConfig */ }, // optional
+        consumer: { /* KafkaConsumerConfig */ }, // optional
+    },
+    config: { /* KafkaConfig */ },
+    schemaRegistry: { // optional
+        host: host,
+        options: { /* SchemaRegistryOptions */ }, // optional
+    },
+    producers: { // optional
+        [name]: { /* KafkaProducerConfig */ }, // optional
+    },
+    publications: {
+        [name]: name,
+        [name]: {
+            topic: name,
+            producer: name, // optional, default to "default"
+            config: { /* ProducerRecord */ },  // optional
+            messageConfig: { /* MessageConfig */ }, // optional
+            schemaId: id, // optional
+        },
+    },
+    subscriptions: {
+        [name]: name,
+        [name]: {
+            topics: [
+                name,
+                {
+                    topic: name,
+                    alias: name, // optional
+                    handler: handler, // optional
+                }
+            ],
+            consumer: { /* ConsumerConfig */ }, // optional
+            runConfig: { /* RunConfig */ }, // optional
+            handler: handler, // optional
+            contentType: value, // optional
+        },
+    },
+});
+```
 
 ## License
 

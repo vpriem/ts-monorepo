@@ -6,6 +6,7 @@ A TypeScript monorepo to host all the packages I maintain.
 
 * [@vpriem/express-api-key-auth](https://github.com/vpriem/ts-monorepo/tree/master/packages/express-api-key-auth) `yarn e [build|test|lint|clean]`
 * [@vpriem/rest-client](https://github.com/vpriem/ts-monorepo/tree/master/packages/rest-client) `yarn r [build|test|lint|clean]`
+* [@vpriem/kafka-broker](https://github.com/vpriem/ts-monorepo/tree/master/packages/kafka-broker) `yarn k [build|test|lint|clean]`
 
 ## Quickstart
 
