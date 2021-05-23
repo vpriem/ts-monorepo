@@ -69,19 +69,12 @@ export const buildPublications = (
 
 const buildTopics = (
     topics: string | SubscriptionConfig['topics']
-): TopicConfig[] => {
-    if (typeof topics === 'string') {
-        return [{ topic: topics }];
-    }
-
-    if (Array.isArray(topics)) {
-        return topics.map((topic) =>
-            typeof topic === 'string' ? { topic } : topic
-        );
-    }
-
-    return [topics];
-};
+): TopicConfig[] =>
+    typeof topics === 'string'
+        ? [{ topic: topics }]
+        : topics.map((topic) =>
+              typeof topic === 'string' ? { topic } : topic
+          );
 
 const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
     typeof (config as SubscriptionConfig).topics !== 'undefined';

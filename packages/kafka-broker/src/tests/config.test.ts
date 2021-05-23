@@ -21,10 +21,13 @@ describe('config', () => {
                 },
                 subscriptions: {
                     'from-topic0': 'my-topic-0',
-                    'from-topic1': {
-                        topic: 'my-topic-1',
-                        alias: 'alias-to-my-topic1',
-                    },
+                    'from-topic1': [
+                        'my-topic-1.0',
+                        {
+                            topic: 'my-topic-1.1',
+                            alias: 'alias-to-my-topic1',
+                        },
+                    ],
                     'from-topic2': {
                         topics: [
                             {
@@ -48,7 +51,7 @@ describe('config', () => {
                         { topic: 'my-topic-0' },
                         { topic: 'my-topic-1' },
                         { topic: 'my-topic-2' },
-                        { topic: 'my-topic-3' },
+                        { topic: 'my-topic-3', alias: 'alias-to-my-topic-3' },
                     ],
                 },
             })
@@ -89,8 +92,9 @@ describe('config', () => {
                 'from-topic1': {
                     kafka: 'default',
                     topics: [
+                        { topic: 'my-topic-1.0' },
                         {
-                            topic: 'my-topic-1',
+                            topic: 'my-topic-1.1',
                             alias: 'alias-to-my-topic1',
                         },
                     ],
@@ -128,7 +132,7 @@ describe('config', () => {
                         { topic: 'my-topic-0' },
                         { topic: 'my-topic-1' },
                         { topic: 'my-topic-2' },
-                        { topic: 'my-topic-3' },
+                        { topic: 'my-topic-3', alias: 'alias-to-my-topic-3' },
                     ],
                     consumer: { groupId: 'my-service.from-all-again' },
                 },

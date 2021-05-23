@@ -73,7 +73,7 @@ export enum ContentTypes {
 
 export interface SubscriptionConfig {
     consumer?: ConsumerConfig;
-    topics: TopicConfig | Array<string | TopicConfig>;
+    topics: Array<string | TopicConfig>;
     runConfig?: RunConfig;
     handler?: Handler;
     contentType?: ContentTypes | string;
