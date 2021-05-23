@@ -29,6 +29,7 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
     -   [Multiple producers](#multiple-producers)
     -   [Multiple brokers](#multiple-brokers)
     -   [Full configuration](#full-configuration)
+-   [Running tests](#running-tests)
 -   [License](#license)
 
 ## Install
@@ -488,40 +489,56 @@ const broker = new Broker({
     },
     config: { /* KafkaConfig */ },
     schemaRegistry: { // optional
-        host: host,
+        host: 'http://localhost:8081',
         options: { /* SchemaRegistryOptions */ }, // optional
     },
     producers: { // optional
         [name]: { /* KafkaProducerConfig */ }, // optional
     },
     publications: {
-        [name]: name,
+        [name]: 'my-topic',
         [name]: {
-            topic: name,
-            producer: name, // optional, default to "default"
+            topic: 'my-topic',
+            producer: 'my-producer', // optional, default to "default"
             config: { /* ProducerRecord */ },  // optional
             messageConfig: { /* MessageConfig */ }, // optional
-            schemaId: id, // optional
+            schemaId: 1, // optional
         },
     },
     subscriptions: {
-        [name]: name,
+        [name]: 'my-topic',
+        [name]: [
+            'my-topic',
+            {
+                topic: 'my-topic',
+                alias: 'my-topic-alias', // optional
+                handler: () => {}, // optional
+            }
+        ],
         [name]: {
             topics: [
-                name,
+                'my-topic',
                 {
-                    topic: name,
-                    alias: name, // optional
-                    handler: handler, // optional
+                    topic: 'my-topic',
+                    alias: 'my-topic-alias', // optional
+                    handler: () => {}, // optional
                 }
             ],
             consumer: { /* ConsumerConfig */ }, // optional
             runConfig: { /* RunConfig */ }, // optional
-            handler: handler, // optional
-            contentType: value, // optional
+            handler: () => {}, // optional
+            contentType: 'application/json', // optional
         },
     },
 });
+```
+
+## Running tests
+
+```shell
+yarn install
+yarn k up
+yarn k test
 ```
 
 ## License
