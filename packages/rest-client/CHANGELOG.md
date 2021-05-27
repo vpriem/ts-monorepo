@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.4...@vpriem/rest-client@1.1.0) (2021-05-27)
+
+
+### Features
+
+* **rest-client:** do not interfere with datadog status level ([7d82bc8](https://github.com/vpriem/ts-monorepo/commit/7d82bc8f2861cdbc4767f18b3071fd0438d2ade8))
+
+
+### BREAKING CHANGES
+
+* **rest-client:** rename RequestError.status to RequestError.statusCode
+
+
+
+
+
 ## [1.0.4](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.3...@vpriem/rest-client@1.0.4) (2021-03-02)
 
 **Note:** Version bump only for package @vpriem/rest-client
