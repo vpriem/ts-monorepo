@@ -36,10 +36,10 @@
     "test": "jest --testMatch '**/*.test.ts'"
   },
   "dependencies": {
-    "@types/node-fetch": "2.5.8",
+    "@types/node-fetch": "2.5.10",
     "node-fetch": "2.6.1"
   },
   "devDependencies": {
-    "nock": "13.0.10"
+    "nock": "13.0.11"
   }
 }
