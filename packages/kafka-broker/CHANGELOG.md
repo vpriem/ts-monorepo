@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0...@vpriem/kafka-broker@1.0.1) (2021-05-27)
+
+
+### Bug Fixes
+
+* **kafka-broker:** remove misleading type for SubscriptionConfig.topics ([efad718](https://github.com/vpriem/ts-monorepo/commit/efad7187fc0112481d5b9f8582802fc46ebdba99))
+* **kafka-broker:** update dependency @kafkajs/confluent-schema-registry to v3.0.0 ([670ca3f](https://github.com/vpriem/ts-monorepo/commit/670ca3fd554def695889465dd9045856c0e1c063))
+
+
+
+
+
 # [1.0.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0-alpha.14...@vpriem/kafka-broker@1.0.0) (2021-05-23)
 
 **Note:** Version bump only for package @vpriem/kafka-broker
