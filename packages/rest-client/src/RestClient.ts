@@ -85,7 +85,7 @@ export class RestClient {
                 method: 'DELETE',
             });
         } catch (error) {
-            if (error instanceof RequestError && error.status === 200) {
+            if (error instanceof RequestError && error.statusCode === 200) {
                 return null;
             }
             throw error;

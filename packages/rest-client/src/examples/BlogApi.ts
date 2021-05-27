@@ -34,7 +34,7 @@ export class BlogApi extends RestClient {
             );
             return data;
         } catch (error) {
-            if (error instanceof RequestError && error.status === 404) {
+            if (error instanceof RequestError && error.statusCode === 404) {
                 return null;
             }
             throw error;
