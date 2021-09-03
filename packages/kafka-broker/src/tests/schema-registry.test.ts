@@ -1,12 +1,14 @@
 import { v4 as uuid } from 'uuid';
-import {
-    readAVSCAsync,
-    SchemaRegistry,
-    SchemaType,
-} from '@kafkajs/confluent-schema-registry';
+import { readAVSCAsync } from '@kafkajs/confluent-schema-registry';
 import path from 'path';
 import fs from 'fs';
-import { Broker, getMessage } from '..';
+import {
+    Broker,
+    SchemaRegistry,
+    SchemaType,
+    COMPATIBILITY,
+    getMessage,
+} from '..';
 
 interface AvroEvent {
     id: string;
@@ -53,24 +55,27 @@ describe('schema registry', () => {
             'utf8'
         );
 
-        const schemaRegistry = new SchemaRegistry({
-            host: process.env.SCHEMA_REGISTRY_HOST as string,
-        });
+        const registry: SchemaRegistry = broker.schemaRegistry()!;
+
+        expect(registry).toBeDefined();
 
         await expect(
-            schemaRegistry.register({
+            registry.register({
                 type: SchemaType.AVRO,
                 schema: JSON.stringify(schemaAVRO),
             })
         ).resolves.toEqual({ id: 1 });
 
         await expect(
-            schemaRegistry.register(
+            registry.register(
                 {
                     type: SchemaType.JSON,
                     schema: schemaJSON,
                 },
-                { subject: 'test.Json' }
+                {
+                    subject: 'test.Json',
+                    compatibility: COMPATIBILITY.NONE,
+                }
             )
         ).resolves.toEqual({ id: 2 });
     });

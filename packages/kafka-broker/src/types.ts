@@ -11,6 +11,11 @@ import {
 } from 'kafkajs';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
+import {
+    SchemaRegistry,
+    SchemaType,
+    COMPATIBILITY,
+} from '@kafkajs/confluent-schema-registry';
 
 export type ProducerConfig = KafkaProducerConfig;
 
@@ -86,6 +91,7 @@ export type SubscriptionMap = Record<
     string | SubscriptionConfig['topics'] | SubscriptionConfig
 >;
 
+export { SchemaRegistry, SchemaType, COMPATIBILITY };
 export type SchemaRegistryArgs = SchemaRegistryAPIClientArgs;
 export type SchemaRegistryOptions = SchemaRegistryAPIClientOptions;
 export interface SchemaRegistryConfig extends SchemaRegistryArgs {
@@ -128,6 +134,8 @@ export interface SubscriptionInterface {
 
 export interface BrokerInterface extends PublisherInterface {
     namespace(): string;
+
+    schemaRegistry(): SchemaRegistry | undefined;
 
     subscription(name: string): SubscriptionInterface;
 

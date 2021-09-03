@@ -281,7 +281,13 @@ const broker = new Broker({
 By doing this, a `content-type: application/schema-registry` header will be added to the message,
 in order to automatically decode messages using schema registry on the consumer side.
 
-**This implies consumer having schema registry configured the same way as the producer.**
+Accessing the registry:
+
+```typescript
+const registry = broker.schemaRegistry();
+
+await registry?.register(/* Schema */);
+```
 
 ## Typescript
 
