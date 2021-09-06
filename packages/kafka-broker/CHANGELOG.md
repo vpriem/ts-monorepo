@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.1...@vpriem/kafka-broker@1.1.0) (2021-09-06)
+
+
+### Bug Fixes
+
+* **kafka-broker:** add Broker.schemaRegistry() to access registry ([b895874](https://github.com/vpriem/ts-monorepo/commit/b895874f79c0b0b4d6b4bc93311cde38b311cb15))
+* **kafka-broker:** update @kafkajs/confluent-schema-registry to v3.0.1 ([c24b4d8](https://github.com/vpriem/ts-monorepo/commit/c24b4d88e002adbb4b9230d48b0cb29d84892f7b))
+
+
+### Features
+
+* **kafka-broker:** enable producing messages from last schema version ([cba1f57](https://github.com/vpriem/ts-monorepo/commit/cba1f57f2c4e8daac98c5413a2456662a1d92cbc))
+
+
+
+
+
 ## [1.0.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.0...@vpriem/kafka-broker@1.0.1) (2021-05-27)
 
 
