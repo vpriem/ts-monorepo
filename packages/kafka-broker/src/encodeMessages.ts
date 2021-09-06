@@ -1,36 +1,16 @@
 import { Message } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
-import { PublishMessage, MessageValue, ContentTypes } from './types';
+import { PublishMessage, MessageValue, SchemaId, SchemaSubject } from './types';
 import { encodeMessage } from './encodeMessage';
-import { BrokerError } from './BrokerError';
+import { encodeMessagesWithRegistry } from './encodeMessagesWithRegistry';
 
 export const encodeMessages = async <V = MessageValue>(
     messages: PublishMessage<V>[],
-    schemaId?: number,
+    schema?: SchemaId | SchemaSubject,
     schemaRegistry?: SchemaRegistry
 ): Promise<Message[]> => {
-    if (schemaId) {
-        // istanbul ignore if
-        if (typeof schemaRegistry === 'undefined') {
-            throw new BrokerError('Registry not defined');
-        }
-
-        return Promise.all(
-            messages.map(async (message) => {
-                const value = await schemaRegistry.encode(
-                    schemaId,
-                    message.value
-                );
-                return {
-                    ...message,
-                    value,
-                    headers: {
-                        ...message.headers,
-                        'content-type': ContentTypes.SCHEMA_REGISTRY,
-                    },
-                };
-            })
-        );
+    if (schema) {
+        return encodeMessagesWithRegistry(messages, schema, schemaRegistry);
     }
 
     return messages.map(encodeMessage);

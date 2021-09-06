@@ -21,12 +21,21 @@ export type ProducerConfig = KafkaProducerConfig;
 
 export type MessageConfig = Omit<Message, 'value'>;
 
+export interface SchemaId {
+    id: number;
+}
+
+export interface SchemaSubject {
+    subject: string;
+    version: 'latest' | number;
+}
+
 export interface PublicationConfig {
     producer?: string;
     topic: string;
     config?: Omit<ProducerRecord, 'topic' | 'messages'>;
     messageConfig?: MessageConfig;
-    schemaId?: number;
+    schema?: number | string | SchemaId | SchemaSubject;
 }
 
 export type MessageValue = Buffer | string | null | object;

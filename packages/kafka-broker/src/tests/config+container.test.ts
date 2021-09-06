@@ -34,6 +34,7 @@ describe('config+container', () => {
                             'to-topic2': {
                                 topic: 'my-topic-2',
                                 producer: 'extra-producer',
+                                schema: { id: 2 },
                             },
                         },
                         subscriptions: {
@@ -84,6 +85,7 @@ describe('config+container', () => {
                     topic: 'my-topic-2',
                     // TODO: producer: 'broker2/extra-producer',
                     producer: 'extra-producer',
+                    schema: { id: 2 },
                 },
             },
             subscriptions: {

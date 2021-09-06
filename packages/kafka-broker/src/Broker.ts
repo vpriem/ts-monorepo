@@ -25,7 +25,7 @@ const isConfig = (
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
 
-    private readonly schemaReg?: SchemaRegistry;
+    private readonly registry?: SchemaRegistry;
 
     private readonly producers: ProducerContainer;
 
@@ -41,7 +41,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
         const kafka = new KafkaContainer(this.config.kafka);
 
         if (this.config.schemaRegistry) {
-            this.schemaReg = new SchemaRegistry(
+            this.registry = new SchemaRegistry(
                 this.config.schemaRegistry,
                 this.config.schemaRegistry.options
             );
@@ -53,7 +53,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
             kafka,
             this,
             this.config.subscriptions,
-            this.schemaReg
+            this.registry
         ).on('error', (error) => this.emit('error', error));
     }
 
@@ -62,7 +62,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
     }
 
     schemaRegistry(): SchemaRegistry | undefined {
-        return this.schemaReg;
+        return this.registry;
     }
 
     async publish<V = MessageValue>(
@@ -79,7 +79,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
             producer: producerName,
             topic,
             messageConfig,
-            schemaId,
+            schema,
         } = publicationConfig;
 
         const producer = await this.producers.create(producerName);
@@ -97,8 +97,8 @@ export class Broker extends EventEmitter implements BrokerInterface {
 
         const encodedMessages = await encodeMessages(
             messages,
-            schemaId,
-            this.schemaReg
+            schema,
+            this.registry
         );
 
         return producer.send({

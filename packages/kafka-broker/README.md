@@ -257,14 +257,16 @@ const broker = new Broker({
     // or
     schemaRegistry: {
         host: process.env.SCHEMA_REGISTRY_URL as string,
-        options: { /* SchemaRegistryOptions */ },
+        options: {
+            /* SchemaRegistryOptions */
+        },
     },
 });
 ```
 
 For the full configuration please refer to [@kafkajs/confluent-schema-registry](https://kafkajs.github.io/confluent-schema-registry/).
 
-Producers need to specify the schema registry id in the publication config:
+Producers need to specify the schema registry id or subject/version in the publication config:
 
 ```typescript
 const broker = new Broker({
@@ -272,7 +274,12 @@ const broker = new Broker({
     publications: {
         'to-my-topic': {
             topic: 'my-long-topic-name',
-            schemaId: 1,
+            schema: 1, // equivalent to { id: 1 }
+        },
+        // or
+        'to-my-topic': {
+            topic: 'my-long-topic-name',
+            schema: 'my-subject', // equivalent to { subject: 'my-subject', version: 'latest' }
         },
     },
 });
@@ -338,8 +345,12 @@ await broker.shutdown();
 const broker = new Broker({
     // ...
     defaults: {
-        producer: { /* KafkaProducerConfig to be applyed to all producers */ },
-        consumer: { /* KafkaConsumerConfig to be applyed to all consumers */ },
+        producer: {
+            /* KafkaProducerConfig to be applyed to all producers */
+        },
+        consumer: {
+            /* KafkaConsumerConfig to be applyed to all consumers */
+        },
     },
 });
 ```
@@ -405,8 +416,12 @@ You can define multiple producers, configure them differently and reuse them acr
 const broker = new Broker({
     // ...
     producers: {
-        'producer-1': { /* KafkaProducerConfig */ },
-        'producer-2': { /* KafkaProducerConfig */ },
+        'producer-1': {
+            /* KafkaProducerConfig */
+        },
+        'producer-2': {
+            /* KafkaProducerConfig */
+        },
     },
     publications: {
         'to-my-topic-1': {
@@ -489,25 +504,42 @@ await broker.publish('private/my-topic', { value: 'my-private-message' });
 ```typescript
 const broker = new Broker({
     namespace: 'my-service',
-    defaults: { // optional
-        producer: { /* KafkaProducerConfig */ }, // optional
-        consumer: { /* KafkaConsumerConfig */ }, // optional
+    defaults: {
+        // optional
+        producer: {
+            /* KafkaProducerConfig */
+        }, // optional
+        consumer: {
+            /* KafkaConsumerConfig */
+        }, // optional
     },
-    config: { /* KafkaConfig */ },
-    schemaRegistry: { // optional
+    config: {
+        /* KafkaConfig */
+    },
+    schemaRegistry: {
+        // optional
         host: 'http://localhost:8081',
-        options: { /* SchemaRegistryOptions */ }, // optional
+        options: {
+            /* SchemaRegistryOptions */
+        }, // optional
     },
-    producers: { // optional
-        [name]: { /* KafkaProducerConfig */ }, // optional
+    producers: {
+        // optional
+        [name]: {
+            /* KafkaProducerConfig */
+        }, // optional
     },
     publications: {
         [name]: 'my-topic',
         [name]: {
             topic: 'my-topic',
             producer: 'my-producer', // optional, default to "default"
-            config: { /* ProducerRecord */ },  // optional
-            messageConfig: { /* MessageConfig */ }, // optional
+            config: {
+                /* ProducerRecord */
+            }, // optional
+            messageConfig: {
+                /* MessageConfig */
+            }, // optional
             schemaId: 1, // optional
         },
     },
@@ -519,7 +551,7 @@ const broker = new Broker({
                 topic: 'my-topic',
                 alias: 'my-topic-alias', // optional
                 handler: () => {}, // optional
-            }
+            },
         ],
         [name]: {
             topics: [
@@ -528,10 +560,14 @@ const broker = new Broker({
                     topic: 'my-topic',
                     alias: 'my-topic-alias', // optional
                     handler: () => {}, // optional
-                }
+                },
             ],
-            consumer: { /* ConsumerConfig */ }, // optional
-            runConfig: { /* RunConfig */ }, // optional
+            consumer: {
+                /* ConsumerConfig */
+            }, // optional
+            runConfig: {
+                /* RunConfig */
+            }, // optional
             handler: () => {}, // optional
             contentType: 'application/json', // optional
         },

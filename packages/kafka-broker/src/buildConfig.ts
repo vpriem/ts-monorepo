@@ -6,7 +6,9 @@ import {
     ProducerMap,
     PublicationConfig,
     PublicationMap,
+    SchemaId,
     SchemaRegistryConfig,
+    SchemaSubject,
     SubscriptionConfig,
     SubscriptionMap,
     TopicConfig,
@@ -25,6 +27,7 @@ export interface ConfigSubscription extends SubscriptionConfig {
 
 export interface ConfigPublication extends PublicationConfig {
     producer: string;
+    schema?: SchemaId | SchemaSubject;
 }
 
 export interface Config {
@@ -55,6 +58,16 @@ export const buildProducers = (
     ),
 });
 
+const buildSchema = (
+    schema?: number | string | SchemaId | SchemaSubject
+): undefined | SchemaId | SchemaSubject => {
+    if (typeof schema === 'number') return { id: schema };
+    if (typeof schema === 'string')
+        // TODO: parse subject:version
+        return { subject: schema, version: 'latest' };
+    return schema;
+};
+
 export const buildPublications = (
     publications: PublicationMap = {},
     producer = 'default'
@@ -63,7 +76,14 @@ export const buildPublications = (
         Object.entries(publications).map(([name, publicationConfig]) =>
             typeof publicationConfig === 'string'
                 ? [name, { producer, topic: publicationConfig }]
-                : [name, { producer, ...publicationConfig }]
+                : [
+                      name,
+                      {
+                          producer,
+                          ...publicationConfig,
+                          schema: buildSchema(publicationConfig.schema),
+                      },
+                  ]
         )
     );
 

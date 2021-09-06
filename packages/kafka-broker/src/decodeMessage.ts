@@ -5,7 +5,7 @@ import { BrokerError } from './BrokerError';
 
 export const decodeMessage = async (
     message: KafkaMessage,
-    schemaRegistry?: SchemaRegistry,
+    registry?: SchemaRegistry,
     contentTypeOverride?: ContentTypes | string
 ): Promise<MessageValue> => {
     if (!message.value) return message.value;
@@ -19,11 +19,11 @@ export const decodeMessage = async (
 
     if (contentType === ContentTypes.SCHEMA_REGISTRY) {
         // istanbul ignore if
-        if (typeof schemaRegistry === 'undefined') {
+        if (typeof registry === 'undefined') {
             throw new BrokerError('Registry not defined');
         }
 
-        return (await schemaRegistry.decode(message.value)) as MessageValue;
+        return (await registry.decode(message.value)) as MessageValue;
     }
 
     if (contentType === ContentTypes.TEXT) {

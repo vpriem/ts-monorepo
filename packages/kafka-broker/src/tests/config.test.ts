@@ -17,6 +17,12 @@ describe('config', () => {
                     'to-topic2': {
                         topic: 'my-topic-2',
                         producer: 'my-producer-2',
+                        schema: 2,
+                    },
+                    'to-topic3': {
+                        topic: 'my-topic-2',
+                        producer: 'my-producer-2',
+                        schema: 'subject-3',
                     },
                 },
                 subscriptions: {
@@ -81,6 +87,15 @@ describe('config', () => {
                 'to-topic2': {
                     topic: 'my-topic-2',
                     producer: 'my-producer-2',
+                    schema: { id: 2 },
+                },
+                'to-topic3': {
+                    topic: 'my-topic-2',
+                    producer: 'my-producer-2',
+                    schema: {
+                        subject: 'subject-3',
+                        version: 'latest',
+                    },
                 },
             },
             subscriptions: {

@@ -21,6 +21,7 @@ interface JsonEvent {
 }
 
 describe('schema registry', () => {
+    const subject = 'test.Json';
     const topic = uuid();
     const broker = new Broker({
         namespace: uuid(),
@@ -33,11 +34,25 @@ describe('schema registry', () => {
         publications: {
             'to-topic-avro': {
                 topic,
-                schemaId: 1,
+                schema: { id: 1 },
             },
             'to-topic-json': {
                 topic,
-                schemaId: 2,
+                schema: { id: 2 },
+            },
+            'to-topic-json-latest': {
+                topic,
+                schema: {
+                    subject,
+                    version: 'latest',
+                },
+            },
+            'to-topic-json-v1': {
+                topic,
+                schema: {
+                    subject,
+                    version: 1,
+                },
             },
         },
         subscriptions: {
@@ -73,7 +88,7 @@ describe('schema registry', () => {
                     schema: schemaJSON,
                 },
                 {
-                    subject: 'test.Json',
+                    subject,
                     compatibility: COMPATIBILITY.NONE,
                 }
             )
@@ -122,6 +137,66 @@ describe('schema registry', () => {
 
         await expect(
             broker.publish<JsonEvent>('to-topic-json', {
+                value: { id, json: true },
+            })
+        ).resolves.toMatchObject([{ topicName: topic }]);
+
+        await expect(message).resolves.toEqual([
+            { id, json: true },
+            expect.objectContaining({
+                message: expect.objectContaining({
+                    headers: {
+                        'content-type': Buffer.from(
+                            'application/schema-registry'
+                        ),
+                    },
+                }) as object,
+                topic,
+            }),
+            expect.any(Function),
+        ]);
+    });
+
+    it('should publish and consume JSON message from latest version', async () => {
+        const id = uuid();
+        const subscription = broker.subscription('from-topic');
+
+        const message = getMessage(subscription);
+
+        await subscription.run();
+
+        await expect(
+            broker.publish<JsonEvent>('to-topic-json-latest', {
+                value: { id, json: true },
+            })
+        ).resolves.toMatchObject([{ topicName: topic }]);
+
+        await expect(message).resolves.toEqual([
+            { id, json: true },
+            expect.objectContaining({
+                message: expect.objectContaining({
+                    headers: {
+                        'content-type': Buffer.from(
+                            'application/schema-registry'
+                        ),
+                    },
+                }) as object,
+                topic,
+            }),
+            expect.any(Function),
+        ]);
+    });
+
+    it('should publish and consume JSON message from fixed version', async () => {
+        const id = uuid();
+        const subscription = broker.subscription('from-topic');
+
+        const message = getMessage(subscription);
+
+        await subscription.run();
+
+        await expect(
+            broker.publish<JsonEvent>('to-topic-json-v1', {
                 value: { id, json: true },
             })
         ).resolves.toMatchObject([{ topicName: topic }]);
