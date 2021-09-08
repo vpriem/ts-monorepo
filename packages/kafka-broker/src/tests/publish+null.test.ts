@@ -20,7 +20,6 @@ describe('publish+null', () => {
 
     it('should publish and consume', async () => {
         const subscription = broker.subscription('from-topic1');
-
         const message = getMessage(subscription);
 
         await subscription.run();

@@ -1,9 +1,9 @@
 import {
     MessageValue,
     ConsumePayload,
-    Handler,
     Publish,
     SubscriptionInterface,
+    Handler,
 } from './types';
 
 type Args = [MessageValue, ConsumePayload, Publish];
@@ -13,15 +13,18 @@ export function getMessage(
     n = 1
 ): Promise<Args | Args[]> {
     if (n === 1) {
-        return new Promise((resolve) => {
-            subscription.once('message', (...args) => {
+        return new Promise((resolve, reject) => {
+            const handler: Handler = (...args) => {
                 resolve(args);
+                subscription.off('message', handler);
                 return Promise.resolve();
-            });
+            };
+
+            subscription.on('message', handler).once('error', reject);
         });
     }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const values: Args[] = [];
 
         const handler: Handler = (...args) => {
@@ -34,6 +37,6 @@ export function getMessage(
             return Promise.resolve();
         };
 
-        subscription.on('message', handler);
+        subscription.on('message', handler).on('error', reject);
     });
 }

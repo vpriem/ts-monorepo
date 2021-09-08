@@ -5,22 +5,12 @@ import { decodeMessage } from './decodeMessage';
 import { ConfigSubscription } from './buildConfig';
 import {
     MessageValue,
-    ConsumePayload,
     Publish,
     PublisherInterface,
     SubscriptionInterface,
+    Handler,
 } from './types';
-
-export interface Subscription {
-    emit(event: 'error', error: Error): boolean;
-
-    emit(
-        event: string,
-        value: MessageValue,
-        payload: ConsumePayload,
-        publish: Publish
-    ): boolean;
-}
+import { BrokerError } from './BrokerError';
 
 export class Subscription
     extends EventEmitter
@@ -34,7 +24,13 @@ export class Subscription
 
     private readonly registry?: SchemaRegistry;
 
-    private isRunning = false;
+    private handlers: Handler[] = [];
+
+    private readonly aliasToTopic: Record<string, string> = {};
+
+    private readonly topicToHandlers: Record<string, Handler[]> = {};
+
+    private isRunning: Promise<this>;
 
     constructor(
         consumer: Consumer,
@@ -49,48 +45,87 @@ export class Subscription
         this.config = config;
         this.registry = registry;
 
-        this.registerHandlers();
-    }
-
-    private registerHandlers() {
         if (this.config.handler) {
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            this.on('message', this.config.handler);
+            this.handlers.push(this.config.handler);
         }
 
-        this.config.topics.forEach(({ topic, alias, handler }) =>
-            handler
-                ? // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                  this.on(`message.${alias || topic.toString()}`, handler)
-                : undefined
+        this.aliasToTopic = Object.fromEntries(
+            this.config.topics.map(({ topic, alias }) => [
+                alias || topic.toString(),
+                topic.toString(),
+            ])
+        );
+
+        this.topicToHandlers = Object.fromEntries(
+            this.config.topics.map(({ topic, handler }) => [
+                topic.toString(),
+                handler ? [handler] : [],
+            ])
         );
     }
 
-    private mapTopicToAlias(): Record<string, string> {
-        return Object.fromEntries(
-            this.config.topics.map(({ topic, alias }) => [
-                topic.toString(),
-                alias || topic.toString(),
-            ])
-        );
+    private addHandler(handler: Handler, topicOrAlias?: string) {
+        if (topicOrAlias) {
+            const topic = this.aliasToTopic[topicOrAlias] || topicOrAlias;
+            if (!this.topicToHandlers[topic]) {
+                throw new BrokerError(
+                    `Unknown topic or alias "${topicOrAlias}"`
+                );
+            }
+
+            this.topicToHandlers[topic].push(handler);
+        } else {
+            this.handlers.push(handler);
+        }
+        return this;
+    }
+
+    private removeHandler(handler: Handler, topicOrAlias?: string) {
+        if (topicOrAlias) {
+            const topic = this.aliasToTopic[topicOrAlias] || topicOrAlias;
+            if (!this.topicToHandlers[topic]) {
+                throw new BrokerError(
+                    `Unknown topic or alias "${topicOrAlias}"`
+                );
+            }
+
+            this.topicToHandlers[topic] = this.topicToHandlers[topic].filter(
+                (h) => h !== handler
+            );
+        } else {
+            this.handlers = this.handlers.filter((h) => h !== handler);
+        }
+        return this;
+    }
+
+    on(event: string | symbol, listener: (...args: any[]) => void): this {
+        if (typeof event === 'string' && event.startsWith('message')) {
+            return this.addHandler(listener as Handler, event.split('.')[1]);
+        }
+
+        return super.on(event, listener);
+    }
+
+    off(event: string | symbol, listener: (...args: any[]) => void): this {
+        if (typeof event === 'string' && event.startsWith('message')) {
+            return this.removeHandler(listener as Handler, event.split('.')[1]);
+        }
+
+        return super.off(event, listener);
     }
 
     private async subscribe(): Promise<void> {
         await this.consumer.connect();
 
         await Promise.all(
-            this.config.topics.map((topicConfig) =>
+            this.config.topics.map(({ alias, handler, ...topicConfig }) =>
                 this.consumer.subscribe(topicConfig)
             )
         );
     }
 
-    async run(): Promise<this> {
-        if (this.isRunning) return this;
-        this.isRunning = true;
-
+    private async subscribeAndRun(): Promise<this> {
         const { runConfig, contentType } = this.config;
-        const topicToAlias = this.mapTopicToAlias();
         const publish = this.publisher.publish.bind(this.publisher) as Publish;
 
         await this.subscribe();
@@ -98,11 +133,12 @@ export class Subscription
         await this.consumer.run({
             ...runConfig,
             eachMessage: async (payload) => {
+                const { message, topic } = payload;
                 let value: MessageValue;
 
                 try {
                     value = await decodeMessage(
-                        payload.message,
+                        message,
                         this.registry,
                         contentType
                     );
@@ -111,17 +147,31 @@ export class Subscription
                     return;
                 }
 
-                this.emit('message', value, payload, publish);
+                const handlers = this.topicToHandlers[topic]
+                    ? [...this.handlers, ...this.topicToHandlers[topic]]
+                    : this.handlers;
 
-                const topicAlias = topicToAlias[payload.topic];
-                // istanbul ignore else
-                if (topicAlias) {
-                    this.emit(`message.${topicAlias}`, value, payload, publish);
+                try {
+                    await Promise.all(
+                        handlers.map((handler) =>
+                            handler(value, payload, publish)
+                        )
+                    );
+                } catch (error) {
+                    this.emit('error', error);
                 }
             },
         });
 
         return this;
+    }
+
+    async run(): Promise<this> {
+        if (typeof this.isRunning === 'undefined') {
+            this.isRunning = this.subscribeAndRun();
+        }
+
+        return this.isRunning;
     }
 
     async disconnect(): Promise<void> {

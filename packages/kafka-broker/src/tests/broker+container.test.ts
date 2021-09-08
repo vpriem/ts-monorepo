@@ -81,7 +81,6 @@ describe('broker+container', () => {
             .run();
 
         const subscription = broker.subscription('private/from-topic2');
-
         const message = getMessage(subscription);
 
         await subscription.run();

@@ -32,6 +32,7 @@ describe('config', () => {
                         {
                             topic: 'my-topic-1.1',
                             alias: 'alias-to-my-topic1',
+                            handler: async () => Promise.resolve(),
                         },
                     ],
                     'from-topic2': {
@@ -41,6 +42,7 @@ describe('config', () => {
                                 fromBeginning: true,
                             },
                         ],
+                        handler: async () => Promise.resolve(),
                     },
                     'from-topic3': {
                         topics: ['my-topic-3'],
@@ -111,6 +113,7 @@ describe('config', () => {
                         {
                             topic: 'my-topic-1.1',
                             alias: 'alias-to-my-topic1',
+                            handler: expect.any(Function) as Function,
                         },
                     ],
                     consumer: { groupId: 'my-service.from-topic1' },
@@ -124,6 +127,7 @@ describe('config', () => {
                         },
                     ],
                     consumer: { groupId: 'my-service.from-topic2' },
+                    handler: expect.any(Function) as Function,
                 },
                 'from-topic3': {
                     kafka: 'default',

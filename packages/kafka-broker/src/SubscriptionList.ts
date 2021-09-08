@@ -4,18 +4,28 @@ export class SubscriptionList
     extends Array<SubscriptionInterface>
     implements SubscriptionInterface
 {
-    on<V = MessageValue>(event: string, listener: Handler<V>): this {
-        this.forEach((subscription) => subscription.on('message', listener));
+    on<V = MessageValue>(
+        event: 'message' | `message.${string}` | 'error',
+        listener: Handler<V> | ((error: Error) => void)
+    ): this {
+        this.forEach((subscription) =>
+            subscription.on(event as 'message', listener as Handler<V>)
+        );
         return this;
     }
 
-    once<V = MessageValue>(event: string, listener: Handler<V>): this {
-        this.forEach((subscription) => subscription.once('message', listener));
+    once(event: 'error', listener: (error: Error) => void): this {
+        this.forEach((subscription) => subscription.once(event, listener));
         return this;
     }
 
-    off<V = MessageValue>(event: string, listener: Handler<V>): this {
-        this.forEach((subscription) => subscription.off('message', listener));
+    off<V = MessageValue>(
+        event: 'message' | 'error',
+        listener: Handler<V> | ((error: Error) => void)
+    ): this {
+        this.forEach((subscription) =>
+            subscription.off(event as 'message', listener as Handler<V>)
+        );
         return this;
     }
 

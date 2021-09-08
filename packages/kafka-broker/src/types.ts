@@ -132,11 +132,19 @@ export interface BrokerContainerConfig {
 }
 
 export interface SubscriptionInterface {
-    on<V = MessageValue>(event: string, listener: Handler<V>): this;
+    on<V = MessageValue>(
+        event: 'message' | `message.${string}`,
+        listener: Handler<V>
+    ): this;
+    on(event: 'error', listener: (error: Error) => void): this;
 
-    once<V = MessageValue>(event: string, listener: Handler<V>): this;
+    once(event: 'error', listener: (error: Error) => void): this;
 
-    off<V = MessageValue>(event: string, listener: Handler<V>): this;
+    off<V = MessageValue>(
+        event: 'message' | string,
+        listener: Handler<V>
+    ): this;
+    off(event: 'error', listener: (error: Error) => void): this;
 
     run(): Promise<this>;
 }

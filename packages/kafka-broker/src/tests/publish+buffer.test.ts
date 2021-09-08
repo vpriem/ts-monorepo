@@ -21,7 +21,6 @@ describe('publish+buffer', () => {
     it('should publish and consume', async () => {
         const value = Buffer.from(uuid());
         const subscription = broker.subscription('from-topic1');
-
         const message = getMessage(subscription);
 
         await subscription.run();
