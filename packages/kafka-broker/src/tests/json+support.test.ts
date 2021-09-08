@@ -33,9 +33,7 @@ describe('json+support', () => {
         const id2 = uuid();
         const id3 = uuid();
         const id4 = uuid();
-
         const subscription = broker.subscription('from-topic1');
-
         const messages = getMessage(subscription, 4);
 
         await subscription.run();
@@ -68,9 +66,7 @@ describe('json+support', () => {
 
     it('should force json consume', async () => {
         const id = uuid();
-
         const subscription = broker.subscription('from-topic2');
-
         const message = getMessage(subscription);
 
         await subscription.run();
@@ -94,17 +90,21 @@ describe('json+support', () => {
     });
 
     it('should emit error event', async () => {
-        broker.on('error', () => undefined);
-        const error = new Promise((resolve) => {
-            broker.on('error', resolve);
-        });
+        const brokerError = new Promise((resolve) =>
+            broker.once('error', resolve)
+        );
+        const subscription = broker.subscription('from-topic2');
+        const subscriptionError = new Promise((resolve) =>
+            subscription.once('error', resolve)
+        );
 
-        await broker.subscription('from-topic2').run();
+        await subscription.run();
 
         await expect(
             broker.publish('to-topic2', [{ value: uuid() }])
         ).resolves.toMatchObject([{ topicName: topic2 }]);
 
-        await expect(error).resolves.toThrow(/JSON/);
+        await expect(brokerError).resolves.toThrow(/JSON/);
+        await expect(subscriptionError).resolves.toThrow(/JSON/);
     });
 });

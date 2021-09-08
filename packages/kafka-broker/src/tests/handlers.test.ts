@@ -39,7 +39,6 @@ describe('handlers', () => {
         const value1 = uuid();
         const value2 = uuid();
         const subscription = broker.subscription('from-all-topics');
-
         const messages = getMessage(subscription, 2);
 
         await subscription.run();

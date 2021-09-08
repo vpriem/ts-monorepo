@@ -1,12 +1,9 @@
 import { v4 as uuid } from 'uuid';
-import { Broker, Handler, getMessage } from '..';
+import { Broker, getMessage } from '..';
 
 describe('handler+publish', () => {
     const topic1 = uuid();
     const topic2 = uuid();
-    const handler: Handler = async (value, payload, publish): Promise<void> => {
-        await publish('to-topic2', { value });
-    };
     const broker = new Broker({
         namespace: uuid(),
         config: {
@@ -19,7 +16,9 @@ describe('handler+publish', () => {
         subscriptions: {
             'from-topic1': {
                 topics: [topic1],
-                handler,
+                handler: async (value, payload, publish): Promise<void> => {
+                    await publish('to-topic2', { value });
+                },
             },
             'from-topic2': topic2,
         },

@@ -100,7 +100,6 @@ describe('schema registry', () => {
     it('should publish and consume AVRO message', async () => {
         const id = uuid();
         const subscription = broker.subscription('from-topic');
-
         const message = getMessage(subscription);
 
         await subscription.run();
@@ -130,7 +129,6 @@ describe('schema registry', () => {
     it('should publish and consume JSON message', async () => {
         const id = uuid();
         const subscription = broker.subscription('from-topic');
-
         const message = getMessage(subscription);
 
         await subscription.run();
@@ -160,7 +158,6 @@ describe('schema registry', () => {
     it('should publish and consume JSON message from latest version', async () => {
         const id = uuid();
         const subscription = broker.subscription('from-topic');
-
         const message = getMessage(subscription);
 
         await subscription.run();
@@ -190,7 +187,6 @@ describe('schema registry', () => {
     it('should publish and consume JSON message from fixed version', async () => {
         const id = uuid();
         const subscription = broker.subscription('from-topic');
-
         const message = getMessage(subscription);
 
         await subscription.run();

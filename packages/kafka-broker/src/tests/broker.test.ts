@@ -15,6 +15,9 @@ describe('broker', () => {
                 producer: 'foo',
             },
         },
+        subscriptions: {
+            'from-topic-foo': topic,
+        },
     });
 
     afterAll(() => broker.shutdown());
@@ -36,4 +39,18 @@ describe('broker', () => {
         expect(() => broker.subscription('foo')).toThrow(
             new BrokerError('Unknown subscription "foo"')
         ));
+
+    it('should throw on unknown topic', () =>
+        expect(() =>
+            broker
+                .subscription('from-topic-foo')
+                .on('message.foo', () => Promise.resolve())
+        ).toThrow(new BrokerError('Unknown topic or alias "foo"')));
+
+    it('should throw on unknown topic', () =>
+        expect(() =>
+            broker
+                .subscription('from-topic-foo')
+                .off('message.foo', () => Promise.resolve())
+        ).toThrow(new BrokerError('Unknown topic or alias "foo"')));
 });

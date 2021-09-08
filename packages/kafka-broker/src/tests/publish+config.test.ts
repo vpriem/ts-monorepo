@@ -37,7 +37,6 @@ describe('publish+config', () => {
         ).resolves.toMatchObject([{ topicName: topic }]);
 
         const subscription = broker.subscription('from-topic1');
-
         const messages = getMessage(subscription, 2);
 
         await subscription.run();
