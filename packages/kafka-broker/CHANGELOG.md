@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.1.0...@vpriem/kafka-broker@1.2.0) (2021-09-09)
+
+
+### Bug Fixes
+
+* **kafka-broker:** do not shortcut kafkajs retry mechanism ([b6f6957](https://github.com/vpriem/ts-monorepo/commit/b6f69579abafca8a107b0e723eb1106603132419))
+* **kafka-broker:** make ConsumerConfig.groupId optional as it is auto generated ([2c5d095](https://github.com/vpriem/ts-monorepo/commit/2c5d095c0a9a2cca9f512658ceee63d56d3b239c))
+
+
+### Features
+
+* **kafka-broker:** rewrite on('message') to wait for each message to be fully processed ([8d10e5f](https://github.com/vpriem/ts-monorepo/commit/8d10e5f806ca1cb4438841c460836b4a4f205553))
+
+
+
+
+
 # [1.1.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.0.1...@vpriem/kafka-broker@1.1.0) (2021-09-06)
 
 
