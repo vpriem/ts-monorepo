@@ -36,9 +36,8 @@ export const encodeMessagesWithRegistry = async <V = MessageValue>(
     schema: SchemaId | SchemaSubject,
     schemaRegistry?: SchemaRegistry
 ): Promise<Message[]> => {
-    // istanbul ignore if
     if (typeof schemaRegistry === 'undefined') {
-        throw new BrokerError('Registry not defined');
+        throw new BrokerError('Registry not found');
     }
 
     let schemaId: number;

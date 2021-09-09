@@ -88,23 +88,4 @@ describe('json+support', () => {
             expect.any(Function),
         ]);
     });
-
-    it('should emit error event', async () => {
-        const brokerError = new Promise((resolve) =>
-            broker.once('error', resolve)
-        );
-        const subscription = broker.subscription('from-topic2');
-        const subscriptionError = new Promise((resolve) =>
-            subscription.once('error', resolve)
-        );
-
-        await subscription.run();
-
-        await expect(
-            broker.publish('to-topic2', [{ value: uuid() }])
-        ).resolves.toMatchObject([{ topicName: topic2 }]);
-
-        await expect(brokerError).resolves.toThrow(/JSON/);
-        await expect(subscriptionError).resolves.toThrow(/JSON/);
-    });
 });

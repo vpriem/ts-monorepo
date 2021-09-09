@@ -4,7 +4,6 @@ import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { decodeMessage } from './decodeMessage';
 import { ConfigSubscription } from './buildConfig';
 import {
-    MessageValue,
     Publish,
     PublisherInterface,
     SubscriptionInterface,
@@ -44,6 +43,10 @@ export class Subscription
         this.publisher = publisher;
         this.config = config;
         this.registry = registry;
+
+        this.consumer.on('consumer.crash', ({ payload: { error } }) =>
+            this.emit('error', error)
+        );
 
         if (this.config.handler) {
             this.handlers.push(this.config.handler);
@@ -134,32 +137,20 @@ export class Subscription
             ...runConfig,
             eachMessage: async (payload) => {
                 const { message, topic } = payload;
-                let value: MessageValue;
 
-                try {
-                    value = await decodeMessage(
-                        message,
-                        this.registry,
-                        contentType
-                    );
-                } catch (error) {
-                    this.emit('error', error);
-                    return;
-                }
+                const value = await decodeMessage(
+                    message,
+                    this.registry,
+                    contentType
+                );
 
                 const handlers = this.topicToHandlers[topic]
                     ? [...this.handlers, ...this.topicToHandlers[topic]]
                     : this.handlers;
 
-                try {
-                    await Promise.all(
-                        handlers.map((handler) =>
-                            handler(value, payload, publish)
-                        )
-                    );
-                } catch (error) {
-                    this.emit('error', error);
-                }
+                await Promise.all(
+                    handlers.map((handler) => handler(value, payload, publish))
+                );
             },
         });
 

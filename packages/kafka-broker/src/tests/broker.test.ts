@@ -14,6 +14,10 @@ describe('broker', () => {
                 topic,
                 producer: 'foo',
             },
+            'to-topic-schema': {
+                topic,
+                schema: 1,
+            },
         },
         subscriptions: {
             'from-topic-foo': topic,
@@ -53,4 +57,9 @@ describe('broker', () => {
                 .subscription('from-topic-foo')
                 .off('message.foo', () => Promise.resolve())
         ).toThrow(new BrokerError('Unknown topic or alias "foo"')));
+
+    it('should throw on registry not found', () =>
+        expect(
+            broker.publish('to-topic-schema', { value: uuid() })
+        ).rejects.toThrow(new BrokerError('Registry not found')));
 });

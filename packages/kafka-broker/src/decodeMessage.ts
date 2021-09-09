@@ -18,9 +18,8 @@ export const decodeMessage = async (
     }
 
     if (contentType === ContentTypes.SCHEMA_REGISTRY) {
-        // istanbul ignore if
         if (typeof registry === 'undefined') {
-            throw new BrokerError('Registry not defined');
+            throw new BrokerError('Registry not found');
         }
 
         return (await registry.decode(message.value)) as MessageValue;
