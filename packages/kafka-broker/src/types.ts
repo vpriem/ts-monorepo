@@ -45,7 +45,9 @@ export interface PublishMessage<V = MessageValue>
     value: V;
 }
 
-export type ConsumerConfig = KafkaConsumerConfig;
+export interface ConsumerConfig extends Omit<KafkaConsumerConfig, 'groupId'> {
+    groupId?: string;
+}
 
 export type ConsumePayload = EachMessagePayload;
 

@@ -1,7 +1,6 @@
-import { KafkaConfig } from 'kafkajs';
+import { KafkaConfig, ConsumerConfig } from 'kafkajs';
 import {
     BrokerConfig,
-    ConsumerConfig,
     ProducerConfig,
     ProducerMap,
     PublicationConfig,
@@ -114,11 +113,11 @@ export const buildSubscriptions = (
                     name,
                     {
                         kafka,
+                        ...subscriptionConfig,
                         consumer: {
                             ...consumer,
                             ...subscriptionConfig.consumer,
                         },
-                        ...subscriptionConfig,
                         topics: buildTopics(subscriptionConfig.topics),
                     },
                 ];
