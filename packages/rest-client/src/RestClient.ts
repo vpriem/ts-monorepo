@@ -18,7 +18,7 @@ export class RestClient {
         };
     }
 
-    async request<R = object>(
+    async request<R extends object | null = object>(
         path: string,
         options?: RequestOptions
     ): Promise<R> {
@@ -41,41 +41,54 @@ export class RestClient {
             ...options?.headers,
         };
 
-        const res = await fetch(`${this.url}${p}${qs}`, {
+        const response = await fetch(`${this.url}${p}${qs}`, {
             method: 'GET',
             ...options,
             headers,
             body,
         });
 
-        if (res.ok) {
-            const contentType = res.headers.get('content-type');
-            if (contentType && isJSON(contentType.toLowerCase())) {
-                return res.json() as Promise<R>;
-            }
+        let responseBody: R | undefined;
 
-            throw new RequestError('Empty Response', res);
+        const contentType = response.headers.get('content-type');
+        if (contentType && isJSON(contentType.toLowerCase())) {
+            responseBody = (await response.json()) as R;
         }
 
-        throw new RequestError(res.statusText, res);
+        if (response.ok) {
+            if (responseBody) return responseBody;
+
+            throw new RequestError('Empty Response', response, responseBody);
+        }
+
+        throw new RequestError(response.statusText, response, responseBody);
     }
 
-    async get<R = object>(path: string, options?: RequestOptions): Promise<R> {
+    async get<R extends object | null = object>(
+        path: string,
+        options?: RequestOptions
+    ): Promise<R> {
         return this.request<R>(path, options);
     }
 
-    async post<R = object>(path: string, options?: RequestOptions): Promise<R> {
+    async post<R extends object | null = object>(
+        path: string,
+        options?: RequestOptions
+    ): Promise<R> {
         return this.request<R>(path, {
             ...options,
             method: 'POST',
         });
     }
 
-    async put<R = object>(path: string, options?: RequestOptions): Promise<R> {
+    async put<R extends object | null = object>(
+        path: string,
+        options?: RequestOptions
+    ): Promise<R> {
         return this.request<R>(path, { ...options, method: 'PUT' });
     }
 
-    async delete<R = object>(
+    async delete<R extends object | null = object>(
         path: string,
         options?: RequestOptions
     ): Promise<R | null> {

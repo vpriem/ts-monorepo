@@ -140,6 +140,30 @@ describe('integration', () => {
             expect(scope.isDone()).toBeTruthy();
         });
 
+        it('should throw an error with decoded body', async () => {
+            const errors = [{ error: 'title is missing' }];
+            const scope = nock(process.env.BLOG_API_URL as string, {
+                reqheaders: {
+                    'x-api-key': process.env.BLOG_API_KEY as string,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+                .put(`/post/${post.id}`)
+                .reply(400, { errors });
+
+            await expect(
+                blogApi.updatePost(post.id, { title: post.title })
+            ).rejects.toMatchObject({
+                name: 'RequestError',
+                response: expect.any(Object) as object,
+                statusCode: 400,
+                body: { errors },
+            });
+
+            expect(scope.isDone()).toBeTruthy();
+        });
+
         it('should delete a post', async () => {
             const scope = nock(process.env.BLOG_API_URL as string, {
                 reqheaders: {
@@ -155,7 +179,7 @@ describe('integration', () => {
             expect(scope.isDone()).toBeTruthy();
         });
 
-        it('should still throw on server error', async () => {
+        it('should still throw an error on delete', async () => {
             const scope = nock(process.env.BLOG_API_URL as string, {
                 reqheaders: {
                     'x-api-key': process.env.BLOG_API_KEY as string,
