@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.1.0...@vpriem/rest-client@1.1.1) (2021-10-07)
+
+
+### Bug Fixes
+
+* **rest-client:** add decoded body to RequestError.body ([bd59eef](https://github.com/vpriem/ts-monorepo/commit/bd59eefa4b63b152bb1afb434d2681f8c972314f))
+* **rest-client:** update dependency node-fetch to v2.6.5 ([cd6fad4](https://github.com/vpriem/ts-monorepo/commit/cd6fad424cbdceea5fc187dda19f40b462e7e0de))
+
+
+
+
+
 # [1.1.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.0.4...@vpriem/rest-client@1.1.0) (2021-05-27)
 
 
