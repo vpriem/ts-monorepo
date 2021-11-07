@@ -13,7 +13,7 @@ import { BrokerError } from './BrokerError';
 
 export class Subscription
     extends EventEmitter
-    implements Subscription, SubscriptionInterface
+    implements SubscriptionInterface
 {
     private readonly consumer: Consumer;
 
