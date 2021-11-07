@@ -26,6 +26,7 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 -   [Advanced configuration](#advanced-configuration)
     -   [Using defaults](#using-defaults)
     -   [Topic alias](#topic-alias)
+    -   [Multiple topics publication](#multiple-topics-publication)
     -   [Multiple producers](#multiple-producers)
     -   [Multiple brokers](#multiple-brokers)
     -   [Full configuration](#full-configuration)
@@ -407,6 +408,25 @@ const broker = new Broker({
 
 await broker.subscriptionList().run();
 ```
+
+### Multiple topics publication
+
+You can publish simultaneously to multiple topics:
+
+```typescript
+new Broker({
+    // ...
+    publications: {
+        'to-multiple-topic': {
+            topic: ['my-first-topic', 'my-second-topic'],
+        },
+    },
+});
+
+await broker.publish('to-multiple-topic', { value: 'my-message' });
+```
+
+This will publish to `my-first-topic` and `my-second-topic`.
 
 ### Multiple producers
 

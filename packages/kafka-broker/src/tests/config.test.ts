@@ -24,6 +24,7 @@ describe('config', () => {
                         producer: 'my-producer-2',
                         schema: 'subject-3',
                     },
+                    'to-topic4': ['my-topic-4.1', 'my-topic-4.2'],
                 },
                 subscriptions: {
                     'from-topic0': 'my-topic-0',
@@ -98,6 +99,10 @@ describe('config', () => {
                         subject: 'subject-3',
                         version: 'latest',
                     },
+                },
+                'to-topic4': {
+                    topic: ['my-topic-4.1', 'my-topic-4.2'],
+                    producer: 'default',
                 },
             },
             subscriptions: {

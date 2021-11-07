@@ -73,9 +73,9 @@ export const buildPublications = (
 ): Config['publications'] =>
     Object.fromEntries(
         Object.entries(publications).map(([name, publicationConfig]) =>
-            typeof publicationConfig === 'string'
-                ? [name, { producer, topic: publicationConfig }]
-                : [
+            typeof publicationConfig === 'object' &&
+            !Array.isArray(publicationConfig)
+                ? [
                       name,
                       {
                           producer,
@@ -83,6 +83,7 @@ export const buildPublications = (
                           schema: buildSchema(publicationConfig.schema),
                       },
                   ]
+                : [name, { producer, topic: publicationConfig }]
         )
     );
 

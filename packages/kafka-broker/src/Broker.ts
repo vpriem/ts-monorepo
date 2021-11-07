@@ -101,6 +101,20 @@ export class Broker extends EventEmitter implements BrokerInterface {
             this.registry
         );
 
+        if (Array.isArray(topic)) {
+            const results = await Promise.all(
+                topic.map((t) =>
+                    producer.send({
+                        ...config,
+                        topic: t,
+                        messages: encodedMessages,
+                    })
+                )
+            );
+
+            return results.flat();
+        }
+
         return producer.send({
             ...config,
             topic,

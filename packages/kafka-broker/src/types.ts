@@ -32,7 +32,7 @@ export interface SchemaSubject {
 
 export interface PublicationConfig {
     producer?: string;
-    topic: string;
+    topic: string | string[];
     config?: Omit<ProducerRecord, 'topic' | 'messages'>;
     messageConfig?: MessageConfig;
     schema?: number | string | SchemaId | SchemaSubject;
@@ -96,7 +96,10 @@ export interface SubscriptionConfig {
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;
-export type PublicationMap = Record<string, string | PublicationConfig>;
+export type PublicationMap = Record<
+    string,
+    string | string[] | PublicationConfig
+>;
 export type SubscriptionMap = Record<
     string,
     string | SubscriptionConfig['topics'] | SubscriptionConfig
