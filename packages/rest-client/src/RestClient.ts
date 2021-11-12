@@ -48,20 +48,18 @@ export class RestClient {
             body,
         });
 
-        let responseBody: R | undefined;
+        let content: R | null = null;
 
         const contentType = response.headers.get('content-type');
         if (contentType && isJSON(contentType.toLowerCase())) {
-            responseBody = (await response.json()) as R;
+            content = (await response.json()) as R;
         }
 
         if (response.ok) {
-            if (responseBody) return responseBody;
-
-            throw new RequestError('Empty Response', response, responseBody);
+            return content as R;
         }
 
-        throw new RequestError(response.statusText, response, responseBody);
+        throw new RequestError(response.statusText, response, content);
     }
 
     async get<R extends object | null = object>(
@@ -85,23 +83,19 @@ export class RestClient {
         path: string,
         options?: RequestOptions
     ): Promise<R> {
-        return this.request<R>(path, { ...options, method: 'PUT' });
+        return this.request<R>(path, {
+            ...options,
+            method: 'PUT',
+        });
     }
 
     async delete<R extends object | null = object>(
         path: string,
         options?: RequestOptions
-    ): Promise<R | null> {
-        try {
-            return await this.request<R>(path, {
-                ...options,
-                method: 'DELETE',
-            });
-        } catch (error) {
-            if (error instanceof RequestError && error.statusCode === 200) {
-                return null;
-            }
-            throw error;
-        }
+    ): Promise<R> {
+        return this.request<R>(path, {
+            ...options,
+            method: 'DELETE',
+        });
     }
 }
