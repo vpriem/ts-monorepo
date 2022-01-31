@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.0.5...@vpriem/express-api-key-auth@1.0.6) (2022-01-31)
+
+
+### Bug Fixes
+
+* **express-api-key-auth:** update dependency http-errors to v2.0.0 ([3a94c76](https://github.com/vpriem/ts-monorepo/commit/3a94c76f7b07a97bb869d3d5b21de285f32ec275))
+
+
+
+
+
 ## [1.0.5](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.0.4...@vpriem/express-api-key-auth@1.0.5) (2021-05-23)
 
 **Note:** Version bump only for package @vpriem/express-api-key-auth

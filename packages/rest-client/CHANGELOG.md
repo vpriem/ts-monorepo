@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.1.1...@vpriem/rest-client@1.1.2) (2022-01-31)
+
+
+### Bug Fixes
+
+* **rest-client:** allow global request options in constructor ([7fd3a4d](https://github.com/vpriem/ts-monorepo/commit/7fd3a4d4ab3e8248d1c853d0211ab84afc98e673))
+* **rest-client:** do throw on successful empty response ([47885dc](https://github.com/vpriem/ts-monorepo/commit/47885dcd0ea03e60531969abab44b07180227d7d))
+* **rest-client:** update dependency node-fetch to v2.6.6 ([9dbfd88](https://github.com/vpriem/ts-monorepo/commit/9dbfd8845e7d4f2b279a47a0b2ccf99a00508194))
+* **rest-client:** update dependency node-fetch to v2.6.7 ([a83d4e3](https://github.com/vpriem/ts-monorepo/commit/a83d4e3b6e792f1337841e439db2a0e97ef785b2))
+
+
+
+
+
 ## [1.1.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.1.0...@vpriem/rest-client@1.1.1) (2021-10-07)
 
 
