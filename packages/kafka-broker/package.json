@@ -38,7 +38,7 @@
     "down": "docker-compose down"
   },
   "dependencies": {
-    "@kafkajs/confluent-schema-registry": "3.1.1",
+    "@kafkajs/confluent-schema-registry": "3.2.1",
     "@types/node": "14.14.37",
     "kafkajs": "1.15.0"
   },
