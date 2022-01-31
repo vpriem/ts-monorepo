@@ -16,7 +16,7 @@ export type Query = Record<
     | undefined
 >;
 
-export interface Options {
+export interface Options extends Omit<RequestInit, 'body' | 'method'> {
     headers?: Headers;
 }
 

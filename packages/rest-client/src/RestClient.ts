@@ -1,21 +1,18 @@
 import fetch from 'node-fetch';
 import queryString from 'querystring';
-import { RequestOptions, Headers, Options } from './types';
+import { RequestOptions, Options } from './types';
 import { createPath, isJSON } from './utils';
 import { RequestError } from './RequestError';
 
 export class RestClient {
     private readonly url: string;
 
-    private readonly headers: Headers;
+    private readonly options?: Options;
 
     constructor(url: string, options?: Options) {
         this.url = url;
 
-        this.headers = {
-            Accept: 'application/json',
-            ...options?.headers,
-        };
+        this.options = options;
     }
 
     async request<R extends object | null = object>(
@@ -34,7 +31,8 @@ export class RestClient {
                 : undefined;
 
         const headers = {
-            ...this.headers,
+            Accept: 'application/json',
+            ...this.options?.headers,
             ...(body && {
                 'Content-Type': 'application/json',
             }),
@@ -42,6 +40,7 @@ export class RestClient {
         };
 
         const response = await fetch(`${this.url}${p}${qs}`, {
+            ...this.options,
             method: 'GET',
             ...options,
             headers,
