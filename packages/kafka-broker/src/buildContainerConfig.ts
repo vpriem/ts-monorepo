@@ -32,7 +32,7 @@ const nsProducers = (
         Object.entries(brokers)
             .map(([brokerName, { producers }]) =>
                 Object.entries(
-                    buildProducers(producers, brokerName, defaults)
+                    buildProducers(producers || {}, brokerName, defaults)
                 ).map<[string, ConfigProducer]>(([name, config]) => [
                     `${brokerName}/${name}`,
                     config,
@@ -48,7 +48,10 @@ const nsPublications = (
         Object.entries(brokers)
             .map(([brokerName, { publications }]) =>
                 Object.entries(
-                    buildPublications(publications, `${brokerName}/default`)
+                    buildPublications(
+                        publications || {},
+                        `${brokerName}/default`
+                    )
                 ).map<[string, ConfigPublication]>(([name, config]) => [
                     `${brokerName}/${name}`,
                     config,
@@ -67,7 +70,7 @@ const nsSubscriptions = (
             .map(([brokerName, { subscriptions }]) =>
                 Object.entries(
                     buildSubscriptions(
-                        subscriptions,
+                        subscriptions || {},
                         `${groupPrefix}.${brokerName}`,
                         brokerName,
                         defaults

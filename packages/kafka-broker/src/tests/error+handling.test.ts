@@ -43,13 +43,13 @@ describe('error+handling', () => {
 
     it('should catch error', async () => {
         const value = uuid();
-        const brokerError = new Promise((resolve) =>
-            broker.once('error', resolve)
-        );
+        const brokerError = new Promise((resolve) => {
+            broker.once('error', resolve);
+        });
         const subscription = broker.subscription('from-topic1');
-        const subscriptionError = new Promise((resolve) =>
-            subscription.once('error', resolve)
-        );
+        const subscriptionError = new Promise((resolve) => {
+            subscription.once('error', resolve);
+        });
 
         await subscription.run();
 
@@ -62,13 +62,13 @@ describe('error+handling', () => {
     });
 
     it('should catch json error', async () => {
-        const brokerError = new Promise((resolve) =>
-            broker.once('error', resolve)
-        );
+        const brokerError = new Promise((resolve) => {
+            broker.once('error', resolve);
+        });
         const subscription = broker.subscription('from-topic2');
-        const subscriptionError = new Promise((resolve) =>
-            subscription.once('error', resolve)
-        );
+        const subscriptionError = new Promise((resolve) => {
+            subscription.once('error', resolve);
+        });
 
         await subscription.run();
 
@@ -81,13 +81,13 @@ describe('error+handling', () => {
     });
 
     it('should catch registry error', async () => {
-        const brokerError = new Promise((resolve) =>
-            broker.once('error', resolve)
-        );
+        const brokerError = new Promise((resolve) => {
+            broker.once('error', resolve);
+        });
         const subscription = broker.subscription('from-topic3');
-        const subscriptionError = new Promise((resolve) =>
-            subscription.once('error', resolve)
-        );
+        const subscriptionError = new Promise((resolve) => {
+            subscription.once('error', resolve);
+        });
 
         await subscription.run();
 

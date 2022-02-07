@@ -16,8 +16,8 @@ interface PaginationQuery {
 }
 
 export class BlogApi extends RestClient {
-    constructor(url = process.env.BLOG_API_URL, options?: Options) {
-        super(url as string, {
+    constructor(url?: string, options?: Options) {
+        super(url || (process.env.BLOG_API_URL as string), {
             ...options,
             headers: {
                 'x-api-key': process.env.BLOG_API_KEY as string,

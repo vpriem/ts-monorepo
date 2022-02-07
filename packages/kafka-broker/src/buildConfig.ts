@@ -44,7 +44,7 @@ export const buildKafka = (
 ): KafkaConfig => ({ clientId, ...config });
 
 export const buildProducers = (
-    producers: ProducerMap = {},
+    producers: ProducerMap,
     kafka: string,
     defaults?: Partial<ProducerConfig>
 ): Config['producers'] => ({
@@ -68,7 +68,7 @@ const buildSchema = (
 };
 
 export const buildPublications = (
-    publications: PublicationMap = {},
+    publications: PublicationMap,
     producer = 'default'
 ): Config['publications'] =>
     Object.fromEntries(
@@ -100,7 +100,7 @@ const isSubscriptionConfig = (config: unknown): config is SubscriptionConfig =>
     typeof (config as SubscriptionConfig).topics !== 'undefined';
 
 export const buildSubscriptions = (
-    subscriptions: SubscriptionMap = {},
+    subscriptions: SubscriptionMap,
     groupPrefix: string,
     kafka: string,
     defaults?: Partial<ConsumerConfig>
@@ -145,9 +145,9 @@ export const buildConfig = ({
     defaults,
     config,
     schemaRegistry,
-    producers,
-    publications,
-    subscriptions,
+    producers = {},
+    publications = {},
+    subscriptions = {},
 }: BrokerConfig): Config => ({
     namespace,
     kafka: {
