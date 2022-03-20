@@ -41,6 +41,7 @@ describe('config+container', () => {
                             'from-topic2': {
                                 topics: ['my-topic-2'],
                                 consumer: { groupId: 'keep-that-group-id' },
+                                deadLetter: 'dead-letter-topic-2',
                             },
                         },
                     },
@@ -98,6 +99,7 @@ describe('config+container', () => {
                     kafka: 'broker2',
                     topics: [{ topic: 'my-topic-2' }],
                     consumer: { groupId: 'keep-that-group-id' },
+                    deadLetter: 'dead-letter-topic-2',
                 },
             },
         });

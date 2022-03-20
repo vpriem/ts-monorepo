@@ -93,6 +93,7 @@ export interface SubscriptionConfig {
     runConfig?: RunConfig;
     handler?: Handler;
     contentType?: ContentTypes | string;
+    deadLetter?: string;
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;

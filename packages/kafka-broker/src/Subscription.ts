@@ -128,7 +128,7 @@ export class Subscription
     }
 
     private async subscribeAndRun(): Promise<this> {
-        const { runConfig, contentType } = this.config;
+        const { runConfig, contentType, deadLetter } = this.config;
         const publish = this.publisher.publish.bind(this.publisher) as Publish;
 
         await this.subscribe();
@@ -138,19 +138,41 @@ export class Subscription
             eachMessage: async (payload) => {
                 const { message, topic } = payload;
 
-                const value = await decodeMessage(
-                    message,
-                    this.registry,
-                    contentType
-                );
+                try {
+                    const value = await decodeMessage(
+                        message,
+                        this.registry,
+                        contentType
+                    );
 
-                const handlers = this.topicToHandlers[topic]
-                    ? [...this.handlers, ...this.topicToHandlers[topic]]
-                    : this.handlers;
+                    const handlers = this.topicToHandlers[topic]
+                        ? [...this.handlers, ...this.topicToHandlers[topic]]
+                        : this.handlers;
 
-                await Promise.all(
-                    handlers.map((handler) => handler(value, payload, publish))
-                );
+                    await Promise.all(
+                        handlers.map((handler) =>
+                            handler(value, payload, publish)
+                        )
+                    );
+                } catch (error) {
+                    if (deadLetter) {
+                        /**
+                         * Cannot emit error without triggering KafkaJs retry mechanism :/
+                         */
+                        // this.emit('error', error);
+
+                        await publish(deadLetter, {
+                            value: {
+                                ...payload,
+                                error: (error as Error).message,
+                            },
+                        });
+
+                        return;
+                    }
+
+                    throw error;
+                }
             },
         });
 

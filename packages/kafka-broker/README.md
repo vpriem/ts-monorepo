@@ -22,6 +22,7 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 -   [Schema registry](#schema-registry)
 -   [Typescript](#typescript)
 -   [Error handling](#error-handling)
+-   [Dead letter](#dead-letter)
 -   [Shutdown](#shutdown)
 -   [Advanced configuration](#advanced-configuration)
     -   [Using defaults](#using-defaults)
@@ -329,6 +330,28 @@ but you have to listen to them in order to avoid your application to crash:
 ```typescript
 broker.on('error', console.error);
 ```
+
+## Dead letter
+
+Unprocessed messages due to error can be send to a dead letter topic to be analysed later:
+
+```typescript
+const broker = new Broker({
+    // ...
+    publications: {
+        'to-my-topic': 'my-long-topic-name',
+        'to-my-topic-dlx': 'my-long-topic-name-dlx',
+    },
+    subscriptions: {
+        'from-my-topic': {
+            topics: ['my-long-topic-name'],
+            deadLetter: 'to-my-topic-dlx',
+        },
+    },
+});
+```
+
+Note that the `deadLetter` is the publication name and not the topic itself.
 
 ## Shutdown
 

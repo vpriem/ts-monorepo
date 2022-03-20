@@ -44,6 +44,7 @@ describe('config', () => {
                             },
                         ],
                         handler: async () => Promise.resolve(),
+                        deadLetter: 'dead-letter-topic-2',
                     },
                     'from-topic3': {
                         topics: ['my-topic-3'],
@@ -133,6 +134,7 @@ describe('config', () => {
                     ],
                     consumer: { groupId: 'my-service.from-topic2' },
                     handler: expect.any(Function) as Function,
+                    deadLetter: 'dead-letter-topic-2',
                 },
                 'from-topic3': {
                     kafka: 'default',
