@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.3.2...@vpriem/kafka-broker@1.4.0) (2022-03-20)
+
+
+### Features
+
+* **kafka-broker:** add dead lettering ([b1e486d](https://github.com/vpriem/ts-monorepo/commit/b1e486d14fdaa4249fb1420f5ad287124b53647e))
+
+
+
+
+
 ## [1.3.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.3.1...@vpriem/kafka-broker@1.3.2) (2022-02-17)
 
 
