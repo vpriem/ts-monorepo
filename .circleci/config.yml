@@ -6,7 +6,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:12.22.7
+      - image: cimg/node:14.19.3
 
 jobs:
   test:
@@ -35,7 +35,7 @@ jobs:
         type: string
 
     docker:
-      - image: cimg/node:12.22.7
+      - image: cimg/node:14.19.3
       - image: wurstmeister/zookeeper:latest
       - image: wurstmeister/kafka:2.11-1.1.1
         environment:
