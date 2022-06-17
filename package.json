@@ -30,7 +30,8 @@
     "e": "yarn workspace @vpriem/express-api-key-auth",
     "r": "yarn workspace @vpriem/rest-client",
     "k": "yarn workspace @vpriem/kafka-broker",
-    "g": "yarn workspace @vpriem/geojson"
+    "g": "yarn workspace @vpriem/geojson",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.2",
@@ -47,7 +48,7 @@
     "eslint-import-resolver-typescript": "2.7.1",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.0.0",
-    "husky": "4.3.8",
+    "husky": "8.0.1",
     "jest": "28.1.1",
     "lerna": "5.1.4",
     "lint-staged": "13.0.2",
@@ -63,11 +64,5 @@
       "prettier --write",
       "git add"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   }
 }
