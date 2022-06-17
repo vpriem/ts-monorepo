@@ -17,6 +17,8 @@ import {
     COMPATIBILITY,
 } from '@kafkajs/confluent-schema-registry';
 
+export type { logCreator, logLevel } from 'kafkajs';
+
 export type ProducerConfig = KafkaProducerConfig;
 
 export type MessageConfig = Omit<Message, 'value'>;
