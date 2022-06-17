@@ -1,4 +1,7 @@
+import { Partitioners } from 'kafkajs';
 import { buildConfig } from '../buildConfig';
+
+const { LegacyPartitioner, DefaultPartitioner } = Partitioners;
 
 describe('config', () => {
     it('should build config', () => {
@@ -10,7 +13,10 @@ describe('config', () => {
                 },
                 schemaRegistry: 'localhost:2',
                 producers: {
-                    'my-producer-2': { allowAutoTopicCreation: false },
+                    'my-producer-2': {
+                        createPartitioner: DefaultPartitioner,
+                        allowAutoTopicCreation: false,
+                    },
                 },
                 publications: {
                     'to-topic1': 'my-topic-1',
@@ -77,10 +83,14 @@ describe('config', () => {
             producers: {
                 default: {
                     kafka: 'default',
+                    producer: { createPartitioner: LegacyPartitioner },
                 },
                 'my-producer-2': {
                     kafka: 'default',
-                    producer: { allowAutoTopicCreation: false },
+                    producer: {
+                        createPartitioner: DefaultPartitioner,
+                        allowAutoTopicCreation: false,
+                    },
                 },
             },
             publications: {
@@ -173,6 +183,7 @@ describe('config', () => {
                 defaults: {
                     producer: {
                         allowAutoTopicCreation: true,
+                        createPartitioner: DefaultPartitioner,
                     },
                     consumer: {
                         groupId: 'this-will-be-overridden',
@@ -199,6 +210,7 @@ describe('config', () => {
                 default: {
                     kafka: 'default',
                     producer: {
+                        createPartitioner: DefaultPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
@@ -234,7 +246,10 @@ describe('config', () => {
                 },
             },
             producers: {
-                default: { kafka: 'default' },
+                default: {
+                    kafka: 'default',
+                    producer: { createPartitioner: LegacyPartitioner },
+                },
             },
             publications: {},
             subscriptions: {},

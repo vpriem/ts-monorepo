@@ -1,4 +1,4 @@
-import { KafkaConfig, ConsumerConfig } from 'kafkajs';
+import { KafkaConfig, ConsumerConfig, Partitioners } from 'kafkajs';
 import {
     BrokerConfig,
     ProducerConfig,
@@ -43,16 +43,24 @@ export const buildKafka = (
     clientId: string
 ): KafkaConfig => ({ clientId, ...config });
 
+const { LegacyPartitioner: createPartitioner } = Partitioners;
+
 export const buildProducers = (
     producers: ProducerMap,
     kafka: string,
     defaults?: Partial<ProducerConfig>
 ): Config['producers'] => ({
-    default: { kafka, producer: defaults },
+    default: {
+        kafka,
+        producer: { createPartitioner, ...defaults },
+    },
     ...Object.fromEntries(
         Object.entries(producers).map(([name, producerConfig]) => [
             name,
-            { kafka, producer: { ...defaults, ...producerConfig } },
+            {
+                kafka,
+                producer: { createPartitioner, ...defaults, ...producerConfig },
+            },
         ])
     ),
 });

@@ -1,4 +1,7 @@
+import { Partitioners } from 'kafkajs';
 import { buildContainerConfig } from '../buildContainerConfig';
+
+const { LegacyPartitioner, DefaultPartitioner } = Partitioners;
 
 describe('config+container', () => {
     it('should build config', () => {
@@ -27,6 +30,7 @@ describe('config+container', () => {
                         },
                         producers: {
                             'extra-producer': {
+                                createPartitioner: DefaultPartitioner,
                                 allowAutoTopicCreation: false,
                             },
                         },
@@ -66,13 +70,16 @@ describe('config+container', () => {
             producers: {
                 'broker1/default': {
                     kafka: 'broker1',
+                    producer: { createPartitioner: LegacyPartitioner },
                 },
                 'broker2/default': {
                     kafka: 'broker2',
+                    producer: { createPartitioner: LegacyPartitioner },
                 },
                 'broker2/extra-producer': {
                     kafka: 'broker2',
                     producer: {
+                        createPartitioner: DefaultPartitioner,
                         allowAutoTopicCreation: false,
                     },
                 },
@@ -116,6 +123,7 @@ describe('config+container', () => {
                     },
                     producer: {
                         allowAutoTopicCreation: true,
+                        createPartitioner: DefaultPartitioner,
                     },
                     consumer: {
                         groupId: 'this-will-be-overridden',
@@ -156,12 +164,14 @@ describe('config+container', () => {
                 'broker1/default': {
                     kafka: 'broker1',
                     producer: {
+                        createPartitioner: DefaultPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
                 'broker2/default': {
                     kafka: 'broker2',
                     producer: {
+                        createPartitioner: DefaultPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
