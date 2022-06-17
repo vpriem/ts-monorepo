@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.4.0...@vpriem/kafka-broker@1.5.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* **kafka-broker:** export logCreator & logLevel types ([c410e2c](https://github.com/vpriem/ts-monorepo/commit/c410e2c670d2d700a1f46df97ba9110360f5b56b))
+
+
+### Features
+
+* **kafka-broker:** update kafkajs to v2 ([a55b2bf](https://github.com/vpriem/ts-monorepo/commit/a55b2bf22accdf0d476d3b6fa474716b2b802706))
+
+
+
+
+
 # [1.4.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.3.2...@vpriem/kafka-broker@1.4.0) (2022-03-20)
 
 
