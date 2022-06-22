@@ -38,14 +38,15 @@ jobs:
 
     docker:
       - image: cimg/node:14.19.3
-      - image: wurstmeister/zookeeper:latest
-      - image: wurstmeister/kafka:2.11-1.1.1
+      - image: confluentinc/cp-zookeeper:7.1.1
+      - image: confluentinc/cp-kafka:7.1.1
         environment:
           KAFKA_ADVERTISED_HOST_NAME: localhost
           KAFKA_ZOOKEEPER_CONNECT: localhost:2181
           KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
           KAFKA_DELETE_TOPIC_ENABLE: "true"
-      - image: confluentinc/cp-schema-registry:6.1.1
+          KAFKA_SCHEMA_REGISTRY_URL: "localhost:8081"
+      - image: confluentinc/cp-schema-registry:7.1.1
         environment:
           SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: localhost:2181
           SCHEMA_REGISTRY_HOST_NAME: localhost
