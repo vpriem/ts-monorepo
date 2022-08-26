@@ -39,7 +39,7 @@ describe('error+handling', () => {
         },
     });
 
-    afterAll(() => broker.shutdown());
+    afterEach(() => broker.shutdown());
 
     it('should catch error', async () => {
         const value = uuid();
