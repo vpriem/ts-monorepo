@@ -66,7 +66,7 @@ jobs:
         environment:
           SCHEMA_REGISTRY_HOST_NAME: localhost
           SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'localhost:29092'
-          SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+          SCHEMA_REGISTRY_LISTENERS: http://localhost:8081
 
     environment:
       HUSKY: 0
@@ -76,8 +76,11 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          name: Wait for kafka
+          name: Wait for Kafka
           command: while ! nc -z localhost 9092 ; do sleep 1 ; done
+      - run:
+          name: Wait for Schema Registry
+          command: while ! nc -z localhost 8081 ; do sleep 1 ; done
       - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
       - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
 
