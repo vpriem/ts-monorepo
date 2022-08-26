@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.2.0
-  wait-for: cobli/wait-for@1.0.0
 
 executors:
   node:
@@ -76,8 +75,9 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - wait-for/kafka:
-          timeout: 180
+      - run:
+          name: Wait for kafka
+          command: while ! nc -z localhost 9092 ; do sleep 1 ; done
       - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
       - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
 
