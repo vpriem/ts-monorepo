@@ -65,7 +65,7 @@ jobs:
       - image: confluentinc/cp-schema-registry:7.2.1
         environment:
           SCHEMA_REGISTRY_HOST_NAME: localhost
-          SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'localhost:29092'
+          SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'localhost:9092'
           SCHEMA_REGISTRY_LISTENERS: http://localhost:8081
 
     environment:
