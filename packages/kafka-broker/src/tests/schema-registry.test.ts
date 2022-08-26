@@ -95,7 +95,7 @@ describe('schema registry', () => {
         ).resolves.toEqual({ id: 2 });
     });
 
-    afterAll(() => broker.shutdown());
+    afterEach(() => broker.shutdown());
 
     it('should publish and consume AVRO message', async () => {
         const id = uuid();
