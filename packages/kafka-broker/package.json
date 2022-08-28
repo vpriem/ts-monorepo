@@ -1,6 +1,6 @@
 {
   "name": "@vpriem/kafka-broker",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "Easily compose and manage your kafka resources in one place",
   "main": "dist/index.js",
   "files": [

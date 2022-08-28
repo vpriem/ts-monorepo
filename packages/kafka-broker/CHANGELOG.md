@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.5.1...@vpriem/kafka-broker@2.0.0) (2022-08-28)
+
+
+### Features
+
+* **kafka-broker:** use kafkajs v2 DefaultPartitioner as the default partitioner ([5d35b48](https://github.com/vpriem/ts-monorepo/commit/5d35b48ab34099797f985787538e954c5fefe0c0))
+
+
+### BREAKING CHANGES
+
+* **kafka-broker:** see kafkajs migrating to v2
+https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner
+
+
+
+
+
 ## [1.5.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@1.5.0...@vpriem/kafka-broker@1.5.1) (2022-08-28)
 
 
