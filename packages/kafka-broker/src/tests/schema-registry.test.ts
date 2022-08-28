@@ -97,7 +97,7 @@ describe('schema registry', () => {
 
     afterAll(() => broker.shutdown());
 
-    it('should publish and consume AVRO message', async () => {
+    it.skip('should publish and consume AVRO message', async () => {
         const id = uuid();
         const subscription = broker.subscription('from-topic');
         const message = getMessage(subscription);
