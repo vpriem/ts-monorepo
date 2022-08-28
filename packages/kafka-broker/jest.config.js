@@ -1,5 +1,5 @@
 module.exports = {
     ...require('../../jest.config'),
     globalSetup: './jest.setup.js',
-    testTimeout: 30000,
+    testTimeout: 120000,
 };
