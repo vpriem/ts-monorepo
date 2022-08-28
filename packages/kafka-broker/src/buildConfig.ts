@@ -43,7 +43,7 @@ export const buildKafka = (
     clientId: string
 ): KafkaConfig => ({ clientId, ...config });
 
-const { LegacyPartitioner: createPartitioner } = Partitioners;
+const { DefaultPartitioner: createPartitioner } = Partitioners;
 
 export const buildProducers = (
     producers: ProducerMap,

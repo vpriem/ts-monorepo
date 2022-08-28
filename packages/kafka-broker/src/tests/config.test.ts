@@ -14,7 +14,7 @@ describe('config', () => {
                 schemaRegistry: 'localhost:2',
                 producers: {
                     'my-producer-2': {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: false,
                     },
                 },
@@ -83,12 +83,12 @@ describe('config', () => {
             producers: {
                 default: {
                     kafka: 'default',
-                    producer: { createPartitioner: LegacyPartitioner },
+                    producer: { createPartitioner: DefaultPartitioner },
                 },
                 'my-producer-2': {
                     kafka: 'default',
                     producer: {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: false,
                     },
                 },
@@ -183,7 +183,7 @@ describe('config', () => {
                 defaults: {
                     producer: {
                         allowAutoTopicCreation: true,
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                     },
                     consumer: {
                         groupId: 'this-will-be-overridden',
@@ -210,7 +210,7 @@ describe('config', () => {
                 default: {
                     kafka: 'default',
                     producer: {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
@@ -248,7 +248,7 @@ describe('config', () => {
             producers: {
                 default: {
                     kafka: 'default',
-                    producer: { createPartitioner: LegacyPartitioner },
+                    producer: { createPartitioner: DefaultPartitioner },
                 },
             },
             publications: {},

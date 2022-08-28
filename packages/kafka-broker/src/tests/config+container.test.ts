@@ -30,7 +30,7 @@ describe('config+container', () => {
                         },
                         producers: {
                             'extra-producer': {
-                                createPartitioner: DefaultPartitioner,
+                                createPartitioner: LegacyPartitioner,
                                 allowAutoTopicCreation: false,
                             },
                         },
@@ -70,16 +70,16 @@ describe('config+container', () => {
             producers: {
                 'broker1/default': {
                     kafka: 'broker1',
-                    producer: { createPartitioner: LegacyPartitioner },
+                    producer: { createPartitioner: DefaultPartitioner },
                 },
                 'broker2/default': {
                     kafka: 'broker2',
-                    producer: { createPartitioner: LegacyPartitioner },
+                    producer: { createPartitioner: DefaultPartitioner },
                 },
                 'broker2/extra-producer': {
                     kafka: 'broker2',
                     producer: {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: false,
                     },
                 },
@@ -123,7 +123,7 @@ describe('config+container', () => {
                     },
                     producer: {
                         allowAutoTopicCreation: true,
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                     },
                     consumer: {
                         groupId: 'this-will-be-overridden',
@@ -164,14 +164,14 @@ describe('config+container', () => {
                 'broker1/default': {
                     kafka: 'broker1',
                     producer: {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
                 'broker2/default': {
                     kafka: 'broker2',
                     producer: {
-                        createPartitioner: DefaultPartitioner,
+                        createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: true,
                     },
                 },
