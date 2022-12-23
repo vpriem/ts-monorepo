@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@kafkajs/confluent-schema-registry": "3.2.1",
-    "@types/node": "18.7.13",
+    "@types/node": "18.11.17",
     "kafkajs": "2.2.0"
   },
   "devDependencies": {
