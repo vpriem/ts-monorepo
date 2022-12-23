@@ -792,10 +792,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kafkajs/confluent-schema-registry@3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@kafkajs/confluent-schema-registry/-/confluent-schema-registry-3.2.1.tgz#d04456e85fe18c44af586b53c88a9b492e45851a"
-  integrity sha512-UERxB+w7Av39IpUjj0aCogbSrCGIMTFdZGtyoOskB/rF3tOi7k45VqZwRHsmedAVqhvSGAw+tJKevjLrCIgnkw==
+"@kafkajs/confluent-schema-registry@3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@kafkajs/confluent-schema-registry/-/confluent-schema-registry-3.3.0.tgz#8e2a34047a84ed15735ddb62ab3ba74619675297"
+  integrity sha512-ImuqcHdJuJLNvfDgQwPP0EEKY4yzwGJ1t0Jyf0aAwWK2TGExXTQmeXCtcu3rdSHBEwrS7T30c6HNVxBPVA1hHQ==
   dependencies:
     ajv "^7.1.0"
     avsc ">= 5.4.13 < 6"
