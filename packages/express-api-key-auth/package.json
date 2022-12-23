@@ -40,9 +40,9 @@
     "http-errors": "2.0.0"
   },
   "devDependencies": {
-    "@types/http-errors": "1.8.2",
+    "@types/http-errors": "2.0.1",
     "@types/supertest": "2.0.12",
-    "express": "4.18.1",
-    "supertest": "6.2.3"
+    "express": "4.18.2",
+    "supertest": "6.3.3"
   }
 }
