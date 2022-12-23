@@ -21,7 +21,7 @@
     "geojson"
   ],
   "engines": {
-    "node": ">=12.x",
+    "node": ">=14.x",
     "yarn": "^1.22.x"
   },
   "scripts": {
