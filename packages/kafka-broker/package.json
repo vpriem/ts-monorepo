@@ -1,49 +1,49 @@
 {
-  "name": "@vpriem/kafka-broker",
-  "version": "2.0.0",
-  "description": "Easily compose and manage your kafka resources in one place",
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
-  "typings": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
-    "directory": "packages/kafka-broker"
-  },
-  "author": "V. Priem <vinzent.priem@gmail.com>",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "kafka",
-    "kafkajs",
-    "broker",
-    "event"
-  ],
-  "engines": {
-    "node": ">=14.x",
-    "yarn": "^1.22.x"
-  },
-  "scripts": {
-    "prepublishOnly": "yarn run build",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
-    "lint": "eslint --ext .ts ./src",
-    "test": "jest --runInBand",
-    "up": "docker-compose up",
-    "down": "docker-compose down"
-  },
-  "dependencies": {
-    "@kafkajs/confluent-schema-registry": "3.3.0",
-    "@types/node": "18.11.17",
-    "kafkajs": "2.2.3"
-  },
-  "devDependencies": {
-    "@types/uuid": "9.0.0",
-    "uuid": "9.0.0"
-  }
+    "name": "@vpriem/kafka-broker",
+    "version": "2.1.0",
+    "description": "Easily compose and manage your kafka resources in one place",
+    "main": "dist/index.js",
+    "files": [
+        "dist"
+    ],
+    "typings": "dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git",
+        "directory": "packages/kafka-broker"
+    },
+    "author": "V. Priem <vinzent.priem@gmail.com>",
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "kafka",
+        "kafkajs",
+        "broker",
+        "event"
+    ],
+    "engines": {
+        "node": ">=14.x",
+        "yarn": "^1.22.x"
+    },
+    "scripts": {
+        "prepublishOnly": "yarn run build",
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
+        "lint": "eslint --ext .ts ./src",
+        "test": "jest --runInBand",
+        "up": "docker-compose up",
+        "down": "docker-compose down"
+    },
+    "dependencies": {
+        "@kafkajs/confluent-schema-registry": "3.3.0",
+        "@types/node": "18.11.17",
+        "kafkajs": "2.2.3"
+    },
+    "devDependencies": {
+        "@types/uuid": "9.0.0",
+        "uuid": "9.0.0"
+    }
 }
