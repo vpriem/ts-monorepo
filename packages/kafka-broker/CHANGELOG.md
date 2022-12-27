@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.1.0...@vpriem/kafka-broker@2.2.0) (2022-12-27)
+
+### Features
+
+-   **kafka-broker:** add consumer parallelism (experimental) ([750f480](https://github.com/vpriem/ts-monorepo/commit/750f480c69bf9eea80ece6285acf23d871e494e6))
+
 # [2.1.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.0.0...@vpriem/kafka-broker@2.1.0) (2022-12-26)
 
 ### Bug Fixes
