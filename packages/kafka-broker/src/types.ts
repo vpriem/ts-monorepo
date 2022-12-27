@@ -96,6 +96,7 @@ export interface SubscriptionConfig {
     handler?: Handler;
     contentType?: ContentTypes | string;
     deadLetter?: string;
+    parallelism?: 'by-partition-key' | 'all-at-once';
 }
 
 export type ProducerMap = Record<string, ProducerConfig>;

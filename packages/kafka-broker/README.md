@@ -14,6 +14,7 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 -   [Consuming](#consuming)
     -   [Handlers](#handlers)
     -   [Consumer group](#consumer-group)
+    -   [Parallelism](#parallelism)
 -   [Encoding](#encoding)
     -   [JSON](#json)
     -   [AVRO](#avro)
@@ -188,6 +189,35 @@ const broker = new Broker({
 ```
 
 This will create and use the consumer group `my-service.from-my-topic` for the topic `my-long-topic-name`.
+
+### Parallelism
+
+⚠️ Experimental ⚠️
+
+`kakfa-broker` is build on top of `kafkajs` [eachMessage](https://kafka.js.org/docs/consuming#a-name-each-message-a-eachmessage)
+which is consuming one message at a time.
+
+Sometimes you might want to speed up consumption in special cases where you don't care about message order.
+
+The library come with 2 built-in parallelism modes build on top of `kafkajs` [eachBatch](https://kafka.js.org/docs/consuming#a-name-each-batch-a-eachbatch):
+
+- `all-at-once`: all messages of a batch are consumed at once, in parallel.
+- `by-partition-key`: same as `all-at-once` except that all messages of the same partition key are consumed in series, one after the other. Messages without a partition key are grouped together.
+
+Be aware that those 2 modes can affect your workload.
+
+```typescript
+const broker = new Broker({
+    namespace: 'my-service',
+    // ...
+    subscriptions: {
+        'from-my-topic': {
+            topic: 'my-long-topic-name',
+            parallelism: 'by-partition-key'
+        },
+    },
+});
+```
 
 ## Encoding
 

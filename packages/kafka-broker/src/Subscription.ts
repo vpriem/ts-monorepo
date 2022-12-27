@@ -1,5 +1,12 @@
 import EventEmitter from 'events';
-import { Consumer } from 'kafkajs';
+import {
+    Consumer,
+    EachBatchHandler,
+    EachBatchPayload,
+    EachMessageHandler,
+    EachMessagePayload,
+    KafkaMessage,
+} from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { decodeMessage } from './decodeMessage';
 import { ConfigSubscription } from './buildConfig';
@@ -117,6 +124,123 @@ export class Subscription
         return super.off(event, listener);
     }
 
+    private async consumeMessage(payload: EachMessagePayload): Promise<void> {
+        const { contentType, deadLetter } = this.config;
+        const publish = this.publisher.publish.bind(this.publisher) as Publish;
+        const { message, topic } = payload;
+
+        try {
+            const value = await decodeMessage(
+                message,
+                this.registry,
+                contentType
+            );
+
+            const handlers = this.topicToHandlers[topic]
+                ? [...this.handlers, ...this.topicToHandlers[topic]]
+                : this.handlers;
+
+            await Promise.all(
+                handlers.map((handler) => handler(value, payload, publish))
+            );
+        } catch (error) {
+            if (deadLetter) {
+                /**
+                 * Cannot emit error without triggering KafkaJs retry mechanism :/
+                 */
+                // this.emit('error', error);
+
+                await publish(deadLetter, {
+                    value: {
+                        ...payload,
+                        error: (error as Error).message,
+                    },
+                });
+
+                return;
+            }
+
+            throw error;
+        }
+    }
+
+    private async eachBatchByPartitionKey({
+        batch,
+        isRunning,
+        isStale,
+        heartbeat,
+        pause,
+        resolveOffset,
+        commitOffsetsIfNecessary,
+    }: EachBatchPayload): Promise<void> {
+        const { topic, partition } = batch;
+        const messagesByKey: Record<string, KafkaMessage[]> = {};
+
+        batch.messages.forEach((message) => {
+            const key = message.key?.toString() || 'no-key';
+
+            if (!messagesByKey[key]) {
+                messagesByKey[key] = [];
+            }
+
+            messagesByKey[key].push(message);
+        });
+
+        await Promise.all(
+            Object.values(messagesByKey).map(async (messages) => {
+                // eslint-disable-next-line no-restricted-syntax
+                for (const message of messages) {
+                    if (!isRunning() || isStale()) break;
+
+                    // eslint-disable-next-line no-await-in-loop
+                    await this.consumeMessage({
+                        topic,
+                        partition,
+                        message,
+                        heartbeat,
+                        pause,
+                    });
+
+                    resolveOffset(message.offset);
+                    // eslint-disable-next-line no-await-in-loop
+                    await heartbeat();
+                    // eslint-disable-next-line no-await-in-loop
+                    await commitOffsetsIfNecessary();
+                }
+            })
+        );
+    }
+
+    private async eachBatch({
+        batch,
+        isRunning,
+        isStale,
+        heartbeat,
+        pause,
+        resolveOffset,
+        commitOffsetsIfNecessary,
+    }: EachBatchPayload): Promise<void> {
+        const { topic, partition } = batch;
+
+        await Promise.all(
+            batch.messages.map(async (message) => {
+                if (!isRunning() || isStale()) return;
+
+                await this.consumeMessage({
+                    topic,
+                    partition,
+                    message,
+                    heartbeat,
+                    pause,
+                });
+
+                resolveOffset(message.offset);
+                await heartbeat();
+                await commitOffsetsIfNecessary();
+            })
+        );
+    }
+
     private async subscribe(): Promise<void> {
         await this.consumer.connect();
 
@@ -128,53 +252,30 @@ export class Subscription
     }
 
     private async subscribeAndRun(): Promise<this> {
-        const { runConfig, contentType, deadLetter } = this.config;
-        const publish = this.publisher.publish.bind(this.publisher) as Publish;
+        const { runConfig, parallelism } = this.config;
 
         await this.subscribe();
 
-        await this.consumer.run({
-            ...runConfig,
-            eachMessage: async (payload) => {
-                const { message, topic } = payload;
-
-                try {
-                    const value = await decodeMessage(
-                        message,
-                        this.registry,
-                        contentType
-                    );
-
-                    const handlers = this.topicToHandlers[topic]
-                        ? [...this.handlers, ...this.topicToHandlers[topic]]
-                        : this.handlers;
-
-                    await Promise.all(
-                        handlers.map((handler) =>
-                            handler(value, payload, publish)
-                        )
-                    );
-                } catch (error) {
-                    if (deadLetter) {
-                        /**
-                         * Cannot emit error without triggering KafkaJs retry mechanism :/
-                         */
-                        // this.emit('error', error);
-
-                        await publish(deadLetter, {
-                            value: {
-                                ...payload,
-                                error: (error as Error).message,
-                            },
-                        });
-
-                        return;
-                    }
-
-                    throw error;
-                }
-            },
-        });
+        if (parallelism === 'by-partition-key') {
+            await this.consumer.run({
+                ...runConfig,
+                eachBatch: this.eachBatchByPartitionKey.bind(
+                    this
+                ) as EachBatchHandler,
+            });
+        } else if (parallelism === 'all-at-once') {
+            await this.consumer.run({
+                ...runConfig,
+                eachBatch: this.eachBatch.bind(this) as EachBatchHandler,
+            });
+        } else {
+            await this.consumer.run({
+                ...runConfig,
+                eachMessage: this.consumeMessage.bind(
+                    this
+                ) as EachMessageHandler,
+            });
+        }
 
         return this;
     }
