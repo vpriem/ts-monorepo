@@ -15,6 +15,7 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
     -   [Handlers](#handlers)
     -   [Consumer group](#consumer-group)
     -   [Parallelism](#parallelism)
+    -   [Error handling](#error-handling)
 -   [Encoding](#encoding)
     -   [JSON](#json)
     -   [AVRO](#avro)
@@ -22,7 +23,6 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
     -   [Enforce contentType](#enforce-contenttype)
 -   [Schema registry](#schema-registry)
 -   [Typescript](#typescript)
--   [Error handling](#error-handling)
 -   [Dead letter](#dead-letter)
 -   [Shutdown](#shutdown)
 -   [Advanced configuration](#advanced-configuration)
@@ -219,6 +219,13 @@ const broker = new Broker({
 });
 ```
 
+### Error handling
+
+KafkaJs will restart consumer on errors that are considered as "retriable" (see [restartOnFailure](https://kafka.js.org/docs/1.13.0/configuration#a-name-restart-on-failure-a-restartonfailure)) 
+but not on errors considered as "non-retriable".
+
+The broker instance will emit those "non-retriable" errors as [error events](https://nodejs.org/api/events.html#error-events).
+
 ## Encoding
 
 ### JSON
@@ -350,15 +357,6 @@ const MyHandler: Handler<MyEvent> = async ({ id }) => {
 };
 
 await broker.publish<MyEvent>('to-my-topic', { value: { id: 1 } });
-```
-
-## Error handling
-
-Subscription errors are propagated to the broker,
-but you have to listen to them in order to avoid your application to crash:
-
-```typescript
-broker.on('error', console.error);
 ```
 
 ## Dead letter

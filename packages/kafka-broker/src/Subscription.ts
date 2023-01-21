@@ -5,6 +5,7 @@ import {
     EachBatchPayload,
     EachMessageHandler,
     EachMessagePayload,
+    KafkaJSNonRetriableError,
     KafkaMessage,
 } from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
@@ -51,9 +52,11 @@ export class Subscription
         this.config = config;
         this.registry = registry;
 
-        this.consumer.on('consumer.crash', ({ payload: { error } }) =>
-            this.emit('error', error)
-        );
+        this.consumer.on('consumer.crash', ({ payload: { error } }) => {
+            if (error instanceof KafkaJSNonRetriableError) {
+                this.emit('error', error);
+            }
+        });
 
         if (this.config.handler) {
             this.handlers.push(this.config.handler);
