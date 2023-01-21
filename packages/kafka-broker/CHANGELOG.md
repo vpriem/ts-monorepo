@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.0...@vpriem/kafka-broker@2.2.1) (2023-01-21)
+
+### Bug Fixes
+
+-   **kafka-broker:** emit consumer errors on non retriable error only ([ac96296](https://github.com/vpriem/ts-monorepo/commit/ac962963b99c8780ac0f6cfd468517b2ac5a31c9))
+
 # [2.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.1.0...@vpriem/kafka-broker@2.2.0) (2022-12-27)
 
 ### Features
