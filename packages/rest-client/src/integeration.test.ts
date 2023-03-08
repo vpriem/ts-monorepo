@@ -52,7 +52,10 @@ describe('integration', () => {
             expect(scope.isDone()).toBeTruthy();
         });
 
-        it('should return a post geo+json', async () => {
+        it.each([
+            'application/geo+json; charset=utf-8',
+            'application/vnd.geo+json; charset=utf-8',
+        ])('should return a post geo+json', async (contentType: string) => {
             const scope = nock(process.env.BLOG_API_URL as string, {
                 reqheaders: {
                     'x-api-key': process.env.BLOG_API_KEY as string,
@@ -60,11 +63,7 @@ describe('integration', () => {
                 },
             })
                 .get(`/post/${post.id}`)
-                .reply(
-                    200,
-                    { data: post },
-                    { 'content-type': 'application/geo+json; charset=utf-8' }
-                );
+                .reply(200, { data: post }, { 'content-type': contentType });
 
             await expect(blogApi.getPost(post.id)).resolves.toEqual(post);
 

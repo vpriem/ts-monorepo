@@ -11,4 +11,5 @@ export const createPath = (path: string, params?: Params): string =>
 
 export const isJSON = (contentType: string): boolean =>
     contentType.startsWith('application/json') ||
-    contentType.startsWith('application/geo+json');
+    contentType.startsWith('application/geo+json') ||
+    contentType.startsWith('application/vnd.geo+json');
