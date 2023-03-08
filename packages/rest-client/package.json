@@ -37,7 +37,7 @@
     },
     "dependencies": {
         "@types/node-fetch": "2.6.2",
-        "node-fetch": "2.6.7"
+        "node-fetch": "2.6.9"
     },
     "devDependencies": {
         "nock": "13.3.0"
