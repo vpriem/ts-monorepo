@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.2.0...@vpriem/rest-client@1.2.1) (2023-03-08)
+
+### Bug Fixes
+
+-   **rest-client:** support application/vnd.geo+json header ([5bff458](https://github.com/vpriem/ts-monorepo/commit/5bff4584404b937e3206eeaad06682c5a685dde5))
+-   **rest-client:** update node-fetch to v2.6.9 ([42ba9df](https://github.com/vpriem/ts-monorepo/commit/42ba9df2e1373aba0638a72ec62fc5fbf08ddd0f))
+
 # [1.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.1.3...@vpriem/rest-client@1.2.0) (2022-12-26)
 
 ### Features

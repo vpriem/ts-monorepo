@@ -1,6 +1,6 @@
 {
     "name": "@vpriem/rest-client",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "A TypeScript rest api client based on node-fetch",
     "main": "dist/index.js",
     "files": [
