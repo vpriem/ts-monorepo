@@ -40,6 +40,6 @@
         "node-fetch": "2.6.7"
     },
     "devDependencies": {
-        "nock": "13.2.9"
+        "nock": "13.3.0"
     }
 }
