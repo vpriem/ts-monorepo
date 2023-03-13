@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.1...@vpriem/kafka-broker@2.2.2) (2023-03-13)
+
+### Bug Fixes
+
+-   **kafka-broker:** update kafkajs to v2.2.4 ([5e19a65](https://github.com/vpriem/ts-monorepo/commit/5e19a65c475d442477a9ba0f683f682a7f0a3385))
+
 ## [2.2.1](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.0...@vpriem/kafka-broker@2.2.1) (2023-01-21)
 
 ### Bug Fixes
