@@ -40,7 +40,7 @@
     "dependencies": {
         "@kafkajs/confluent-schema-registry": "3.3.0",
         "@types/node": "18.15.1",
-        "kafkajs": "2.2.3"
+        "kafkajs": "2.2.4"
     },
     "devDependencies": {
         "@types/uuid": "9.0.1",
