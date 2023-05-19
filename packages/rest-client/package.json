@@ -24,8 +24,7 @@
         "http-client"
     ],
     "engines": {
-        "node": ">=14.x",
-        "yarn": "^1.22.x"
+        "node": ">=16.x"
     },
     "scripts": {
         "prepublishOnly": "yarn run build",
