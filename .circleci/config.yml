@@ -54,7 +54,7 @@ jobs:
           KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
           KAFKA_JMX_PORT: 9101
           KAFKA_JMX_HOSTNAME: localhost
-      - image: confluentinc/cp-schema-registry:7.3.0
+      - image: confluentinc/cp-schema-registry:7.4.0
         environment:
           SCHEMA_REGISTRY_HOST_NAME: localhost
           SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'localhost:9092'
