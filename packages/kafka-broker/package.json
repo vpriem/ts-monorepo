@@ -42,7 +42,7 @@
         "kafkajs": "2.2.4"
     },
     "devDependencies": {
-        "@types/uuid": "9.0.1",
+        "@types/uuid": "9.0.2",
         "uuid": "9.0.0"
     }
 }

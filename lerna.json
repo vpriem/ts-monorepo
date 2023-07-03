@@ -1,20 +1,18 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "version": "independent",
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "command": {
-    "version": {
-      "conventionalCommits": true,
-      "message": "chore: release"
-    }
-  },
-  "ignoreChanges": [
-    "**/*.test.ts",
-    "**/jest.*.js",
-    "**/tsconfig.eslint.json",
-    "**/examples/**/*"
-  ]
+    "packages": ["packages/*"],
+    "version": "independent",
+    "npmClient": "yarn",
+    "command": {
+        "version": {
+            "conventionalCommits": true,
+            "message": "chore: release"
+        }
+    },
+    "ignoreChanges": [
+        "**/*.test.ts",
+        "**/jest.*.js",
+        "**/tsconfig.eslint.json",
+        "**/examples/**/*"
+    ],
+    "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
