@@ -61,6 +61,26 @@ describe('error+handling', () => {
         await expect(subscriptionError).resolves.toThrow('Sorry');
     });
 
+    it('should catch error from subscription list', async () => {
+        const value = uuid();
+        const brokerError = new Promise((resolve) => {
+            broker.once('error', resolve);
+        });
+        const subscriptions = broker.subscriptionList();
+        const subscriptionError = new Promise((resolve) => {
+            subscriptions.once('error', resolve);
+        });
+
+        await subscriptions.run();
+
+        await expect(
+            broker.publish('to-topic1', [{ value }])
+        ).resolves.toMatchObject([{ topicName: topic1 }]);
+
+        await expect(brokerError).resolves.toThrow('Sorry');
+        await expect(subscriptionError).resolves.toThrow('Sorry');
+    });
+
     it('should catch json error', async () => {
         const brokerError = new Promise((resolve) => {
             broker.once('error', resolve);
