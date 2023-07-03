@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.2...@vpriem/kafka-broker@2.3.0) (2023-07-03)
+
+### Bug Fixes
+
+-   **kafka-broker:** export CompressionTypes ([fe765b0](https://github.com/vpriem/ts-monorepo/commit/fe765b0e247e6df81492c4b3a9daadbc07d97369))
+
+### Features
+
+-   drop node 14 support ([9c111c9](https://github.com/vpriem/ts-monorepo/commit/9c111c95f2dfb0cb64b32fa07cc4cc905f6ceb4b))
+
 ## [2.2.2](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.1...@vpriem/kafka-broker@2.2.2) (2023-03-13)
 
 ### Bug Fixes
