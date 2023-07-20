@@ -11,6 +11,8 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 -   [Concepts](#concepts)
 -   [Configuration](#configuration)
 -   [Publishing](#publishing)
+    -   [Multiple topics](#multiple-topics)
+    -   [Batching](#batching)
 -   [Consuming](#consuming)
     -   [Handlers](#handlers)
     -   [Consumer group](#consumer-group)
@@ -28,7 +30,6 @@ heavily inspired from [Rascal](https://github.com/guidesmiths/rascal).
 -   [Advanced configuration](#advanced-configuration)
     -   [Using defaults](#using-defaults)
     -   [Topic alias](#topic-alias)
-    -   [Multiple topics publication](#multiple-topics-publication)
     -   [Multiple producers](#multiple-producers)
     -   [Multiple brokers](#multiple-brokers)
     -   [Full configuration](#full-configuration)
@@ -120,6 +121,77 @@ await broker.publish('to-my-topic', [
 ```
 
 This will publish to `my-long-topic-name` using the `default` producer.
+
+### Multiple topics
+
+You can publish simultaneously to multiple topics:
+
+```typescript
+new Broker({
+    // ...
+    publications: {
+        'to-multiple-topic': {
+            topic: ['my-first-topic', 'my-second-topic'],
+        },
+    },
+});
+
+await broker.publish('to-multiple-topic', { value: 'my-message' });
+```
+
+This will publish to `my-first-topic` and `my-second-topic` in a batch.
+
+### Batching
+
+You can configure the producers to automatically batch messages.
+This will delay sending messages so that more messages can be sent into a single request.  
+This can significantly reduce the number of requests made to the cluster, and improve performance overall. 
+
+```typescript
+new Broker({
+    // ...
+    producers: {
+        default: {
+            batch: {
+                size: 150,
+                lingerMs: 100,
+            }
+        },
+    },
+});
+```
+
+- `size`: maximum number of messages to batch in one request
+- `lingerMs`: maximum duration to fill the batch
+
+If `size` is reached, the batch request will be sent immediately regardless of `lingerMs`.  
+Otherwise, the producer will wait up to `lingerMs` to send the batch request.
+
+⚠️ Be aware that a large `size` might increase memory usage and a high `lingerMs` might increase latency.
+
+Because the [batch request](https://kafka.js.org/docs/producing#producing-to-multiple-topics) can contain multiple topics, the options `acks`, `compression` and `timeout` have to be provided on the batch level, this also means that any provided `config` on the `publications` level will be discarded:
+
+```typescript
+new Broker({
+    // ...
+    producers: {
+        default: {
+            batch: {
+                size: 150,
+                lingerMs: 100,
+                acks: 1,
+                compression: CompressionTypes.GZIP,
+            }
+        },
+    },
+    publications: {
+        'to-my-topic': {
+            topic: 'my-long-topic-name',
+            config: { acks: 0 }, // this will be ignored
+        },
+    },
+});
+```
 
 ## Consuming
 
@@ -459,25 +531,6 @@ const broker = new Broker({
 
 await broker.subscriptionList().run();
 ```
-
-### Multiple topics publication
-
-You can publish simultaneously to multiple topics:
-
-```typescript
-new Broker({
-    // ...
-    publications: {
-        'to-multiple-topic': {
-            topic: ['my-first-topic', 'my-second-topic'],
-        },
-    },
-});
-
-await broker.publish('to-multiple-topic', { value: 'my-message' });
-```
-
-This will publish to `my-first-topic` and `my-second-topic`.
 
 ### Multiple producers
 

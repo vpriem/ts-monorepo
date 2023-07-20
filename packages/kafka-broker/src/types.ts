@@ -1,4 +1,5 @@
 import {
+    CompressionTypes,
     ConsumerConfig as KafkaConsumerConfig,
     ConsumerRunConfig,
     ConsumerSubscribeTopic,
@@ -19,7 +20,19 @@ import {
 
 export type { logCreator, logLevel } from 'kafkajs';
 
-export type ProducerConfig = KafkaProducerConfig;
+export { CompressionTypes };
+
+export interface BatchConfig {
+    size: number;
+    lingerMs: number;
+    acks?: -1 | 0 | 1;
+    timeout?: number;
+    compression?: CompressionTypes;
+}
+
+export interface ProducerConfig extends KafkaProducerConfig {
+    batch?: BatchConfig;
+}
 
 export type MessageConfig = Omit<Message, 'value'>;
 
@@ -57,11 +70,11 @@ export type PublishResult = RecordMetadata;
 
 export type Publish = {
     <V = MessageValue>(name: string, messages: PublishMessage<V>[]): Promise<
-        PublishResult[]
+        PublishResult[] | null
     >;
 
     <V = MessageValue>(name: string, message: PublishMessage<V>): Promise<
-        PublishResult[]
+        PublishResult[] | null
     >;
 };
 

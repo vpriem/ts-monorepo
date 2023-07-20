@@ -32,6 +32,7 @@
     "import/prefer-default-export": "off",
     "import/extensions": ["error", { "js": "never", "ts": "never" }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts"] }],
+    "@typescript-eslint/explicit-module-boundary-types": ["error"],
     "no-shadow": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-shadow": ["error"]

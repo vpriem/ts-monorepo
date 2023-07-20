@@ -68,7 +68,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
     async publish<V = MessageValue>(
         publicationName: string,
         messageOrMessages: PublishMessage<V> | PublishMessage<V>[]
-    ): Promise<PublishResult[]> {
+    ): Promise<PublishResult[] | null> {
         const publicationConfig = this.config.publications[publicationName];
         if (typeof publicationConfig === 'undefined') {
             throw new BrokerError(`Unknown publication "${publicationName}"`);
@@ -81,8 +81,6 @@ export class Broker extends EventEmitter implements BrokerInterface {
             messageConfig,
             schema,
         } = publicationConfig;
-
-        const producer = await this.producers.create(producerName);
 
         let messages = Array.isArray(messageOrMessages)
             ? messageOrMessages
@@ -102,20 +100,16 @@ export class Broker extends EventEmitter implements BrokerInterface {
         );
 
         if (Array.isArray(topic)) {
-            const results = await Promise.all(
-                topic.map((t) =>
-                    producer.send({
-                        ...config,
-                        topic: t,
-                        messages: encodedMessages,
-                    })
-                )
-            );
-
-            return results.flat();
+            return this.producers.publish(producerName, {
+                ...config,
+                topicMessages: topic.map((t) => ({
+                    topic: t,
+                    messages: encodedMessages,
+                })),
+            });
         }
 
-        return producer.send({
+        return this.producers.publish(producerName, {
             ...config,
             topic,
             messages: encodedMessages,
@@ -135,9 +129,7 @@ export class Broker extends EventEmitter implements BrokerInterface {
     }
 
     async shutdown(): Promise<void> {
-        await Promise.all([
-            this.producers.disconnect(),
-            this.subscriptions.disconnect(),
-        ]);
+        await this.subscriptions.disconnect();
+        await this.producers.disconnect();
     }
 }
