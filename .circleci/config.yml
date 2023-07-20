@@ -152,4 +152,6 @@ workflows:
             - lint-geojson
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - feat/kafka-broker/producer-batch

@@ -16,6 +16,7 @@ describe('config', () => {
                     'my-producer-2': {
                         createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: false,
+                        batch: { size: 50, lingerMs: 100 },
                     },
                 },
                 publications: {
@@ -91,6 +92,7 @@ describe('config', () => {
                         createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: false,
                     },
+                    batch: { size: 50, lingerMs: 100 },
                 },
             },
             publications: {
@@ -176,7 +178,7 @@ describe('config', () => {
         });
     });
 
-    it('should build config with default', () => {
+    it('should build config with defaults', () => {
         expect(
             buildConfig({
                 namespace: 'my-service',
@@ -184,10 +186,17 @@ describe('config', () => {
                     producer: {
                         allowAutoTopicCreation: true,
                         createPartitioner: LegacyPartitioner,
+                        batch: { size: 50, lingerMs: 100 },
                     },
                     consumer: {
                         groupId: 'this-will-be-overridden',
                         allowAutoTopicCreation: false,
+                    },
+                },
+                producers: {
+                    keep: {
+                        allowAutoTopicCreation: false,
+                        batch: { size: 100, lingerMs: 200 },
                     },
                 },
                 config: {
@@ -213,6 +222,15 @@ describe('config', () => {
                         createPartitioner: LegacyPartitioner,
                         allowAutoTopicCreation: true,
                     },
+                    batch: { size: 50, lingerMs: 100 },
+                },
+                keep: {
+                    kafka: 'default',
+                    producer: {
+                        createPartitioner: LegacyPartitioner,
+                        allowAutoTopicCreation: false,
+                    },
+                    batch: { size: 100, lingerMs: 200 },
                 },
             },
             publications: {},

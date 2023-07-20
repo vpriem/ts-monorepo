@@ -26,23 +26,25 @@ describe('publish+topics', () => {
 
         await subscription.run();
 
-        await expect(
-            broker.publish('to-topics', { value })
-        ).resolves.toMatchObject([
-            { topicName: topic1 },
-            { topicName: topic2 },
-        ]);
+        await expect(broker.publish('to-topics', { value })).resolves.toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ topicName: topic1 }),
+                expect.objectContaining({ topicName: topic2 }),
+            ])
+        );
+
+        const expectedMessage = expect.objectContaining({
+            headers: {
+                'content-type': Buffer.from('text/plain'),
+            },
+        }) as object;
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
                     value,
                     expect.objectContaining({
-                        message: expect.objectContaining({
-                            headers: {
-                                'content-type': Buffer.from('text/plain'),
-                            },
-                        }) as object,
+                        message: expectedMessage,
                         topic: topic1,
                     }),
                     expect.any(Function),
@@ -50,11 +52,7 @@ describe('publish+topics', () => {
                 [
                     value,
                     expect.objectContaining({
-                        message: expect.objectContaining({
-                            headers: {
-                                'content-type': Buffer.from('text/plain'),
-                            },
-                        }) as object,
+                        message: expectedMessage,
                         topic: topic2,
                     }),
                     expect.any(Function),

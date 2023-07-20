@@ -112,7 +112,7 @@ describe('config+container', () => {
         });
     });
 
-    it('should build config with default', () => {
+    it('should build config with defaults', () => {
         expect(
             buildContainerConfig({
                 namespace: 'my-service',

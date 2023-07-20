@@ -1,6 +1,7 @@
 import { KafkaConfig, ConsumerConfig, Partitioners } from 'kafkajs';
 import {
     BrokerConfig,
+    BatchConfig,
     ProducerConfig,
     ProducerMap,
     PublicationConfig,
@@ -15,7 +16,8 @@ import {
 
 export interface ConfigProducer {
     kafka: string;
-    producer?: ProducerConfig;
+    producer?: Omit<ProducerConfig, 'batch'>;
+    batch?: BatchConfig;
 }
 
 export interface ConfigSubscription extends SubscriptionConfig {
@@ -48,20 +50,31 @@ const { DefaultPartitioner: createPartitioner } = Partitioners;
 export const buildProducers = (
     producers: ProducerMap,
     kafka: string,
-    defaults?: Partial<ProducerConfig>
+    { batch: batchDefaults, ...defaults }: Partial<ProducerConfig> = {}
 ): Config['producers'] => ({
     default: {
         kafka,
         producer: { createPartitioner, ...defaults },
+        batch: batchDefaults,
     },
     ...Object.fromEntries(
-        Object.entries(producers).map(([name, producerConfig]) => [
-            name,
-            {
-                kafka,
-                producer: { createPartitioner, ...defaults, ...producerConfig },
-            },
-        ])
+        Object.entries(producers).map(
+            ([name, { batch: batchConfig, ...producerConfig }]) => [
+                name,
+                {
+                    kafka,
+                    producer: {
+                        createPartitioner,
+                        ...defaults,
+                        ...producerConfig,
+                    },
+                    batch: (batchDefaults || batchConfig) && {
+                        ...batchDefaults,
+                        ...batchConfig,
+                    },
+                },
+            ]
+        )
     ),
 });
 
