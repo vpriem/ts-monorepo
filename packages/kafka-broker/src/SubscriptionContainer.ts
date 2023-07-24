@@ -41,13 +41,19 @@ export class SubscriptionContainer extends EventEmitter {
             const { kafka: kafkaName, consumer: consumerConfig } =
                 subscriptionConfig;
 
+            const consumer = this.kafka.consumer(kafkaName, consumerConfig);
+
             this.subscriptions[name] = new Subscription(
-                this.kafka.consumer(kafkaName, consumerConfig),
+                consumer,
                 this.publisher,
                 subscriptionConfig,
                 this.registry
             ).on('error', (error) => {
                 this.emit('error', error);
+            });
+
+            Object.values(consumer.events).forEach((eventName) => {
+                consumer.on(eventName, (event) => this.emit(eventName, event));
             });
         }
 
