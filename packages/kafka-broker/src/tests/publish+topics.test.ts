@@ -4,6 +4,7 @@ import { Broker, getMessage } from '..';
 describe('publish+topics', () => {
     const topic1 = uuid();
     const topic2 = uuid();
+    const onBatchStart = jest.fn();
     const broker = new Broker({
         namespace: uuid(),
         config: {
@@ -15,7 +16,7 @@ describe('publish+topics', () => {
         subscriptions: {
             'from-topics': [topic1, topic2],
         },
-    });
+    }).on('producer.batch.start', onBatchStart);
 
     afterAll(() => broker.shutdown());
 
@@ -59,5 +60,19 @@ describe('publish+topics', () => {
                 ],
             ])
         );
+
+        expect(onBatchStart).toHaveBeenCalledTimes(1);
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic1,
+                    messages: [expect.objectContaining({ value })],
+                },
+                {
+                    topic: topic2,
+                    messages: [expect.objectContaining({ value })],
+                },
+            ],
+        });
     });
 });

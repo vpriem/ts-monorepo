@@ -4,7 +4,6 @@ import {
     Producer,
     ProducerBatch,
     ProducerRecord,
-    RecordMetadata,
     TopicMessages,
 } from 'kafkajs';
 import { BatchConfig } from './types';
@@ -30,8 +29,7 @@ const noop = () => {
 
 export declare interface BatchProducer {
     on(event: 'error', listener: (error: Error) => void): this;
-    on(event: 'batch.start', listener: (batch: ProducerBatch) => void): this;
-    on(event: 'batch.end', listener: (results: RecordMetadata[]) => void): this;
+    on(event: 'batch.start', listener: (event: ProducerBatch) => void): this;
 }
 
 export class BatchProducer extends EventEmitter {
@@ -158,8 +156,7 @@ export class BatchProducer extends EventEmitter {
             this.emit('batch.start', batch);
 
             try {
-                const result = await this.producer.sendBatch(batch);
-                this.emit('batch.end', result);
+                await this.producer.sendBatch(batch);
             } catch (error) {
                 this.emit('error', error);
             }
