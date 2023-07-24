@@ -1,6 +1,14 @@
 import EventEmitter from 'events';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import {
+    ConnectEvent,
+    DisconnectEvent,
+    ProducerBatch,
+    RequestEvent,
+    RequestQueueSizeEvent,
+    RequestTimeoutEvent,
+} from 'kafkajs';
+import {
     BrokerConfig,
     BrokerContainerConfig,
     BrokerInterface,
@@ -21,6 +29,34 @@ import { buildContainerConfig } from './buildContainerConfig';
 const isConfig = (
     config: BrokerConfig | BrokerContainerConfig
 ): config is BrokerConfig => (config as BrokerConfig).config !== undefined;
+
+export declare interface Broker {
+    on(event: 'error', listener: (error: Error) => void): this;
+    on(
+        event: 'producer.batch.start',
+        listener: (event: ProducerBatch) => void
+    ): this;
+    on(
+        event: 'producer.connect',
+        listener: (event: ConnectEvent) => void
+    ): this;
+    on(
+        event: 'producer.disconnect',
+        listener: (event: DisconnectEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request',
+        listener: (event: RequestEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request_timeout',
+        listener: (event: RequestTimeoutEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request_queue_size',
+        listener: (event: RequestQueueSizeEvent) => void
+    ): this;
+}
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
@@ -48,6 +84,19 @@ export class Broker extends EventEmitter implements BrokerInterface {
         }
 
         this.producers = new ProducerContainer(kafka, this.config.producers);
+
+        [
+            'producer.connect',
+            'producer.disconnect',
+            'producer.network.request',
+            'producer.network.request_timeout',
+            'producer.network.request_queue_size',
+            'producer.batch.start',
+        ].forEach((eventName) => {
+            this.producers.on(eventName, (event) =>
+                this.emit(eventName, event)
+            );
+        });
 
         this.subscriptions = new SubscriptionContainer(
             kafka,

@@ -206,13 +206,10 @@ describe('batch+producer', () => {
 
     it('should send emmit events', async () => {
         const onBatchStart = jest.fn();
-        const onBatchEnd = jest.fn();
         const batchProducer = new BatchProducer(producer, {
             size: 2,
             lingerMs: 24 * 60 * 60,
-        })
-            .on('batch.start', onBatchStart)
-            .on('batch.end', onBatchEnd);
+        }).on('batch.start', onBatchStart);
 
         const [m1, m2, m3, m4] = [
             { value: uuid() },
@@ -237,13 +234,6 @@ describe('batch+producer', () => {
         expect(onBatchStart).toHaveBeenCalledWith({
             topicMessages: [{ topic: topic1, messages: [m3, m4] }],
         });
-        expect(onBatchEnd).toHaveBeenCalledTimes(2);
-        expect(onBatchEnd).toHaveBeenCalledWith([
-            expect.objectContaining({ topicName: topic1 }),
-        ]);
-        expect(onBatchEnd).toHaveBeenCalledWith([
-            expect.objectContaining({ topicName: topic1 }),
-        ]);
         expect(batchProducer.length).toBe(0);
     });
 });

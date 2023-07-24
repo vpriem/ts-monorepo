@@ -1,14 +1,11 @@
 import { v4 as uuid } from 'uuid';
 import { Broker, getMessage } from '..';
 
-interface Event {
-    id: string;
-}
-
 describe('publish+batch', () => {
     const topic1 = uuid();
     const topic2 = uuid();
     const topic3 = uuid();
+    const onBatchStart = jest.fn();
     const broker = new Broker({
         namespace: uuid(),
         config: {
@@ -30,41 +27,41 @@ describe('publish+batch', () => {
             'from-topic1': topic1,
             'from-topic2-3': [topic2, topic3],
         },
-    });
+    }).on('producer.batch.start', onBatchStart);
 
     afterAll(() => broker.shutdown());
 
     it('should batch publish and consume', async () => {
-        const id1 = uuid();
-        const id2 = uuid();
-        const id3 = uuid();
-        const id4 = uuid();
+        const value1 = uuid();
+        const value2 = uuid();
+        const value3 = uuid();
+        const value4 = uuid();
         const subscription = broker.subscription('from-topic1');
         const messages = getMessage(subscription, 4);
 
         await subscription.run();
 
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: id1 } })
+            broker.publish('to-topic1', { value: value1 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: id2 } })
+            broker.publish('to-topic1', { value: value2 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: id3 } })
+            broker.publish('to-topic1', { value: value3 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic1', { value: { id: id4 } })
+            broker.publish('to-topic1', { value: value4 })
         ).resolves.toBeNull();
 
         const expectedMessage = expect.objectContaining({
-            headers: { 'content-type': Buffer.from('application/json') },
+            headers: { 'content-type': Buffer.from('text/plain') },
         }) as object;
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
-                    { id: id1 },
+                    value1,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic1,
@@ -72,7 +69,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id2 },
+                    value2,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic1,
@@ -80,7 +77,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id3 },
+                    value3,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic1,
@@ -88,7 +85,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id4 },
+                    value4,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic1,
@@ -97,39 +94,63 @@ describe('publish+batch', () => {
                 ],
             ])
         );
+
+        expect(onBatchStart).toHaveBeenCalledTimes(2);
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic1,
+                    messages: [
+                        expect.objectContaining({ value: value1 }),
+                        expect.objectContaining({ value: value2 }),
+                    ],
+                },
+            ],
+        });
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic1,
+                    messages: [
+                        expect.objectContaining({ value: value3 }),
+                        expect.objectContaining({ value: value4 }),
+                    ],
+                },
+            ],
+        });
     });
 
     it('should batch publish and consume from multiple topics', async () => {
-        const id1 = uuid();
-        const id2 = uuid();
-        const id3 = uuid();
-        const id4 = uuid();
+        const value1 = uuid();
+        const value2 = uuid();
+        const value3 = uuid();
+        const value4 = uuid();
         const subscription = broker.subscription('from-topic2-3');
         const messages = getMessage(subscription, 8);
 
         await subscription.run();
 
         await expect(
-            broker.publish<Event>('to-topic2-3', { value: { id: id1 } })
+            broker.publish('to-topic2-3', { value: value1 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic2-3', { value: { id: id2 } })
+            broker.publish('to-topic2-3', { value: value2 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic2-3', { value: { id: id3 } })
+            broker.publish('to-topic2-3', { value: value3 })
         ).resolves.toBeNull();
         await expect(
-            broker.publish<Event>('to-topic2-3', { value: { id: id4 } })
+            broker.publish('to-topic2-3', { value: value4 })
         ).resolves.toBeNull();
 
         const expectedMessage = expect.objectContaining({
-            headers: { 'content-type': Buffer.from('application/json') },
+            headers: { 'content-type': Buffer.from('text/plain') },
         }) as object;
 
         await expect(messages).resolves.toEqual(
             expect.arrayContaining([
                 [
-                    { id: id1 },
+                    value1,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic2,
@@ -137,7 +158,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id1 },
+                    value1,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic3,
@@ -145,7 +166,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id2 },
+                    value2,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic2,
@@ -153,7 +174,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id2 },
+                    value2,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic3,
@@ -161,7 +182,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id3 },
+                    value3,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic2,
@@ -169,7 +190,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id3 },
+                    value3,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic3,
@@ -177,7 +198,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id4 },
+                    value4,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic2,
@@ -185,7 +206,7 @@ describe('publish+batch', () => {
                     expect.any(Function),
                 ],
                 [
-                    { id: id4 },
+                    value4,
                     expect.objectContaining({
                         message: expectedMessage,
                         topic: topic3,
@@ -194,5 +215,55 @@ describe('publish+batch', () => {
                 ],
             ])
         );
+
+        expect(onBatchStart).toHaveBeenCalledTimes(4);
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic2,
+                    messages: [expect.objectContaining({ value: value1 })],
+                },
+                {
+                    topic: topic3,
+                    messages: [expect.objectContaining({ value: value1 })],
+                },
+            ],
+        });
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic2,
+                    messages: [expect.objectContaining({ value: value2 })],
+                },
+                {
+                    topic: topic3,
+                    messages: [expect.objectContaining({ value: value2 })],
+                },
+            ],
+        });
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic2,
+                    messages: [expect.objectContaining({ value: value3 })],
+                },
+                {
+                    topic: topic3,
+                    messages: [expect.objectContaining({ value: value3 })],
+                },
+            ],
+        });
+        expect(onBatchStart).toHaveBeenCalledWith({
+            topicMessages: [
+                {
+                    topic: topic2,
+                    messages: [expect.objectContaining({ value: value4 })],
+                },
+                {
+                    topic: topic3,
+                    messages: [expect.objectContaining({ value: value4 })],
+                },
+            ],
+        });
     });
 });
