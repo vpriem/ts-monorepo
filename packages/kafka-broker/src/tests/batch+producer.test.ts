@@ -21,7 +21,7 @@ describe('batch+producer', () => {
 
     afterAll(() => producer.disconnect());
 
-    it('should send batch immediately', () => {
+    it('should send batch immediately', async () => {
         const batchProducer = new BatchProducer(producer, {
             size: 5,
             lingerMs: 24 * 60 * 60,
@@ -39,6 +39,7 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1, m2, m3, m4, m5],
         });
+        await sleep(1);
 
         expect(sendBatch).toHaveBeenCalledTimes(1);
         expect(sendBatch).toHaveBeenCalledWith({
@@ -66,7 +67,6 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1, m2, m3, m4, m5],
         });
-
         await sleep(100);
 
         expect(sendBatch).toHaveBeenCalledTimes(2);
@@ -81,7 +81,7 @@ describe('batch+producer', () => {
         expect(batchProducer.length).toBe(1);
     });
 
-    it('should send batch with multiple topics', () => {
+    it('should send batch with multiple topics', async () => {
         const batchProducer = new BatchProducer(producer, {
             size: 5,
             lingerMs: 24 * 60 * 60,
@@ -100,6 +100,7 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1],
         });
+        await sleep(1);
 
         expect(sendBatch).not.toHaveBeenCalled();
         expect(batchProducer.length).toBe(1);
@@ -108,6 +109,7 @@ describe('batch+producer', () => {
             topic: topic2,
             messages: [m2, m3],
         });
+        await sleep(1);
 
         expect(sendBatch).not.toHaveBeenCalled();
         expect(batchProducer.length).toBe(3);
@@ -116,6 +118,7 @@ describe('batch+producer', () => {
             topic: topic3,
             messages: [m4, m5],
         });
+        await sleep(1);
 
         expect(sendBatch).toHaveBeenCalledTimes(1);
         expect(sendBatch).toHaveBeenCalledWith({
@@ -147,6 +150,7 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1],
         });
+        await sleep(1);
 
         expect(sendBatch).not.toHaveBeenCalled();
         expect(batchProducer.length).toBe(1);
@@ -155,6 +159,7 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m2, m3],
         });
+        await sleep(1);
 
         expect(sendBatch).not.toHaveBeenCalled();
         expect(batchProducer.length).toBe(3);
@@ -191,6 +196,7 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1, m2, m3, m4],
         });
+        await sleep(1);
 
         expect(sendBatch).not.toHaveBeenCalled();
         expect(batchProducer.length).toBe(4);
@@ -223,7 +229,6 @@ describe('batch+producer', () => {
             topic: topic1,
             messages: [m1, m2, m3, m4],
         });
-
         await sleep(100);
 
         expect(sendBatch).toHaveBeenCalledTimes(2);

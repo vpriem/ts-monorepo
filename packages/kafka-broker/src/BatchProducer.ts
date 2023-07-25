@@ -4,6 +4,7 @@ import {
     Producer,
     ProducerBatch,
     ProducerRecord,
+    RecordMetadata,
     TopicMessages,
 } from 'kafkajs';
 import { BatchConfig } from './types';
@@ -45,6 +46,8 @@ export class BatchProducer extends EventEmitter {
 
     private readonly batchSize: number;
 
+    private batchRequest: Promise<RecordMetadata[] | void> = Promise.resolve();
+
     private readonly lingerMs: number;
 
     private readonly config?: Omit<ProducerBatch, 'topicMessages'>;
@@ -60,13 +63,14 @@ export class BatchProducer extends EventEmitter {
         this.lingerMs = lingerMs;
         this.config = config;
 
-        this.producer.on('producer.connect', () => {
-            this.startAutoSendIfNecessary();
-        });
+        this.producer.on(
+            'producer.connect',
+            /* istanbul ignore next */ () => this.startAutoSendIfNecessary()
+        );
 
-        this.producer.on('producer.disconnect', () => {
-            this.stopAutoSendIfNecessary();
-        });
+        this.producer.on('producer.disconnect', () =>
+            this.stopAutoSendIfNecessary()
+        );
     }
 
     get length(): number {
@@ -74,8 +78,8 @@ export class BatchProducer extends EventEmitter {
     }
 
     private elapsedMs(): number {
-        const [, ns] = process.hrtime(this.hrTime);
-        return ns / 1000000;
+        const [s, ns] = process.hrtime(this.hrTime);
+        return s * 1000 + ns / 1000000;
     }
 
     private async sendIfNecessary(): Promise<void> {
@@ -84,7 +88,7 @@ export class BatchProducer extends EventEmitter {
         if (this.topicMessages.length >= this.batchSize) {
             await this.sendAllBatch();
         } else if (this.elapsedMs() >= this.lingerMs) {
-            await this.flush();
+            await this.sendOneBatch();
         }
     }
 
@@ -94,7 +98,10 @@ export class BatchProducer extends EventEmitter {
         this.timer = setInterval(() => {
             this.sendIfNecessary()
                 .then(noop)
-                .catch((error) => this.emit('error', error));
+                .catch(
+                    /* istanbul ignore next */ (error) =>
+                        this.emit('error', error)
+                );
         }, this.lingerMs);
     }
 
@@ -117,7 +124,9 @@ export class BatchProducer extends EventEmitter {
 
         this.sendIfNecessary()
             .then(noop)
-            .catch((error) => this.emit('error', error));
+            .catch(
+                /* istanbul ignore next */ (error) => this.emit('error', error)
+            );
 
         this.startAutoSendIfNecessary();
     }
@@ -143,39 +152,52 @@ export class BatchProducer extends EventEmitter {
     }
 
     private async sendBatch(): Promise<void> {
-        if (this.isSending) return;
+        await this.batchRequest;
 
-        this.isSending = true;
+        const messages = this.topicMessages.splice(0, this.batchSize);
+        if (!messages.length) return;
 
         this.hrTime = process.hrtime();
 
-        if (this.topicMessages.length) {
-            const batch = this.createBatch(
-                this.topicMessages.splice(0, this.batchSize)
-            );
-            this.emit('batch.start', batch);
+        const batch = this.createBatch(messages);
+        this.emit('batch.start', batch);
 
-            try {
-                await this.producer.sendBatch(batch);
-            } catch (error) {
+        this.batchRequest = this.producer.sendBatch(batch).catch(
+            /* istanbul ignore next */ (error) => {
                 this.emit('error', error);
             }
-        }
+        );
+        await this.batchRequest;
+        this.batchRequest = Promise.resolve();
+    }
+
+    private async sendOneBatch(): Promise<void> {
+        this.isSending = true;
+
+        await this.sendBatch();
 
         this.isSending = false;
     }
 
     private async sendAllBatch(): Promise<void> {
+        this.isSending = true;
+
         while (this.topicMessages.length >= this.batchSize) {
             // eslint-disable-next-line no-await-in-loop
             await this.sendBatch();
         }
+
+        this.isSending = false;
     }
 
     async flush(): Promise<void> {
+        this.isSending = true;
+
         while (this.topicMessages.length) {
             // eslint-disable-next-line no-await-in-loop
             await this.sendBatch();
         }
+
+        this.isSending = false;
     }
 }
