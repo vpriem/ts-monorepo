@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.3.0...@vpriem/kafka-broker@2.4.0) (2023-08-06)
+
+### Features
+
+-   **kafka-broker:** add producer batching ([e132338](https://github.com/vpriem/ts-monorepo/commit/e132338cc6d6f3bd4c7ecde44c272befc0fefbf1))
+-   **kafka-broker:** emit consumer events ([056bab6](https://github.com/vpriem/ts-monorepo/commit/056bab61991dfee879c907c5e78d77d504972fa2))
+-   **kafka-broker:** emit producer events ([14555e4](https://github.com/vpriem/ts-monorepo/commit/14555e4513aadc200c02965ccfdc1fb6e1898e03))
+
 # [2.3.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.2.2...@vpriem/kafka-broker@2.3.0) (2023-07-03)
 
 ### Bug Fixes
