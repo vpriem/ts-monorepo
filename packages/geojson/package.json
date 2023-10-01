@@ -31,6 +31,6 @@
         "test": "yarn x:test"
     },
     "dependencies": {
-        "@types/geojson": "7946.0.10"
+        "@types/geojson": "7946.0.11"
     }
 }
