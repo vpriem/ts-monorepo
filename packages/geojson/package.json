@@ -24,7 +24,7 @@
         "node": ">=18.x"
     },
     "scripts": {
-        "prepublishOnly": "yarn x:build",
+        "prepack": "yarn build",
         "build": "yarn x:build",
         "clean": "yarn x:clean",
         "lint": "yarn x:lint",
