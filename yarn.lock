@@ -1851,17 +1851,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/http-errors@npm:*":
+"@types/http-errors@npm:*, @types/http-errors@npm:2.0.2":
   version: 2.0.2
   resolution: "@types/http-errors@npm:2.0.2"
   checksum: d7f14045240ac4b563725130942b8e5c8080bfabc724c8ff3f166ea928ff7ae02c5194763bc8f6aaf21897e8a44049b0492493b9de3e058247e58fdfe0f86692
-  languageName: node
-  linkType: hard
-
-"@types/http-errors@npm:2.0.1":
-  version: 2.0.1
-  resolution: "@types/http-errors@npm:2.0.1"
-  checksum: 3bb0c50b0a652e679a84c30cd0340d696c32ef6558518268c238840346c077f899315daaf1c26c09c57ddd5dc80510f2a7f46acd52bf949e339e35ed3ee9654f
   languageName: node
   linkType: hard
 
@@ -2212,7 +2205,7 @@ __metadata:
   resolution: "@vpriem/express-api-key-auth@workspace:packages/express-api-key-auth"
   dependencies:
     "@types/express": 4.17.18
-    "@types/http-errors": 2.0.1
+    "@types/http-errors": 2.0.2
     "@types/supertest": 2.0.12
     express: 4.18.2
     http-errors: 2.0.0
