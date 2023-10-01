@@ -2,6 +2,7 @@
   "name": "@vpriem/ts-monorepo",
   "version": "0.0.0",
   "main": "index.js",
+  "packageManager": "yarn@3.6.3",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/vpriem/ts-monorepo.git"
@@ -11,21 +12,25 @@
   "private": true,
   "engines": {
     "node": ">=16.x",
-    "yarn": "^1.22.0"
+    "yarn": "^3.6.0"
   },
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "lerna run build",
+    "x:build": "cd $INIT_CWD && tsc",
     "release": "lerna version",
     "publish": "lerna publish",
     "clean": "lerna run clean",
+    "x:clean": "cd $INIT_CWD && rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
     "doc": "lerna run doc",
     "lint": "lerna run lint --",
+    "x:lint": "cd $INIT_CWD && eslint --ext .ts src",
     "format": "prettier --write packages/*/src/{*.ts,**/*.ts}",
     "test": "lerna run test",
-    "u": "yarn upgrade-interactive --latest",
+    "x:test": "cd $INIT_CWD && jest",
+    "u": "yarn upgrade-interactive",
     "w": "yarn workspace",
     "e": "yarn workspace @vpriem/express-api-key-auth",
     "r": "yarn workspace @vpriem/rest-client",

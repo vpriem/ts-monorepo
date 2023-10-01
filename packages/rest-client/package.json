@@ -27,12 +27,11 @@
         "node": ">=16.x"
     },
     "scripts": {
-        "prepublishOnly": "yarn run build",
-        "build": "tsc",
-        "build:watch": "tsc --watch",
-        "clean": "rimraf {dist,tsconfig.tsbuildinfo,yarn-error.log,coverage}",
-        "lint": "eslint --ext .ts ./src",
-        "test": "jest --testMatch '**/*.test.ts'"
+        "prepublishOnly": "yarn x:build",
+        "build": "yarn x:build",
+        "clean": "yarn x:clean",
+        "lint": "yarn x:lint",
+        "test": "yarn x:test"
     },
     "dependencies": {
         "@types/node-fetch": "2.6.4",

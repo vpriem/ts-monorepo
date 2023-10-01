@@ -24,7 +24,8 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          pkg-manager: yarn
+          pkg-manager: yarn-berry
+          cache-version: v2
       - run: yarn workspace << parameters.scope >>/<< parameters.package >> test
       - run: ./node_modules/.bin/codecov -f packages/<< parameters.package >>/coverage/clover.xml -F << parameters.package >>
 
@@ -66,7 +67,8 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          pkg-manager: yarn
+          pkg-manager: yarn-berry
+          cache-version: v2
       - run:
           name: Wait for Kafka
           command: while ! nc -z localhost 9092 ; do sleep 1 ; done
@@ -89,7 +91,8 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          pkg-manager: yarn
+          pkg-manager: yarn-berry
+          cache-version: v2
       - run: yarn workspace << parameters.scope >>/<< parameters.package >> lint
 
   build-and-publish:
@@ -101,7 +104,8 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
       - checkout
       - node/install-packages:
-          pkg-manager: yarn
+          pkg-manager: yarn-berry
+          cache-version: v2
       - run: yarn run publish --no-verify-access --yes from-package
 
 workflows:
