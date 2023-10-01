@@ -34,7 +34,7 @@
         "test": "yarn x:test"
     },
     "dependencies": {
-        "@types/express": "4.17.17",
+        "@types/express": "4.17.18",
         "http-errors": "2.0.0"
     },
     "devDependencies": {
