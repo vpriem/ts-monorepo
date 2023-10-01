@@ -28,12 +28,15 @@ const noop = () => {
     /** */
 };
 
-export declare interface BatchProducer {
+export interface BatchProducerInterface {
     on(event: 'error', listener: (error: Error) => void): this;
     on(event: 'batch.start', listener: (event: ProducerBatch) => void): this;
 }
 
-export class BatchProducer extends EventEmitter {
+export class BatchProducer
+    extends EventEmitter
+    implements BatchProducerInterface
+{
     private readonly producer: Producer;
 
     private topicMessages: SingleTopicMessage[] = [];

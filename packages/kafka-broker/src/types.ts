@@ -1,14 +1,31 @@
 import {
     CompressionTypes,
+    ConnectEvent,
+    ConsumerCommitOffsetsEvent,
     ConsumerConfig as KafkaConsumerConfig,
+    ConsumerCrashEvent,
+    ConsumerEndBatchProcessEvent,
+    ConsumerFetchEvent,
+    ConsumerFetchStartEvent,
+    ConsumerGroupJoinEvent,
+    ConsumerHeartbeatEvent,
+    ConsumerRebalancingEvent,
+    ConsumerReceivedUnsubcribedTopicsEvent,
     ConsumerRunConfig,
+    ConsumerStartBatchProcessEvent,
     ConsumerSubscribeTopic,
+    DisconnectEvent,
     EachMessagePayload,
+    InstrumentationEvent,
     KafkaConfig,
     Message,
+    ProducerBatch,
     ProducerConfig as KafkaProducerConfig,
     ProducerRecord,
     RecordMetadata,
+    RequestEvent,
+    RequestQueueSizeEvent,
+    RequestTimeoutEvent,
 } from 'kafkajs';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
@@ -69,13 +86,15 @@ export type ConsumePayload = EachMessagePayload;
 export type PublishResult = RecordMetadata;
 
 export type Publish = {
-    <V = MessageValue>(name: string, messages: PublishMessage<V>[]): Promise<
-        PublishResult[] | null
-    >;
+    <V = MessageValue>(
+        name: string,
+        messages: PublishMessage<V>[]
+    ): Promise<PublishResult[] | null>;
 
-    <V = MessageValue>(name: string, message: PublishMessage<V>): Promise<
-        PublishResult[] | null
-    >;
+    <V = MessageValue>(
+        name: string,
+        message: PublishMessage<V>
+    ): Promise<PublishResult[] | null>;
 };
 
 export interface PublisherInterface {
@@ -163,7 +182,7 @@ export interface SubscriptionInterface {
     once(event: 'error', listener: (error: Error) => void): this;
 
     off<V = MessageValue>(
-        event: 'message' | string,
+        event: 'message' | `message.${string}`,
         listener: Handler<V>
     ): this;
     off(event: 'error', listener: (error: Error) => void): this;
@@ -172,6 +191,98 @@ export interface SubscriptionInterface {
 }
 
 export interface BrokerInterface extends PublisherInterface {
+    on(event: 'error', listener: (error: Error) => void): this;
+
+    on(
+        event: 'producer.connect',
+        listener: (event: ConnectEvent) => void
+    ): this;
+    on(
+        event: 'producer.disconnect',
+        listener: (event: DisconnectEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request',
+        listener: (event: RequestEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request_timeout',
+        listener: (event: RequestTimeoutEvent) => void
+    ): this;
+    on(
+        event: 'producer.network.request_queue_size',
+        listener: (event: RequestQueueSizeEvent) => void
+    ): this;
+    on(
+        event: 'producer.batch.start',
+        listener: (event: ProducerBatch) => void
+    ): this;
+
+    on(
+        event: 'consumer.heartbeat',
+        listener: (event: ConsumerHeartbeatEvent) => void
+    ): this;
+    on(
+        event: 'consumer.commit_offsets',
+        listener: (event: ConsumerCommitOffsetsEvent) => void
+    ): this;
+    on(
+        event: 'consumer.group_join',
+        listener: (event: ConsumerGroupJoinEvent) => void
+    ): this;
+    on(
+        event: 'consumer.fetch_start',
+        listener: (event: ConsumerFetchStartEvent) => void
+    ): this;
+    on(
+        event: 'consumer.fetch',
+        listener: (event: ConsumerFetchEvent) => void
+    ): this;
+    on(
+        event: 'consumer.start_batch_process',
+        listener: (event: ConsumerStartBatchProcessEvent) => void
+    ): this;
+    on(
+        event: 'consumer.end_batch_process',
+        listener: (event: ConsumerEndBatchProcessEvent) => void
+    ): this;
+    on(
+        event: 'consumer.connect',
+        listener: (event: ConnectEvent) => void
+    ): this;
+    on(
+        event: 'consumer.disconnect',
+        listener: (event: DisconnectEvent) => void
+    ): this;
+    on(
+        event: 'consumer.stop',
+        listener: (event: InstrumentationEvent<null>) => void
+    ): this;
+    on(
+        event: 'consumer.crash',
+        listener: (event: ConsumerCrashEvent) => void
+    ): this;
+    on(
+        event: 'consumer.rebalancing',
+        listener: (event: ConsumerRebalancingEvent) => void
+    ): this;
+    on(
+        event: 'consumer.received_unsubscribed_topics',
+        listener: (event: ConsumerReceivedUnsubcribedTopicsEvent) => void
+    ): this;
+    on(
+        event: 'consumer.network.request',
+        listener: (event: RequestEvent) => void
+    ): this;
+    on(
+        event: 'consumer.network.request_timeout',
+        listener: (event: RequestTimeoutEvent) => void
+    ): this;
+    on(
+        event: 'consumer.network.request_queue_size',
+        listener: (event: RequestQueueSizeEvent) => void
+    ): this;
+
     namespace(): string;
 
     schemaRegistry(): SchemaRegistry | undefined;

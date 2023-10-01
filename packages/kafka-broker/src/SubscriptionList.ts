@@ -20,7 +20,7 @@ export class SubscriptionList
     }
 
     off<V = MessageValue>(
-        event: 'message' | 'error',
+        event: 'message' | `message.${string}` | 'error',
         listener: Handler<V> | ((error: Error) => void)
     ): this {
         this.forEach((subscription) =>

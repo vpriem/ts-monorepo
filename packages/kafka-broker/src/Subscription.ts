@@ -111,7 +111,7 @@ export class Subscription
         return this;
     }
 
-    on(event: string | symbol, listener: (...args: any[]) => void): this {
+    on(event: string | symbol, listener: (...args: never[]) => void): this {
         if (typeof event === 'string' && event.startsWith('message')) {
             return this.addHandler(listener as Handler, event.split('.')[1]);
         }
@@ -119,7 +119,7 @@ export class Subscription
         return super.on(event, listener);
     }
 
-    off(event: string | symbol, listener: (...args: any[]) => void): this {
+    off(event: string | symbol, listener: (...args: never[]) => void): this {
         if (typeof event === 'string' && event.startsWith('message')) {
             return this.removeHandler(listener as Handler, event.split('.')[1]);
         }

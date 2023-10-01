@@ -95,8 +95,8 @@ export class ProducerContainer extends EventEmitter {
         this.batchProducers = {};
 
         await Promise.all(
-            Object.values(batchProducers).map((batchProducer) =>
-                batchProducer?.flush()
+            Object.values(batchProducers).map(
+                (batchProducer) => batchProducer?.flush()
             )
         );
 

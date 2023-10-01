@@ -1,25 +1,6 @@
 import EventEmitter from 'events';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import {
-    ConnectEvent,
-    ConsumerCommitOffsetsEvent,
-    ConsumerCrashEvent,
-    ConsumerEndBatchProcessEvent,
-    ConsumerFetchEvent,
-    ConsumerFetchStartEvent,
-    ConsumerGroupJoinEvent,
-    ConsumerHeartbeatEvent,
-    ConsumerRebalancingEvent,
-    ConsumerReceivedUnsubcribedTopicsEvent,
-    ConsumerStartBatchProcessEvent,
-    DisconnectEvent,
-    InstrumentationEvent,
-    ProducerBatch,
-    RequestEvent,
-    RequestQueueSizeEvent,
-    RequestTimeoutEvent,
-} from 'kafkajs';
-import {
     BrokerConfig,
     BrokerContainerConfig,
     BrokerInterface,
@@ -40,100 +21,6 @@ import { buildContainerConfig } from './buildContainerConfig';
 const isConfig = (
     config: BrokerConfig | BrokerContainerConfig
 ): config is BrokerConfig => (config as BrokerConfig).config !== undefined;
-
-export declare interface Broker {
-    on(event: 'error', listener: (error: Error) => void): this;
-
-    on(
-        event: 'producer.connect',
-        listener: (event: ConnectEvent) => void
-    ): this;
-    on(
-        event: 'producer.disconnect',
-        listener: (event: DisconnectEvent) => void
-    ): this;
-    on(
-        event: 'producer.network.request',
-        listener: (event: RequestEvent) => void
-    ): this;
-    on(
-        event: 'producer.network.request_timeout',
-        listener: (event: RequestTimeoutEvent) => void
-    ): this;
-    on(
-        event: 'producer.network.request_queue_size',
-        listener: (event: RequestQueueSizeEvent) => void
-    ): this;
-    on(
-        event: 'producer.batch.start',
-        listener: (event: ProducerBatch) => void
-    ): this;
-
-    on(
-        event: 'consumer.heartbeat',
-        listener: (event: ConsumerHeartbeatEvent) => void
-    ): this;
-    on(
-        event: 'consumer.commit_offsets',
-        listener: (event: ConsumerCommitOffsetsEvent) => void
-    ): this;
-    on(
-        event: 'consumer.group_join',
-        listener: (event: ConsumerGroupJoinEvent) => void
-    ): this;
-    on(
-        event: 'consumer.fetch_start',
-        listener: (event: ConsumerFetchStartEvent) => void
-    ): this;
-    on(
-        event: 'consumer.fetch',
-        listener: (event: ConsumerFetchEvent) => void
-    ): this;
-    on(
-        event: 'consumer.start_batch_process',
-        listener: (event: ConsumerStartBatchProcessEvent) => void
-    ): this;
-    on(
-        event: 'consumer.end_batch_process',
-        listener: (event: ConsumerEndBatchProcessEvent) => void
-    ): this;
-    on(
-        event: 'consumer.connect',
-        listener: (event: ConnectEvent) => void
-    ): this;
-    on(
-        event: 'consumer.disconnect',
-        listener: (event: DisconnectEvent) => void
-    ): this;
-    on(
-        event: 'consumer.stop',
-        listener: (event: InstrumentationEvent<null>) => void
-    ): this;
-    on(
-        event: 'consumer.crash',
-        listener: (event: ConsumerCrashEvent) => void
-    ): this;
-    on(
-        event: 'consumer.rebalancing',
-        listener: (event: ConsumerRebalancingEvent) => void
-    ): this;
-    on(
-        event: 'consumer.received_unsubscribed_topics',
-        listener: (event: ConsumerReceivedUnsubcribedTopicsEvent) => void
-    ): this;
-    on(
-        event: 'consumer.network.request',
-        listener: (event: RequestEvent) => void
-    ): this;
-    on(
-        event: 'consumer.network.request_timeout',
-        listener: (event: RequestTimeoutEvent) => void
-    ): this;
-    on(
-        event: 'consumer.network.request_queue_size',
-        listener: (event: RequestQueueSizeEvent) => void
-    ): this;
-}
 
 export class Broker extends EventEmitter implements BrokerInterface {
     private readonly config: Config;
