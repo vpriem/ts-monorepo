@@ -24,7 +24,7 @@
         "event"
     ],
     "engines": {
-        "node": ">=16.x"
+        "node": ">=18.x"
     },
     "scripts": {
         "prepublishOnly": "yarn x:build",
@@ -37,7 +37,7 @@
     },
     "dependencies": {
         "@kafkajs/confluent-schema-registry": "3.3.0",
-        "@types/node": "20.4.8",
+        "@types/node": "18.18.0",
         "kafkajs": "2.2.4"
     },
     "devDependencies": {

@@ -6,7 +6,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:16.20.0
+      - image: cimg/node:18.18.0
         environment:
           HUSKY: 0
 
@@ -38,7 +38,7 @@ jobs:
         type: string
 
     docker:
-      - image: cimg/node:16.20.0
+      - image: cimg/node:18.18.0
       - image: confluentinc/cp-zookeeper:7.4.0
         environment:
           ZOOKEEPER_CLIENT_PORT: 2181
