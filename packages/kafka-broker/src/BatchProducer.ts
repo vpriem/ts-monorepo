@@ -41,7 +41,7 @@ export class BatchProducer
 
     private topicMessages: SingleTopicMessage[] = [];
 
-    private timer: NodeJS.Timer;
+    private timer: NodeJS.Timeout;
 
     private hrTime = process.hrtime();
 
