@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/geojson@1.2.0...@vpriem/geojson@1.3.0) (2023-10-01)
+
+### Bug Fixes
+
+-   **geojson:** update @types/geojson to v7946.0.11 ([e3131db](https://github.com/vpriem/ts-monorepo/commit/e3131dbc6afe7f6d1f788a39433517538f552945))
+
+### Features
+
+-   drop node 16 support ([361fb5f](https://github.com/vpriem/ts-monorepo/commit/361fb5f945d46f3cc0b67c5a6ff2117b5bd033ee))
+
 # [1.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/geojson@1.1.0...@vpriem/geojson@1.2.0) (2023-07-03)
 
 ### Features

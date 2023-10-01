@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.2.0...@vpriem/express-api-key-auth@1.3.0) (2023-10-01)
+
+### Bug Fixes
+
+-   **express-api-key-auth:** update @types/express to v4.17.18 ([b5a376a](https://github.com/vpriem/ts-monorepo/commit/b5a376a88592ec542ab265366ec4a8995cd4135b))
+
+### Features
+
+-   drop node 16 support ([361fb5f](https://github.com/vpriem/ts-monorepo/commit/361fb5f945d46f3cc0b67c5a6ff2117b5bd033ee))
+
 # [1.2.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/express-api-key-auth@1.1.0...@vpriem/express-api-key-auth@1.2.0) (2023-07-03)
 
 ### Features

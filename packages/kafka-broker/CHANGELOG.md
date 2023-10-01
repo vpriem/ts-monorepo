@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.4.0...@vpriem/kafka-broker@2.5.0) (2023-10-01)
+
+### Bug Fixes
+
+-   **kafka-broker:** rework typing after linter update ([8bad513](https://github.com/vpriem/ts-monorepo/commit/8bad513af76d5655d5aeb3f276162e8793282137))
+
+### Features
+
+-   drop node 16 support ([361fb5f](https://github.com/vpriem/ts-monorepo/commit/361fb5f945d46f3cc0b67c5a6ff2117b5bd033ee))
+
 # [2.4.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/kafka-broker@2.3.0...@vpriem/kafka-broker@2.4.0) (2023-08-06)
 
 ### Features

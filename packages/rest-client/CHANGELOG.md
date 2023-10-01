@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.3.0...@vpriem/rest-client@1.4.0) (2023-10-01)
+
+### Bug Fixes
+
+-   **rest-client:** update node-fetch to v2.7.0 ([f3fcbcf](https://github.com/vpriem/ts-monorepo/commit/f3fcbcf5da62d73a99f056d12ce65f6b72d82453))
+
+### Features
+
+-   drop node 16 support ([361fb5f](https://github.com/vpriem/ts-monorepo/commit/361fb5f945d46f3cc0b67c5a6ff2117b5bd033ee))
+
 # [1.3.0](https://github.com/vpriem/ts-monorepo/compare/@vpriem/rest-client@1.2.1...@vpriem/rest-client@1.3.0) (2023-07-03)
 
 ### Bug Fixes
