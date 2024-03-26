@@ -1959,10 +1959,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.18.0":
-  version: 18.18.0
-  resolution: "@types/node@npm:18.18.0"
-  checksum: 61bcffa28eb713e7a4c66fd369df603369c3f834a783faeced95fe3e78903faa25f1a704d49e054f41d71b7915eeb066d10a37cc699421fcf5dd267f96ad5808
+"@types/node@npm:18.19.26":
+  version: 18.19.26
+  resolution: "@types/node@npm:18.19.26"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: d72d4e7e520206a2a05cb3e03a73696fc3bdcdc6ba5330a75cfef4818cb137b260c32dfe85e8b4ea28e8fe92f1d1497e26336c607254c5eaf47032a1b1c8bb6e
   languageName: node
   linkType: hard
 
@@ -2226,7 +2228,7 @@ __metadata:
   resolution: "@vpriem/kafka-broker@workspace:packages/kafka-broker"
   dependencies:
     "@kafkajs/confluent-schema-registry": 3.3.0
-    "@types/node": 18.18.0
+    "@types/node": 18.19.26
     "@types/uuid": 9.0.4
     kafkajs: 2.2.4
     uuid: 9.0.1
@@ -2251,7 +2253,7 @@ __metadata:
     "@commitlint/config-conventional": 17.7.0
     "@commitlint/config-lerna-scopes": 17.7.0
     "@types/jest": 29.5.5
-    "@types/node": 18.18.0
+    "@types/node": 18.19.26
     "@typescript-eslint/eslint-plugin": 6.7.3
     "@typescript-eslint/parser": 6.7.3
     codecov: 3.8.3
@@ -10126,6 +10128,13 @@ __metadata:
     has-symbols: ^1.0.3
     which-boxed-primitive: ^1.0.2
   checksum: b7a1cf5862b5e4b5deb091672ffa579aa274f648410009c81cca63fed3b62b610c4f3b773f912ce545bb4e31edc3138975b5bc777fc6e4817dca51affb6380e9
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
   languageName: node
   linkType: hard
 
